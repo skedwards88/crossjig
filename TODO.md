@@ -6,7 +6,4 @@
 - app store
 - package to import to wordgames
 - package and import common functions
-- limit size for large screens
-- when complete game, add button for new game and for share
 - track game completion?
-- make lines thicker on maskable icon or make all
