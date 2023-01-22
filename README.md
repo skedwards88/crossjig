@@ -6,6 +6,10 @@ A word based jigsaw puzzle
 
 **Time:** 5 minutes
 
+[Play Now!](https://skedwards88.github.io/crossjig/)
+
+<img src="src/images/icon_512.png" alt="game icon" width="70"/>
+
 Do you have feedback or ideas for improvement? [Open an issue](https://github.com/skedwards88/crossjig/issues/new).
 
 Want more games? Visit [SECT Games](https://skedwards88.github.io/portfolio/).
