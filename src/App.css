@@ -11,6 +11,7 @@ body {
   --default-font-size: min(4vmax, 7vmin, 40px);
   --dark-color: rgb(55 54 71);
   --light-color: rgb(239 239 239);
+
   background-color: var(--dark-color);
   color: var(--light-color);
   font-family: sans-serif;
@@ -49,17 +50,18 @@ button {
 
 /* Slider setting styling */
 input[type="range"] {
-  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   background: var(--dark-color);
 }
+
 input[type="range"]:focus {
   outline: none;
 }
 
 /* Slider thumb */
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   height: calc(var(--default-font-size) * 1.5);
   width: calc(var(--default-font-size) * 0.5);
   border-radius: 2px;
@@ -68,6 +70,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   margin-top: calc(var(--default-font-size) * -0.5);
 }
+
 input[type="range"]::-moz-range-thumb {
   height: calc(var(--default-font-size) * 1.5);
   width: calc(var(--default-font-size) * 0.5);
@@ -75,6 +78,7 @@ input[type="range"]::-moz-range-thumb {
   background: var(--light-color);
   box-shadow: 0 0 2px 2px black;
 }
+
 input[type="range"]::-ms-thumb {
   height: calc(var(--default-font-size) * 1.5);
   width: calc(var(--default-font-size) * 0.5);
@@ -91,30 +95,37 @@ input[type="range"]::-webkit-slider-runnable-track {
   background: var(--light-color);
   border-radius: 2px;
 }
+
 input[type="range"]:focus::-webkit-slider-runnable-track {
   background: var(--light-color);
 }
+
 input[type="range"]::-moz-range-track {
   height: 2vh;
   cursor: pointer;
   background: var(--light-color);
   border-radius: 2px;
 }
+
 input[type="range"]::-ms-track {
   height: 2vh;
   cursor: pointer;
   background: var(--light-color);
   border-radius: 2px;
 }
+
 input[type="range"]::-ms-fill-lower {
   background: var(--light-color);
 }
+
 input[type="range"]::-ms-fill-upper {
   background: var(--light-color);
 }
+
 input[type="range"]:focus::-ms-fill-lower {
   background: var(--light-color);
 }
+
 input[type="range"]:focus::-ms-fill-upper {
   background: var(--light-color);
 }
@@ -237,6 +248,7 @@ a {
     auto
     auto
     1fr;
+
   --box-size: calc(min(8vw, 5.5vh));
 }
 
