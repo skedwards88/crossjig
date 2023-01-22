@@ -4,8 +4,14 @@ import Result from "./Result";
 import Board from "./Board";
 import ControlBar from "./ControlBar";
 
-function Game({dispatchGameState, gameState, setDisplay, setInstallPromptEvent, showInstallButton,installPromptEvent}) {
-
+function Game({
+  dispatchGameState,
+  gameState,
+  setDisplay,
+  setInstallPromptEvent,
+  showInstallButton,
+  installPromptEvent,
+}) {
   function dragToken({
     event,
     dragArea,
@@ -112,14 +118,14 @@ function Game({dispatchGameState, gameState, setDisplay, setInstallPromptEvent, 
         ></Result>
       )}
 
-      <ControlBar 
+      <ControlBar
         setDisplay={setDisplay}
         setInstallPromptEvent={setInstallPromptEvent}
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
         dispatchGameState={dispatchGameState}
-        gameState={gameState}>
-      </ControlBar>
+        gameState={gameState}
+      ></ControlBar>
     </div>
   );
 }

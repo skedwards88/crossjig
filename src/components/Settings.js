@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function Settings({ setDisplay, dispatchGameState, gameState }) {
-
   function handleNewGame(event) {
     event.preventDefault();
     const newNumLetters = event.target.elements.numLetters.value;
@@ -10,7 +9,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
       action: "newGame",
       numLetters: newNumLetters,
     });
-    setDisplay("game")
+    setDisplay("game");
   }
 
   return (
@@ -51,5 +50,5 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
         </button>
       </div>
     </form>
-  )
+  );
 }

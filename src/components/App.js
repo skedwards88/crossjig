@@ -2,7 +2,10 @@ import React from "react";
 import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
-import { handleAppInstalled, handleBeforeInstallPrompt } from "../common/handleInstall";
+import {
+  handleAppInstalled,
+  handleBeforeInstallPrompt,
+} from "../common/handleInstall";
 import Settings from "./Settings";
 import { gameInit } from "../logic/gameInit";
 import { gameReducer } from "../logic/gameReducer";
@@ -66,7 +69,13 @@ export default function App() {
       return <Heart setDisplay={setDisplay}></Heart>;
 
     case "settings":
-      return <Settings setDisplay={setDisplay} dispatchGameState={dispatchGameState} gameState={gameState} />
+      return (
+        <Settings
+          setDisplay={setDisplay}
+          dispatchGameState={dispatchGameState}
+          gameState={gameState}
+        />
+      );
 
     default:
       return (

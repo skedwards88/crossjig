@@ -29,4 +29,4 @@ function handleAppInstalled(setInstallPromptEvent, setShowInstallButton) {
   setShowInstallButton(false);
 }
 
-export {handleInstall, handleBeforeInstallPrompt, handleAppInstalled}
+export { handleInstall, handleBeforeInstallPrompt, handleAppInstalled };

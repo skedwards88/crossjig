@@ -2,34 +2,42 @@ import { generateGrid } from "./generateGrid";
 import { shuffleArray } from "../common/shuffleArray";
 
 function getMaxShifts(grid) {
-  const transposedGrid = grid.map((_, index) => grid.map((row) => row[index]))
+  const transposedGrid = grid.map((_, index) => grid.map((row) => row[index]));
 
-  let maxShiftUp = 0
+  let maxShiftUp = 0;
   for (let index = 0; index < grid.length; index++) {
-    if (grid[index].every(i => i === "")) {
-      maxShiftUp++
-    } else { break }
+    if (grid[index].every((i) => i === "")) {
+      maxShiftUp++;
+    } else {
+      break;
+    }
   }
 
-  let maxShiftDown = 0
+  let maxShiftDown = 0;
   for (let index = grid.length - 1; index >= 0; index--) {
-    if (grid[index].every(i => i === "")) {
-      maxShiftDown++
-    } else { break }
+    if (grid[index].every((i) => i === "")) {
+      maxShiftDown++;
+    } else {
+      break;
+    }
   }
 
-  let maxShiftLeft = 0
+  let maxShiftLeft = 0;
   for (let index = 0; index < transposedGrid.length; index++) {
-    if (transposedGrid[index].every(i => i === "")) {
-      maxShiftLeft++
-    } else { break }
+    if (transposedGrid[index].every((i) => i === "")) {
+      maxShiftLeft++;
+    } else {
+      break;
+    }
   }
 
-  let maxShiftRight = 0
+  let maxShiftRight = 0;
   for (let index = transposedGrid.length - 1; index >= 0; index--) {
-    if (transposedGrid[index].every(i => i === "")) {
-      maxShiftRight++
-    } else { break }
+    if (transposedGrid[index].every((i) => i === "")) {
+      maxShiftRight++;
+    } else {
+      break;
+    }
   }
 
   return {
@@ -37,7 +45,7 @@ function getMaxShifts(grid) {
     maxShiftLeft: maxShiftLeft,
     maxShiftRight: maxShiftRight,
     maxShiftUp: maxShiftUp,
-  }
+  };
 }
 
 function getPieceDimension(pieceData) {
@@ -226,7 +234,8 @@ export function gameInit({ numLetters, useSaved = true }) {
     maxWordLength: maxWordLength,
   });
 
-  const {maxShiftLeft,maxShiftRight,maxShiftUp, maxShiftDown} = getMaxShifts(grid)
+  const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
+    getMaxShifts(grid);
 
   const pieces = shuffleArray(makePieces(grid));
   const pieceData = pieces.map((piece, index) => ({

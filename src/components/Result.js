@@ -73,7 +73,14 @@ export default function Result({ dropToken, dispatchGameState, gameState }) {
         event.preventDefault();
       }}
     >
-      {gameIsSolved ? <GameOver dispatchGameState={dispatchGameState} gameState={gameState}></GameOver> : reason}
+      {gameIsSolved ? (
+        <GameOver
+          dispatchGameState={dispatchGameState}
+          gameState={gameState}
+        ></GameOver>
+      ) : (
+        reason
+      )}
     </div>
   );
 }

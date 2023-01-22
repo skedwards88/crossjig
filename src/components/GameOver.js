@@ -15,7 +15,7 @@ export default function GameOver({ dispatchGameState, gameState }) {
       >
         New game
       </button>
-        <Share text={"Check out this word puzzle!"}></Share>
+      <Share text={"Check out this word puzzle!"}></Share>
     </div>
   );
 }
