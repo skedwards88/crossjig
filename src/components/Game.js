@@ -106,9 +106,9 @@ function Game({dispatchGameState, gameState, setDisplay, setInstallPromptEvent, 
         ></Pool>
       ) : (
         <Result
-          pieces={gameState.pieces}
-          gridSize={gameState.gridSize}
           dropToken={dropOnPool}
+          dispatchGameState={dispatchGameState}
+          gameState={gameState}
         ></Result>
       )}
 

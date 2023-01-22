@@ -1,5 +1,6 @@
 import React from "react";
 import { crosswordValidQ } from "../common/crosswordValidQ";
+import GameOver from "./GameOver";
 
 function piecesOverlapQ(boardPieces, gridSize) {
   let overlappingPiecesQ = false;
@@ -55,7 +56,10 @@ function gameSolvedQ(pieces, gridSize) {
   };
 }
 
-export default function Result({ dropToken, pieces, gridSize }) {
+export default function Result({ dropToken, dispatchGameState, gameState }) {
+  const pieces = gameState.pieces;
+  const gridSize = gameState.gridSize;
+
   const { gameIsSolved, reason } = gameSolvedQ(pieces, gridSize);
 
   return (
@@ -69,7 +73,7 @@ export default function Result({ dropToken, pieces, gridSize }) {
         event.preventDefault();
       }}
     >
-      {gameIsSolved ? "Complete!" : reason}
+      {gameIsSolved ? <GameOver dispatchGameState={dispatchGameState} gameState={gameState}></GameOver> : reason}
     </div>
   );
 }

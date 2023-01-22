@@ -389,6 +389,11 @@ a {
   color: rgb(0 162 255);
 }
 
+#gameOver {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Landscape */
 
 @media (orientation: landscape) {
