@@ -1,7 +1,6 @@
 # TODO
 
 - add screenshots to manifest and webpack config
-- analytics
 - icons uniform
 - test install
 - app store
