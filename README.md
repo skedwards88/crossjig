@@ -6,7 +6,7 @@ A word based jigsaw puzzle
 
 **Time:** 5 minutes
 
-[Play Now!](https://skedwards88.github.io/crossjig/)
+[Play Now!](https://crossjig.com/)
 
 <img src="src/images/icon_512.png" alt="game icon" width="70"/>
 

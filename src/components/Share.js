@@ -5,7 +5,7 @@ function handleShare(text) {
     .share({
       title: "Crossjig",
       text: `${text}\n\n`,
-      url: "https://skedwards88.github.io/crossjig/",
+      url: "https://crossjig.com/",
     })
     .then(() => console.log("Successful share"))
     .catch((error) => {
@@ -23,7 +23,7 @@ function handleShare(text) {
 
 function handleCopy(text) {
   try {
-    navigator.clipboard.writeText(`${text}\n\nhttps://skedwards88.github.io/crossjig/`);
+    navigator.clipboard.writeText(`${text}\n\nhttps://crossjig.com/`);
   } catch (error) {
     console.log(error);
   }
