@@ -2,7 +2,7 @@
 
 - add screenshots to manifest and webpack config
 - icons uniform
-- test install
+- test install -- not showing
 - app store
 - screenshots
 - package to import to wordgames

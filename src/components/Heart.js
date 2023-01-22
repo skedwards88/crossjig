@@ -7,6 +7,7 @@ export default function Heart({ setDisplay }) {
 
   return (
     <div className="App info">
+      <h1>Crossjig</h1>
       <div className="infoText">
         {"Like this game? Share it with your friends.\n\n"}
         {<Share text={"Check out this word puzzle!"}></Share>}

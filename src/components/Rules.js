@@ -4,7 +4,7 @@ import packageJson from "../../package.json";
 export default function Rules({ setDisplay }) {
   return (
     <div className="App rules">
-      <h1 id="rulesHeader">How to play</h1>
+      <h1 id="rulesHeader">Crossjig: How to play</h1>
       <p id="rulesText">{`Arrange the pieces to make words vertically and horizontally. All words must connect.\n\nDrag a blank space to move the whole puzzle.`}</p>
       <button
         id="rulesClose"

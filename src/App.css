@@ -22,7 +22,10 @@ body {
 }
 
 h1 {
-  font-size: min(5vmax, 10vmin);
+  all: unset;
+  font-size: calc(var(--default-font-size) * 1.2);
+  display: block;
+  font-weight: bold;
 }
 
 small {
@@ -318,7 +321,7 @@ a {
   opacity: 0.5;
 }
 
-.rules, .settings {
+.rules {
   display: grid;
   grid-template-areas:
     "header"
@@ -332,11 +335,18 @@ a {
   align-items: center;
 }
 
+.settings {
+  text-align: center;
+  overflow: scroll;
+  font-size: calc(var(--default-font-size) * 0.75);
+  justify-items: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 #rulesHeader {
-  all: unset;
-  font-size: calc(var(--default-font-size) * 1.5);
-  display: block;
-  font-weight: bold;
   grid-area: header;
 }
 
