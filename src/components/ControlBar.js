@@ -24,7 +24,7 @@ function ControlBar({dispatchGameState, gameState, setDisplay, setInstallPromptE
         <button id="heartButton" onClick={() => setDisplay("heart")}></button>
         {showInstallButton && installPromptEvent ? (
           <button
-            id="install"
+            id="installButton"
             onClick={() =>
               handleInstall(installPromptEvent, setInstallPromptEvent)
             }

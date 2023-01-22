@@ -178,12 +178,14 @@ input[type="range"]:focus::-ms-fill-upper {
 
 #rulesButton {
   background-image: url("./images/info.svg");
-  grid-area: rules;
 }
 
 #heartButton {
   background-image: url("./images/heart.svg");
-  grid-area: heart;
+}
+
+#installButton {
+  background-image: url("./images/install.svg");
 }
 
 #settings {
