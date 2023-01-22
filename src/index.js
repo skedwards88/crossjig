@@ -5,8 +5,11 @@ import App from "./components/App";
 import "./App.css";
 
 if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
-  const path = "/service-worker.js";
-  const scope = "";
+  const path =
+    location.hostname === "localhost"
+      ? "/service-worker.js"
+      : "/crossjig/service-worker.js";
+  const scope = location.hostname === "localhost" ? "" : "/crossjig/";
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register(path, { scope: scope })
