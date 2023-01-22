@@ -38,7 +38,7 @@ export default function Heart({ setDisplay }) {
         <a href="./privacy.html">Privacy policy</a>
       </div>
       <button className="close" onClick={() => setDisplay("game")}>
-        CLOSE
+        Close
       </button>
     </div>
   );

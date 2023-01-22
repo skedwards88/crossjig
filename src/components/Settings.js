@@ -40,7 +40,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
       </div>
       <div id="setting-buttons">
         <button type="submit" aria-label="new game">
-          New Game
+          New game
         </button>
         <button
           type="button"
