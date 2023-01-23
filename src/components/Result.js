@@ -1,5 +1,6 @@
 import React from "react";
-import { crosswordValidQ } from "../common/crosswordValidQ";
+import { crosswordValidQ } from "@skedwards88/word_logic";
+
 import GameOver from "./GameOver";
 
 function piecesOverlapQ(boardPieces, gridSize) {

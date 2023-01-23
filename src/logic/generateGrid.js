@@ -1,6 +1,6 @@
 import getPatternsForRow from "./getRegexForRow.js";
 import { commonWords } from "@skedwards88/word_lists";
-import { shuffleArray } from "../common/shuffleArray";
+import { shuffleArray } from "@skedwards88/word_logic";
 
 function getCommonWordsForLenRange(minLength, maxLength) {
   const filteredWords = commonWords.filter(

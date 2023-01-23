@@ -1,5 +1,5 @@
 import { generateGrid } from "./generateGrid";
-import { shuffleArray } from "../common/shuffleArray";
+import { shuffleArray } from "@skedwards88/word_logic";
 
 function getMaxShifts(grid) {
   const transposedGrid = grid.map((_, index) => grid.map((row) => row[index]));
