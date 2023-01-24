@@ -34,5 +34,63 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot_720_1280_1.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "New game of Crossjig"
+    },
+    {
+      "src": "screenshot_720_1280_2.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "In progress game of Crossjig"
+    },
+    {
+      "src": "screenshot_720_1280_3.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Nearly complete game of Crossjig"
+    },
+    {
+      "src": "screenshot_720_1280_4.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Complete game of Crossjig"
+    },
+    {
+      "src": "screenshot_1080_1080_1.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "New game of Crossjig"
+    },
+    {
+      "src": "screenshot_1080_1080_2.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "In progress game of Crossjig"
+    },
+    {
+      "src": "screenshot_1080_1080_3.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Nearly complete game of Crossjig"
+    },
+    {
+      "src": "screenshot_1080_1080_4.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Complete game of Crossjig"
+    }
   ]
 }

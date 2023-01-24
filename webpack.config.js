@@ -25,6 +25,15 @@ module.exports = (env, argv) => {
       { from: "./src/images/maskable_icon.png", to: "./assets/maskable_icon.png" },
       { from: "./src/manifest.json", to: "./assets/manifest.json" },
       { from: "./src/privacy.html", to: "./privacy.html" },
+      { from: "./src/images/screenshot_720_1280_1.png", to: "./assets/screenshot_720_1280_1.png" },
+      { from: "./src/images/screenshot_720_1280_2.png", to: "./assets/screenshot_720_1280_2.png" },
+      { from: "./src/images/screenshot_720_1280_3.png", to: "./assets/screenshot_720_1280_3.png" },
+      { from: "./src/images/screenshot_720_1280_4.png", to: "./assets/screenshot_720_1280_4.png" },
+      { from: "./src/images/screenshot_1080_1080_1.png", to: "./assets/screenshot_1080_1080_1.png" },
+      { from: "./src/images/screenshot_1080_1080_2.png", to: "./assets/screenshot_1080_1080_2.png" },
+      { from: "./src/images/screenshot_1080_1080_3.png", to: "./assets/screenshot_1080_1080_3.png" },
+      { from: "./src/images/screenshot_1080_1080_4.png", to: "./assets/screenshot_1080_1080_4.png" },
+
     ],
     options: {
       concurrency: 100,
