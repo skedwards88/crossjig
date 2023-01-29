@@ -5,7 +5,7 @@
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
-  "start_url": "../index.html",
+  "start_url": "https://crossjig.com",
   "background_color": "#373647",
   "theme_color": "#373647",
   "orientation": "any",
