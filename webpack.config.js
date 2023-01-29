@@ -24,6 +24,7 @@ module.exports = (env, argv) => {
       { from: "./src/images/icon_512.png", to: "./assets/icon_512.png" },
       { from: "./src/images/maskable_icon.png", to: "./assets/maskable_icon.png" },
       { from: "./src/manifest.json", to: "./assets/manifest.json" },
+      { from: "./src/assetlinks.json", to: "./.well-known/assetlinks.json" },
       { from: "./src/privacy.html", to: "./privacy.html" },
       { from: "./src/images/screenshot_720_1280_1.png", to: "./assets/screenshot_720_1280_1.png" },
       { from: "./src/images/screenshot_720_1280_2.png", to: "./assets/screenshot_720_1280_2.png" },

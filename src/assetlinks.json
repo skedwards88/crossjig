@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "com.crossjig.twa",
+                     "sha256_cert_fingerprints": ["EC:63:F2:73:CF:12:71:29:C1:49:0C:6A:B6:7A:A9:8C:AB:F3:96:E3:17:99:F5:CA:64:06:F6:B2:B0:CA:F5:F0"] }
+      }
+]
