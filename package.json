@@ -21,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@skedwards88/word_lists": "^2.1.1",
-    "@skedwards88/word_logic": "^1.0.3",
+    "@skedwards88/word_logic": "^2.0.2",
     "mobile-drag-drop": "^2.3.0-rc.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

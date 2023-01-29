@@ -225,13 +225,10 @@ export function gameInit({ numLetters, useSaved = true }) {
 
   const gridSize = 12;
   const minLetters = numLetters || 40;
-  const minWordLength = 4;
-  const maxWordLength = 7;
+  // Generate grid with words that are 4-7 letters
   const grid = generateGrid({
     gridSize: gridSize,
     minLetters: minLetters,
-    minWordLength: minWordLength,
-    maxWordLength: maxWordLength,
   });
 
   const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =

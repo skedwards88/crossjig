@@ -5,7 +5,6 @@
 - package to import to wordgames
 - track game completion?
 
-
 For screenshots:
 
   const grid = [

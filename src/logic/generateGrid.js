@@ -1,13 +1,11 @@
 import getPatternsForRow from "./getRegexForRow.js";
-import { commonWords } from "@skedwards88/word_lists";
 import { shuffleArray } from "@skedwards88/word_logic";
-
-function getCommonWordsForLenRange(minLength, maxLength) {
-  const filteredWords = commonWords.filter(
-    (word) => word.length < maxLength && word.length > minLength
-  );
-  return shuffleArray(filteredWords);
-}
+import {
+  commonWordsLen4,
+  commonWordsLen5,
+  commonWordsLen6,
+  commonWordsLen7,
+} from "@skedwards88/word_lists";
 
 function removeWordThatMatches(pattern, wordList) {
   // Given a patten and a list of words, finds a word that matches the pattern
@@ -31,10 +29,14 @@ function removeWordThatMatches(pattern, wordList) {
 export function generateGrid({
   gridSize,
   minLetters,
-  minWordLength,
-  maxWordLength,
 }) {
-  let wordList = getCommonWordsForLenRange(minWordLength, maxWordLength);
+  const minWordLength = 4;
+  let wordList = shuffleArray([
+    ...commonWordsLen4,
+    ...commonWordsLen5,
+    ...commonWordsLen6,
+    ...commonWordsLen7,
+  ]);
 
   let letterCount = 0;
   let grid;

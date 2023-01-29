@@ -1,5 +1,6 @@
 import React from "react";
 import { crosswordValidQ } from "@skedwards88/word_logic";
+import { trie } from "../logic/trie";
 
 import GameOver from "./GameOver";
 
@@ -50,7 +51,7 @@ function gameSolvedQ(pieces, gridSize) {
     };
   }
 
-  const { gameIsSolved, reason } = crosswordValidQ({ grid: grid });
+  const { gameIsSolved, reason } = crosswordValidQ({ grid: grid, trie: trie });
   return {
     gameIsSolved: gameIsSolved,
     reason: reason,
