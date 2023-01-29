@@ -66,12 +66,6 @@ export function generateGrid({
     ) {
       grid[startingRowIndex][index] = startingWord[index - startingColIndex];
     }
-    // solution.push({
-    //   word: startingWord,
-    //   colIndex: startingColIndex,
-    //   rowIndex: startingRowIndex,
-    //   orientationIsRows: orientationIsRows,
-    // });
 
     //
     // Use this inner loop with the safeguard to let us short circuit if we aren't finding anything
@@ -121,12 +115,6 @@ export function generateGrid({
               grid[rowIndexesByCounts[metaIndex]][index] =
                 matchingWord[index - startPosition];
             }
-            // solution.push({
-            //   word: matchingWord,
-            //   colIndex: startPosition,
-            //   rowIndex: rowIndexesByCounts[metaIndex],
-            //   orientationIsRows: orientationIsRows,
-            // });
             break;
           }
         }
