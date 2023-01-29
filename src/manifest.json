@@ -5,7 +5,7 @@
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
-  "start_url": "../.",
+  "start_url": "../index.html",
   "background_color": "#373647",
   "theme_color": "#373647",
   "orientation": "any",
