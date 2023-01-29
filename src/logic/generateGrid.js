@@ -26,10 +26,7 @@ function removeWordThatMatches(pattern, wordList) {
   }
 }
 
-export function generateGrid({
-  gridSize,
-  minLetters,
-}) {
+export function generateGrid({ gridSize, minLetters }) {
   const minWordLength = 4;
   let wordList = shuffleArray([
     ...commonWordsLen4,
