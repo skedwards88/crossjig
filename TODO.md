@@ -1,9 +1,8 @@
 # TODO
 
 - icons uniform
-- app store
+- app store: in review now
 - package to import to wordgames
-- center the grid
 
 For screenshots:
 
