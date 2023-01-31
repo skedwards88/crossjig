@@ -1,6 +1,12 @@
-[{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target" : { "namespace": "android_app", "package_name": "com.crossjig.twa",
-                     "sha256_cert_fingerprints": ["EB:E1:74:16:D7:24:01:5C:D5:AA:9D:D4:30:39:4C:E0:9D:ED:E3:9A:F3:37:66:7C:4E:62:93:7E:CB:D2:69:00"] }
-      }
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.crossjig.twa",
+      "sha256_cert_fingerprints": [
+        "EB:E1:74:16:D7:24:01:5C:D5:AA:9D:D4:30:39:4C:E0:9D:ED:E3:9A:F3:37:66:7C:4E:62:93:7E:CB:D2:69:00"
+      ]
+    }
+  }
 ]
