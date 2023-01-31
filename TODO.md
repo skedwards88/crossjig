@@ -3,7 +3,6 @@
 - icons uniform
 - app store
 - package to import to wordgames
-- track game completion?
 - center the grid
 
 For screenshots:

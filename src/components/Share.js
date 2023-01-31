@@ -1,4 +1,5 @@
 import React from "react";
+import sendAnalytics from "../common/sendAnalytics";
 
 function handleShare(text) {
   navigator
@@ -13,12 +14,7 @@ function handleShare(text) {
       handleCopy(text);
       console.log("Error sharing", error);
     });
-
-  try {
-    window.gtag("event", "share", {});
-  } catch (error) {
-    console.log("tracking error", error);
-  }
+  sendAnalytics("share");
 }
 
 function handleCopy(text) {

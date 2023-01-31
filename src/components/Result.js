@@ -1,7 +1,7 @@
 import React from "react";
 import { crosswordValidQ } from "@skedwards88/word_logic";
 import { trie } from "../logic/trie";
-
+import sendAnalytics from "../common/sendAnalytics";
 import GameOver from "./GameOver";
 
 function piecesOverlapQ(boardPieces, gridSize) {
@@ -52,6 +52,9 @@ function gameSolvedQ(pieces, gridSize) {
   }
 
   const { gameIsSolved, reason } = crosswordValidQ({ grid: grid, trie: trie });
+  if (gameIsSolved) {
+    sendAnalytics("won");
+  }
   return {
     gameIsSolved: gameIsSolved,
     reason: reason,

@@ -1,3 +1,5 @@
+import sendAnalytics from "./sendAnalytics";
+
 async function handleInstall(installPromptEvent, setInstallPromptEvent) {
   console.log("handling install");
   console.log(installPromptEvent);
@@ -5,12 +7,7 @@ async function handleInstall(installPromptEvent, setInstallPromptEvent) {
   const result = await installPromptEvent.userChoice;
   console.log(result);
   setInstallPromptEvent(null);
-
-  try {
-    window.gtag("event", "install", {});
-  } catch (error) {
-    console.log("tracking error", error);
-  }
+  sendAnalytics("install");
 }
 
 function handleBeforeInstallPrompt(

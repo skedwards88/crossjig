@@ -1,4 +1,5 @@
 import { gameInit } from "./gameInit";
+import sendAnalytics from "../common/sendAnalytics";
 
 function giveHint(currentGameState) {
   const pieces = JSON.parse(JSON.stringify(currentGameState.pieces));
@@ -106,6 +107,7 @@ export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
     return gameInit({ ...payload, useSaved: false });
   } else if (payload.action === "getHint") {
+    sendAnalytics("hint");
     const newPieces = giveHint(currentGameState);
     return {
       ...currentGameState,

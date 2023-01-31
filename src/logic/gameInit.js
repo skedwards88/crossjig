@@ -1,5 +1,6 @@
 import { generateGrid } from "./generateGrid";
 import { shuffleArray } from "@skedwards88/word_logic";
+import sendAnalytics from "../common/sendAnalytics";
 
 function centerGrid(grid) {
   let shiftedGrid = JSON.parse(JSON.stringify(grid));
@@ -297,6 +298,8 @@ export function gameInit({ numLetters, useSaved = true }) {
     solutionTop: piece.solutionTop,
     solutionLeft: piece.solutionLeft,
   }));
+
+  sendAnalytics("new_game");
 
   return {
     pieces: pieceData,
