@@ -3,6 +3,7 @@
 - icons uniform
 - app store: in review now
 - package to import to wordgames
+- add tests
 
 For screenshots:
 
