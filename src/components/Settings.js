@@ -29,7 +29,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
               type="range"
               min="20"
               max="60"
-              defaultValue={gameState.numLetters || "40"}
+              defaultValue={gameState.numLetters || "30"}
             />
             <div id="numLetters-info" className="setting-info">
               +

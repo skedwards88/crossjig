@@ -16,7 +16,7 @@ export function gameInit({ numLetters, useSaved = true }) {
   }
 
   const gridSize = 12;
-  const minLetters = numLetters || 40;
+  const minLetters = numLetters || 30;
 
   const { pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
     generatePuzzle({ gridSize: gridSize, minLetters: minLetters });
