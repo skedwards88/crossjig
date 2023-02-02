@@ -5,33 +5,52 @@ import { makePieces } from "./makePieces";
 import { shuffleArray } from "@skedwards88/word_logic";
 
 export function generatePuzzle({ gridSize, minLetters }) {
-  // Generate grid with words that are 4-7 letters
-  const grid = generateGrid({
-    gridSize: gridSize,
-    minLetters: minLetters,
-  });
+  let count = 0;
+  let foundPuzzleWithAcceptableSingletons = false;
+  const maxFractionSingles = 0.1;
 
-  const centeredGrid = centerGrid(grid);
+  while (!foundPuzzleWithAcceptableSingletons) {
+    count++;
 
-  const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
-    getMaxShifts(centeredGrid);
+    // Generate grid with words that are 4-7 letters
+    const grid = generateGrid({
+      gridSize: gridSize,
+      minLetters: minLetters,
+    });
 
-  const pieces = shuffleArray(makePieces(centeredGrid));
-  const pieceData = pieces.map((piece, index) => ({
-    letters: piece.letters,
-    id: index,
-    boardTop: undefined,
-    boardLeft: undefined,
-    poolIndex: index,
-    solutionTop: piece.solutionTop,
-    solutionLeft: piece.solutionLeft,
-  }));
+    const centeredGrid = centerGrid(grid);
 
-  return {
-    pieces: pieceData,
-    maxShiftLeft: maxShiftLeft,
-    maxShiftRight: maxShiftRight,
-    maxShiftUp: maxShiftUp,
-    maxShiftDown: maxShiftDown,
-  };
+    const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
+      getMaxShifts(centeredGrid);
+
+    const pieces = shuffleArray(makePieces(centeredGrid));
+    const pieceData = pieces.map((piece, index) => ({
+      letters: piece.letters,
+      id: index,
+      boardTop: undefined,
+      boardLeft: undefined,
+      poolIndex: index,
+      solutionTop: piece.solutionTop,
+      solutionLeft: piece.solutionLeft,
+    }));
+
+    const numSingletons = pieceData
+      .map((piece) => piece.letters)
+      .filter(
+        (letters) => letters.length === 1 && letters[0].length === 1
+      ).length;
+    const numPieces = pieceData.length;
+    foundPuzzleWithAcceptableSingletons =
+      numSingletons / numPieces < maxFractionSingles;
+
+    if (foundPuzzleWithAcceptableSingletons || count > 100) {
+      return {
+        pieces: pieceData,
+        maxShiftLeft: maxShiftLeft,
+        maxShiftRight: maxShiftRight,
+        maxShiftUp: maxShiftUp,
+        maxShiftDown: maxShiftDown,
+      };
+    }
+  }
 }
