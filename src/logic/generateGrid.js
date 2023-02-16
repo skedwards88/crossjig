@@ -1,6 +1,7 @@
 import getPatternsForRow from "./getRegexForRow.js";
 import { shuffleArray } from "@skedwards88/word_logic";
 import {
+  commonWordsLen3,
   commonWordsLen4,
   commonWordsLen5,
   commonWordsLen6,
@@ -29,6 +30,7 @@ function removeWordThatMatches(pattern, wordList) {
 export function generateGrid({ gridSize, minLetters }) {
   const minWordLength = 4;
   let wordList = shuffleArray([
+    ...commonWordsLen3,
     ...commonWordsLen4,
     ...commonWordsLen5,
     ...commonWordsLen6,
