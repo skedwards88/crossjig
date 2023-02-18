@@ -50,6 +50,7 @@ button {
 }
 
 #pool::-webkit-scrollbar {
+  -webkit-appearance: none;
   height: 1vh;
   background-color: lightgray;
   border-radius: 5px;
@@ -58,6 +59,10 @@ button {
 #pool::-webkit-scrollbar-thumb {
   background: rgb(127, 125, 125);
   border-radius: 5px;
+}
+
+#pool {
+  -webkit-overflow-scrolling: auto;
 }
 
 /* Slider setting styling */
