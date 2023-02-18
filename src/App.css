@@ -49,6 +49,17 @@ button {
   padding: 1px 6px;
 }
 
+#pool::-webkit-scrollbar {
+  height: 1vh;
+  background-color: lightgray;
+  border-radius: 5px;
+}
+
+#pool::-webkit-scrollbar-thumb {
+  background: rgb(127, 125, 125);
+  border-radius: 5px;
+}
+
 /* Slider setting styling */
 input[type="range"] {
   appearance: none;
