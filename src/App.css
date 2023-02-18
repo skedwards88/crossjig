@@ -289,19 +289,19 @@ a {
 }
 
 #crossjig .borderTop {
-  border-top: 0.5px solid var(--light-color);
+  border-top: 1px solid var(--light-color);
 }
 
 #crossjig .borderLeft {
-  border-left: 0.5px solid var(--light-color);
+  border-left: 1px solid var(--light-color);
 }
 
 #crossjig .borderRight {
-  border-right: 0.5px solid var(--light-color);
+  border-right: 1px solid var(--light-color);
 }
 
 #crossjig .borderBottom {
-  border-bottom: 0.5px solid var(--light-color);
+  border-bottom: 1px solid var(--light-color);
 }
 
 #crossjig #pool {
