@@ -339,7 +339,7 @@ a {
   font-size: var(--default-font-size);
   width: fit-content;
   height: 100%;
-  margin: 3vmin;
+  padding: 3vmin;
   align-content: center;
 }
 
