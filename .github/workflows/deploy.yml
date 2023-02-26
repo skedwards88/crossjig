@@ -46,6 +46,12 @@ jobs:
       - name: Print packages
         run: npm list --depth=0
 
+      - name: Update word lists
+        run: npm update @skedwards88/word_lists
+
+      - name: Print packages
+        run: npm list --depth=0
+
       - name: Build
         run: npm run build
 
