@@ -43,6 +43,9 @@ jobs:
       - name: Install requirements
         run: npm install
 
+      - name: Print packages
+        run: npm list --depth=0
+
       - name: Build
         run: npm run build
 
