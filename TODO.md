@@ -1,7 +1,10 @@
 # TODO
 
+- Make a way to move chunks of connected pieces instead of the whole puzzle
+- Make a daily version
+- Add a tutorial video that pops up at the start. like palette
+
 - icons uniform
-- app store: in review now
 - package to import to wordgames
 - add tests
 
