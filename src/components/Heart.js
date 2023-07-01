@@ -15,7 +15,7 @@ export default function Heart({ setDisplay }) {
         {<hr></hr>}
         {`\n`}
         {`Want more games? Check `}
-        <a href="https://skedwards88.github.io/portfolio/">these</a>
+        <a href="https://skedwards88.github.io/">these</a>
         {` out. `}
         {`\n\n`}
         {<hr></hr>}
