@@ -18,7 +18,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "",
   "dependencies": {
     "@skedwards88/word_lists": "latest",
     "@skedwards88/word_logic": "^2.0.2",
