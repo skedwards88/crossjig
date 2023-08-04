@@ -2,13 +2,17 @@ import React from "react";
 import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
+import Stats from "./Stats";
+import ControlBar from "./ControlBar";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
 } from "../common/handleInstall";
 import Settings from "./Settings";
 import { gameInit } from "../logic/gameInit";
+import { dailyGameInit } from "../logic/dailyGameInit";
 import { gameReducer } from "../logic/gameReducer";
+import { gameSolvedQ } from "../logic/gameSolvedQ";
 
 export default function App() {
   const [display, setDisplay] = React.useState("game");
@@ -18,6 +22,11 @@ export default function App() {
     gameReducer,
     {},
     gameInit
+  );
+  const [dailyGameState, dailyDispatchGameState] = React.useReducer(
+    gameReducer,
+    {},
+    dailyGameInit
   );
 
   React.useEffect(() => {
@@ -49,19 +58,20 @@ export default function App() {
     window.localStorage.setItem("crossjigState", JSON.stringify(gameState));
   }, [gameState]);
 
-  switch (display) {
-    case "game":
-      return (
-        <Game
-          setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Game>
-      );
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "dailyCrossjigState",
+      JSON.stringify(dailyGameState)
+    );
+  }, [dailyGameState]);
 
+  const { gameIsSolved: dailyIsSolved } = dailyGameState.pieces.filter(
+    (piece) => piece.poolIndex >= 0
+  ).length
+    ? { gameIsSolved: false }
+    : gameSolvedQ(dailyGameState.pieces, dailyGameState.gridSize);
+
+  switch (display) {
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
 
@@ -77,16 +87,49 @@ export default function App() {
         />
       );
 
+    case "daily":
+      if (dailyIsSolved) {
+        return (
+          <Stats setDisplay={setDisplay} stats={dailyGameState.stats}></Stats>
+        );
+      } else {
+        return (
+          <div className="App" id="crossjig">
+            <div id="exitDaily">
+              <button
+                id="helpButton"
+                className="controlButton"
+                // disabled={!gameState.pool.length} todo
+                onClick={() => dailyDispatchGameState({ action: "getHint" })}
+              ></button>
+              <button onClick={() => setDisplay("game")}>
+                Exit daily challenge
+              </button>
+            </div>
+            <Game
+              dispatchGameState={dailyDispatchGameState}
+              gameState={dailyGameState}
+            ></Game>
+          </div>
+        );
+      }
     default:
       return (
-        <Game
-          setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Game>
+        <div className="App" id="crossjig">
+          <ControlBar
+            setDisplay={setDisplay}
+            setInstallPromptEvent={setInstallPromptEvent}
+            showInstallButton={showInstallButton}
+            installPromptEvent={installPromptEvent}
+            dispatchGameState={dispatchGameState}
+            gameState={gameState}
+            dailyIsSolved={dailyIsSolved}
+          ></ControlBar>
+          <Game
+            dispatchGameState={dispatchGameState}
+            gameState={gameState}
+          ></Game>
+        </div>
       );
   }
 }

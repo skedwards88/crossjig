@@ -27,15 +27,18 @@ function removeWordThatMatches(pattern, wordList) {
   }
 }
 
-export function generateGrid({ gridSize, minLetters }) {
+export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
   const minWordLength = 4;
-  let wordList = shuffleArray([
-    ...commonWordsLen3,
-    ...commonWordsLen4,
-    ...commonWordsLen5,
-    ...commonWordsLen6,
-    ...commonWordsLen7,
-  ]);
+  let wordList = shuffleArray(
+    [
+      ...commonWordsLen3,
+      ...commonWordsLen4,
+      ...commonWordsLen5,
+      ...commonWordsLen6,
+      ...commonWordsLen7,
+    ],
+    pseudoRandomGenerator
+  );
 
   let letterCount = 0;
   let grid;
@@ -54,9 +57,9 @@ export function generateGrid({ gridSize, minLetters }) {
     let startingWord;
     [startingWord, wordList] = removeWordThatMatches(".+", wordList);
     letterCount = startingWord.length;
-    const startingRowIndex = Math.floor(Math.random() * gridSize);
+    const startingRowIndex = Math.floor(pseudoRandomGenerator() * gridSize);
     const startingColIndex = Math.floor(
-      Math.random() * (gridSize - startingWord.length)
+      pseudoRandomGenerator() * (gridSize - startingWord.length)
     );
     for (
       let index = startingColIndex;

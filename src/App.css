@@ -162,7 +162,7 @@ input[type="range"]:focus::-ms-fill-upper {
   align-items: baseline;
 }
 
-#controls {
+#controls, #exitDaily {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -172,7 +172,7 @@ input[type="range"]:focus::-ms-fill-upper {
   border-bottom: 2px solid var(--light-color);
 }
 
-#controls > button {
+.controlButton {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -210,6 +210,19 @@ input[type="range"]:focus::-ms-fill-upper {
 
 #heartButton {
   background-image: url("./images/heart.svg");
+}
+
+#calendarButton {
+  background-image: url("./images/daily.svg"), radial-gradient(
+    circle,
+    rgba(239, 239, 239, 0.6) 30%,
+    rgba(55, 54, 71)
+    );
+    width: calc(var(--default-font-size) * 2);
+}
+
+#calendarButtonSolved {
+  background-image: url("./images/daily.svg");
 }
 
 #installButton {
@@ -270,12 +283,19 @@ a {
   display: grid;
   grid-template-areas:
     "controls"
-    "board"
-    "pool";
+    "game";
   grid-template-rows:
     auto
-    auto
     1fr;
+}
+
+#game {
+  display: grid;
+  grid-area: game;
+  grid-template-areas: 
+    "board"
+    "pool";
+  grid-template-rows: auto 1fr;
 }
 
 #crossjig #board {
@@ -421,28 +441,80 @@ a {
   flex-direction: column;
 }
 
+.stats {
+  font-size: calc(var(--default-font-size) * 0.75);
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#statsDistribution {
+  border-top: 3px solid var(--light-color);
+  border-bottom: 3px solid var(--light-color);
+}
+
+.statsBar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 90vw;
+  margin: 10px 0;
+}
+
+.statsBar>.statsDay {
+  align-self: center;
+  width: calc(var(--default-font-size) * 1);
+  padding: 0 2vw;
+}
+.statsBar>.statsWon {
+  background-color: var(--light-color);
+  height: calc(var(--default-font-size) * 1.2);
+}
+
+.statsNumber {
+  text-align: center;
+  margin: 1vh 0;
+}
+.statsNumber>.number {
+  font-size: calc(var(--default-font-size) * 1.5);
+}
+
+.statLabel {
+  padding: 2vw 0 0 2vw;
+}
+
 /* Landscape, small screen */
 
 @media (orientation: landscape) and (max-width: 800px) {
   #crossjig {
-    grid-template-areas: "board pool controls";
-    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "game controls";
+    grid-template-columns: 1fr auto;
     grid-template-rows: 1fr;
   }
 
-  #crossjig #board {
+  #game {
+    display: grid;
+    grid-area: game;
+    grid-template-areas: 
+      "board"
+      "pool";
+    grid-template-rows: auto 1fr;
+  }
+
+  #board {
     align-self: center;
     margin: 0 0 0 3vmin;
   }
 
-  #crossjig #pool {
+  #pool {
     flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
     height: 100vh;
   }
 
-  #crossjig .poolPiece {
+  .poolPiece {
     height: fit-content;
     width: 100%;
   }

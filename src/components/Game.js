@@ -2,16 +2,8 @@ import React from "react";
 import Pool from "./Pool";
 import Result from "./Result";
 import Board from "./Board";
-import ControlBar from "./ControlBar";
 
-function Game({
-  dispatchGameState,
-  gameState,
-  setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
-}) {
+function Game({ dispatchGameState, gameState }) {
   function dragToken({
     event,
     dragArea,
@@ -95,7 +87,7 @@ function Game({
   }
 
   return (
-    <div className="App" id="crossjig">
+    <div id="game">
       <Board
         pieces={gameState.pieces}
         handleBoardDragEnter={handleBoardDragEnter}
@@ -117,15 +109,6 @@ function Game({
           gameState={gameState}
         ></Result>
       )}
-
-      <ControlBar
-        setDisplay={setDisplay}
-        setInstallPromptEvent={setInstallPromptEvent}
-        showInstallButton={showInstallButton}
-        installPromptEvent={installPromptEvent}
-        dispatchGameState={dispatchGameState}
-        gameState={gameState}
-      ></ControlBar>
     </div>
   );
 }
