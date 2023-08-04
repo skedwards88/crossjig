@@ -1,13 +1,7 @@
 import React from "react";
 import GameOver from "./GameOver";
-import { gameSolvedQ } from "../logic/gameSolvedQ";
 
 export default function Result({ dropToken, dispatchGameState, gameState }) {
-  const pieces = gameState.pieces;
-  const gridSize = gameState.gridSize;
-
-  const { gameIsSolved, reason } = gameSolvedQ(pieces, gridSize);
-
   return (
     <div
       id="result"
@@ -19,13 +13,13 @@ export default function Result({ dropToken, dispatchGameState, gameState }) {
         event.preventDefault();
       }}
     >
-      {gameIsSolved ? (
+      {gameState.gameIsSolved ? (
         <GameOver
           dispatchGameState={dispatchGameState}
           gameState={gameState}
         ></GameOver>
       ) : (
-        reason
+        gameState.gameIsSolvedReason
       )}
     </div>
   );

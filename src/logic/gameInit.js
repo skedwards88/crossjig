@@ -41,6 +41,9 @@ export function gameInit({ numLetters, useSaved = true, isDaily = false }) {
     savedState.pieces &&
     savedState.gridSize &&
     savedState.numLetters &&
+    savedState.allPiecesAreUsed != undefined &&
+    savedState.gameIsSolved != undefined &&
+    savedState.gameIsSolvedReason &&
     savedState.stats
   ) {
     return savedState;
@@ -94,6 +97,7 @@ export function gameInit({ numLetters, useSaved = true, isDaily = false }) {
     maxShiftDown: maxShiftDown,
     stats: stats,
     isDaily: isDaily,
+    allPiecesAreUsed: false,
     gameIsSolved: false,
     gameIsSolvedReason: "",
   };

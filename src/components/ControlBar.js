@@ -25,7 +25,7 @@ function ControlBar({
       <button
         id="helpButton"
         className="controlButton"
-        // disabled={!gameState.pool.length} todo
+        disabled={gameState.gameIsSolved}
         onClick={() => dispatchGameState({ action: "getHint" })}
       ></button>
       <button

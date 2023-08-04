@@ -1,5 +1,6 @@
 import { gameInit } from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
+import {gameSolvedQ} from "./gameSolvedQ";
 
 function giveHint(currentGameState) {
   const pieces = JSON.parse(JSON.stringify(currentGameState.pieces));
@@ -103,15 +104,47 @@ function giveHint(currentGameState) {
   return realignedPieces;
 }
 
+function getCompletionData(currentGameState) {
+  const allPiecesAreUsed = currentGameState.pieces.filter((piece) => piece.poolIndex >= 0).length === 0
+
+  if (!allPiecesAreUsed) {
+    return {
+      allPiecesAreUsed: false,
+      gameIsSolved: false,
+      gameIsSolvedReason: "",
+    }
+  }
+
+  const { gameIsSolved, reason: gameIsSolvedReason } = gameSolvedQ(currentGameState.pieces, currentGameState.gridSize);
+
+  if (gameIsSolved && !currentGameState.gameIsSolved) {
+    sendAnalytics("won");
+  }
+
+  return {
+    allPiecesAreUsed: true,
+    gameIsSolved: gameIsSolved,
+    gameIsSolvedReason: gameIsSolvedReason,
+  }
+}
+
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
     return gameInit({ ...payload, useSaved: false });
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
     const newPieces = giveHint(currentGameState);
+
+    const { allPiecesAreUsed, gameIsSolved, gameIsSolvedReason } = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    })
     return {
       ...currentGameState,
       pieces: newPieces,
+      allPiecesAreUsed,
+      gameIsSolved,
+      gameIsSolvedReason,
     };
   } else if (payload.action === "startDrag") {
     // store drag data in the game state
@@ -193,10 +226,19 @@ export function gameReducer(currentGameState, payload) {
     newPieces[dragData.pieceID].boardTop = undefined;
     newPieces[dragData.pieceID].boardLeft = undefined;
 
+    // still update the completion data in case the game was complete and now is not due to dragging from board to pool
+    const { allPiecesAreUsed, gameIsSolved, gameIsSolvedReason } = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    })
+
     return {
       ...currentGameState,
       pieces: newPieces,
       dragData: payload.action === "dropOnPool" ? {} : dragData,
+      allPiecesAreUsed,
+      gameIsSolved,
+      gameIsSolvedReason,
     };
   }
 
@@ -303,10 +345,17 @@ export function gameReducer(currentGameState, payload) {
     if (payload.action === "dropOnBoard") {
       newPieces[dragData.pieceID].poolIndex = undefined;
     }
+    const { allPiecesAreUsed, gameIsSolved, gameIsSolvedReason } = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    })
     return {
       ...currentGameState,
       pieces: newPieces,
       dragData: payload.action === "dropOnBoard" ? {} : dragData,
+      allPiecesAreUsed,
+      gameIsSolved,
+      gameIsSolvedReason,
     };
   } else {
     console.log(`unknown action: ${payload.action}`);

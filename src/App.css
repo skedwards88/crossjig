@@ -49,6 +49,10 @@ button {
   padding: 1px 6px;
 }
 
+button:disabled {
+  opacity: 50%;
+}
+
 #pool::-webkit-scrollbar {
   -webkit-appearance: none;
   height: 1vh;

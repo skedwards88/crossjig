@@ -11,7 +11,6 @@ import {
 import Settings from "./Settings";
 import { gameInit } from "../logic/gameInit";
 import { gameReducer } from "../logic/gameReducer";
-import { gameSolvedQ } from "../logic/gameSolvedQ";
 
 export default function App() {
   const [display, setDisplay] = React.useState("game");
@@ -64,12 +63,6 @@ export default function App() {
     );
   }, [dailyGameState]);
 
-  const { gameIsSolved: dailyIsSolved } = dailyGameState.pieces.filter(
-    (piece) => piece.poolIndex >= 0
-  ).length
-    ? { gameIsSolved: false }
-    : gameSolvedQ(dailyGameState.pieces, dailyGameState.gridSize);
-
   switch (display) {
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
@@ -87,7 +80,7 @@ export default function App() {
       );
 
     case "daily":
-      if (dailyIsSolved) {
+      if (dailyGameState.gameIsSolved) {
         return (
           <Stats setDisplay={setDisplay} stats={dailyGameState.stats}></Stats>
         );
@@ -98,7 +91,7 @@ export default function App() {
               <button
                 id="helpButton"
                 className="controlButton"
-                // disabled={!gameState.pool.length} todo
+                disabled={dailyGameState.gameIsSolved}
                 onClick={() => dailyDispatchGameState({ action: "getHint" })}
               ></button>
               <button onClick={() => setDisplay("game")}>
@@ -122,7 +115,7 @@ export default function App() {
             installPromptEvent={installPromptEvent}
             dispatchGameState={dispatchGameState}
             gameState={gameState}
-            dailyIsSolved={dailyIsSolved}
+            dailyIsSolved={dailyGameState.gameIsSolved}
           ></ControlBar>
           <Game
             dispatchGameState={dispatchGameState}

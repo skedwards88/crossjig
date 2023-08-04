@@ -95,19 +95,20 @@ function Game({ dispatchGameState, gameState }) {
         gridSize={gameState.gridSize}
         dragToken={dragToken}
       ></Board>
-      {gameState.pieces.filter((piece) => piece.poolIndex >= 0).length ? (
+      {gameState.allPiecesAreUsed ? (
+        <Result
+        dropToken={dropOnPool}
+        dispatchGameState={dispatchGameState}
+        gameState={gameState}
+      ></Result>
+      ) : (
         <Pool
           pieces={gameState.pieces}
           dropOnPool={dropOnPool}
           handlePoolDragEnter={handlePoolDragEnter}
           dragToken={dragToken}
         ></Pool>
-      ) : (
-        <Result
-          dropToken={dropOnPool}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Result>
+        
       )}
     </div>
   );
