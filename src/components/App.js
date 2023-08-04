@@ -10,7 +10,6 @@ import {
 } from "../common/handleInstall";
 import Settings from "./Settings";
 import { gameInit } from "../logic/gameInit";
-import { dailyGameInit } from "../logic/dailyGameInit";
 import { gameReducer } from "../logic/gameReducer";
 import { gameSolvedQ } from "../logic/gameSolvedQ";
 
@@ -25,8 +24,8 @@ export default function App() {
   );
   const [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
-    {},
-    dailyGameInit
+    {isDaily: true},
+    gameInit
   );
 
   React.useEffect(() => {
