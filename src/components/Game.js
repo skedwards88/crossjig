@@ -2,16 +2,8 @@ import React from "react";
 import Pool from "./Pool";
 import Result from "./Result";
 import Board from "./Board";
-import ControlBar from "./ControlBar";
 
-function Game({
-  dispatchGameState,
-  gameState,
-  setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
-}) {
+function Game({ dispatchGameState, gameState, setDisplay }) {
   function dragToken({
     event,
     dragArea,
@@ -95,7 +87,7 @@ function Game({
   }
 
   return (
-    <div className="App" id="crossjig">
+    <div id="game">
       <Board
         pieces={gameState.pieces}
         handleBoardDragEnter={handleBoardDragEnter}
@@ -103,29 +95,21 @@ function Game({
         gridSize={gameState.gridSize}
         dragToken={dragToken}
       ></Board>
-      {gameState.pieces.filter((piece) => piece.poolIndex >= 0).length ? (
+      {gameState.allPiecesAreUsed ? (
+        <Result
+          dropToken={dropOnPool}
+          dispatchGameState={dispatchGameState}
+          gameState={gameState}
+          setDisplay={setDisplay}
+        ></Result>
+      ) : (
         <Pool
           pieces={gameState.pieces}
           dropOnPool={dropOnPool}
           handlePoolDragEnter={handlePoolDragEnter}
           dragToken={dragToken}
         ></Pool>
-      ) : (
-        <Result
-          dropToken={dropOnPool}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Result>
       )}
-
-      <ControlBar
-        setDisplay={setDisplay}
-        setInstallPromptEvent={setInstallPromptEvent}
-        showInstallButton={showInstallButton}
-        installPromptEvent={installPromptEvent}
-        dispatchGameState={dispatchGameState}
-        gameState={gameState}
-      ></ControlBar>
     </div>
   );
 }

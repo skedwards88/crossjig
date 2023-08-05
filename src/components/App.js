@@ -2,6 +2,8 @@ import React from "react";
 import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
+import Stats from "./Stats";
+import ControlBar from "./ControlBar";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -17,6 +19,11 @@ export default function App() {
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
     {},
+    gameInit
+  );
+  const [dailyGameState, dailyDispatchGameState] = React.useReducer(
+    gameReducer,
+    { isDaily: true },
     gameInit
   );
 
@@ -49,19 +56,14 @@ export default function App() {
     window.localStorage.setItem("crossjigState", JSON.stringify(gameState));
   }, [gameState]);
 
-  switch (display) {
-    case "game":
-      return (
-        <Game
-          setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Game>
-      );
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "dailyCrossjigState",
+      JSON.stringify(dailyGameState)
+    );
+  }, [dailyGameState]);
 
+  switch (display) {
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
 
@@ -77,16 +79,50 @@ export default function App() {
         />
       );
 
+    case "daily":
+      return (
+        <div className="App" id="crossjig">
+          <div id="exitDaily">
+            <button
+              id="helpButton"
+              className="controlButton"
+              disabled={dailyGameState.gameIsSolved}
+              onClick={() => dailyDispatchGameState({ action: "getHint" })}
+            ></button>
+            <button onClick={() => setDisplay("game")}>
+              Exit daily challenge
+            </button>
+          </div>
+          <Game
+            dispatchGameState={dailyDispatchGameState}
+            gameState={dailyGameState}
+            setDisplay={setDisplay}
+          ></Game>
+        </div>
+      );
+
+    case "dailyStats":
+      return (
+        <Stats setDisplay={setDisplay} stats={dailyGameState.stats}></Stats>
+      );
+
     default:
       return (
-        <Game
-          setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
-          dispatchGameState={dispatchGameState}
-          gameState={gameState}
-        ></Game>
+        <div className="App" id="crossjig">
+          <ControlBar
+            setDisplay={setDisplay}
+            setInstallPromptEvent={setInstallPromptEvent}
+            showInstallButton={showInstallButton}
+            installPromptEvent={installPromptEvent}
+            dispatchGameState={dispatchGameState}
+            gameState={gameState}
+            dailyIsSolved={dailyGameState.gameIsSolved}
+          ></ControlBar>
+          <Game
+            dispatchGameState={dispatchGameState}
+            gameState={gameState}
+          ></Game>
+        </div>
       );
   }
 }

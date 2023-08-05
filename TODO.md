@@ -1,7 +1,7 @@
 # TODO
 
+- way to share a seed and build game from seed query?
 - Make a way to move chunks of connected pieces instead of the whole puzzle
-- Make a daily version
 - Add a tutorial video that pops up at the start. like palette
 
 - icons uniform

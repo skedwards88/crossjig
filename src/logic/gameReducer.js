@@ -1,5 +1,6 @@
 import { gameInit } from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
+import { gameSolvedQ } from "./gameSolvedQ";
 
 function giveHint(currentGameState) {
   const pieces = JSON.parse(JSON.stringify(currentGameState.pieces));
@@ -103,15 +104,133 @@ function giveHint(currentGameState) {
   return realignedPieces;
 }
 
+function isYesterday(timestamp) {
+  return isNDaysAgo(timestamp, 1);
+}
+
+function isToday(timestamp) {
+  return isNDaysAgo(timestamp, 0);
+}
+
+function isNDaysAgo(timestamp, numberOfDaysAgo) {
+  const milliSecPerDay = 24 * 60 * 60 * 1000;
+  const previousDay = new Date(Date.now() - numberOfDaysAgo * milliSecPerDay);
+  const dateFromTimestamp = new Date(timestamp);
+
+  return (
+    dateFromTimestamp.getDate() === previousDay.getDate() &&
+    dateFromTimestamp.getMonth() === previousDay.getMonth() &&
+    dateFromTimestamp.getFullYear() === previousDay.getFullYear()
+  );
+}
+
+function getNewDailyStats(currentGameState) {
+  const today = new Date();
+  const lastDateWon = currentGameState.stats.lastDateWon;
+  const wonYesterday = isYesterday(lastDateWon);
+
+  // exit early if we already recorded stats for today
+  const wonToday = isToday(lastDateWon);
+  if (wonToday) {
+    return;
+  }
+
+  // If won yesterday, add 1 to the streak
+  // Otherwise, reset the streak to 1
+  const newStreak = wonYesterday ? currentGameState.stats.streak + 1 : 1;
+
+  const newMaxStreak = Math.max(newStreak, currentGameState.stats.maxStreak);
+
+  // If didn't use any hints today, increment number of wins in the streak without hints
+  const hintsUsedToday = currentGameState.hintTally;
+  const prevNumHintlessInStreak = wonYesterday
+    ? currentGameState.stats.numHintlessInStreak
+    : 0;
+  const newNumHintlessInStreak = hintsUsedToday
+    ? prevNumHintlessInStreak
+    : prevNumHintlessInStreak + 1;
+
+  // Tally the number of hints used in the streak
+  const prevNumHintsInStreak = wonYesterday
+    ? currentGameState.stats.numHintsInStreak
+    : 0;
+  const newNumHintsInStreak = prevNumHintsInStreak + hintsUsedToday;
+
+  // Update the number of games won for this weekday
+  const dayNumber = today.getDay();
+
+  const numWeekdayWon = currentGameState.stats.days[dayNumber].won + 1;
+
+  const numWeekdayWonWithoutHints = hintsUsedToday
+    ? currentGameState.stats.days[dayNumber].noHints
+    : currentGameState.stats.days[dayNumber].noHints + 1;
+
+  const newDays = {
+    ...currentGameState.stats.days,
+    [dayNumber]: { won: numWeekdayWon, noHints: numWeekdayWonWithoutHints },
+  };
+
+  return {
+    ...currentGameState.stats,
+    lastDateWon: today,
+    streak: newStreak,
+    maxStreak: newMaxStreak,
+    numHintlessInStreak: newNumHintlessInStreak,
+    numHintsInStreak: newNumHintsInStreak,
+    days: newDays,
+  };
+}
+
+function getCompletionData(currentGameState) {
+  const allPiecesAreUsed =
+    currentGameState.pieces.filter((piece) => piece.poolIndex >= 0).length ===
+    0;
+
+  if (!allPiecesAreUsed) {
+    return {
+      allPiecesAreUsed: false,
+      gameIsSolved: false,
+      gameIsSolvedReason: "",
+    };
+  }
+
+  const { gameIsSolved, reason: gameIsSolvedReason } = gameSolvedQ(
+    currentGameState.pieces,
+    currentGameState.gridSize
+  );
+
+  let newStats;
+  if (gameIsSolved && !currentGameState.gameIsSolved) {
+    sendAnalytics("won");
+    if (currentGameState.isDaily) {
+      newStats = getNewDailyStats(currentGameState);
+    }
+  }
+
+  return {
+    allPiecesAreUsed: true,
+    gameIsSolved: gameIsSolved,
+    gameIsSolvedReason: gameIsSolvedReason,
+    ...(newStats && { stats: newStats }),
+  };
+}
+
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
     return gameInit({ ...payload, useSaved: false });
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
     const newPieces = giveHint(currentGameState);
+
+    const completionData = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    });
     return {
       ...currentGameState,
       pieces: newPieces,
+      hintTally: currentGameState.hintTally + 1,
+      ...completionData,
     };
   } else if (payload.action === "startDrag") {
     // store drag data in the game state
@@ -193,10 +312,17 @@ export function gameReducer(currentGameState, payload) {
     newPieces[dragData.pieceID].boardTop = undefined;
     newPieces[dragData.pieceID].boardLeft = undefined;
 
+    // still update the completion data in case the game was complete and now is not due to dragging from board to pool
+    const completionData = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    });
+
     return {
       ...currentGameState,
       pieces: newPieces,
       dragData: payload.action === "dropOnPool" ? {} : dragData,
+      ...completionData,
     };
   }
 
@@ -303,11 +429,38 @@ export function gameReducer(currentGameState, payload) {
     if (payload.action === "dropOnBoard") {
       newPieces[dragData.pieceID].poolIndex = undefined;
     }
+    const completionData = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    });
     return {
       ...currentGameState,
       pieces: newPieces,
       dragData: payload.action === "dropOnBoard" ? {} : dragData,
+      ...completionData,
     };
+  } else if (payload.action === "clearStreakIfNeeded") {
+    const lastDateWon = currentGameState.stats.lastDateWon;
+    const wonYesterday = isYesterday(lastDateWon);
+    const wonToday = isToday(lastDateWon);
+
+    if (wonYesterday || wonToday) {
+      // if won in the past day, don't need to clear the streak
+      return currentGameState;
+    } else {
+      // otherwise clear the streak but leave other stats intact
+      const newStats = {
+        ...currentGameState.stats,
+        streak: 0,
+        numHintlessInStreak: 0,
+        numHintsInStreak: 0,
+      };
+
+      return {
+        ...currentGameState,
+        stats: newStats,
+      };
+    }
   } else {
     console.log(`unknown action: ${payload.action}`);
     return { ...currentGameState };
