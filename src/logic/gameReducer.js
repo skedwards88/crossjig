@@ -129,6 +129,12 @@ function getNewDailyStats(currentGameState) {
   const lastDateWon = currentGameState.stats.lastDateWon;
   const wonYesterday = isYesterday(lastDateWon);
 
+  // exit early if we already recorded stats for today
+  const wonToday = isToday(lastDateWon);
+  if (wonToday) {
+    return;
+  }
+
   // If won yesterday, add 1 to the streak
   // Otherwise, reset the streak to 1
   const newStreak = wonYesterday ? currentGameState.stats.streak + 1 : 1;
