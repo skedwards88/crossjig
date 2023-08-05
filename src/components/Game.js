@@ -3,7 +3,7 @@ import Pool from "./Pool";
 import Result from "./Result";
 import Board from "./Board";
 
-function Game({ dispatchGameState, gameState }) {
+function Game({ dispatchGameState, gameState, setDisplay }) {
   function dragToken({
     event,
     dragArea,
@@ -97,10 +97,11 @@ function Game({ dispatchGameState, gameState }) {
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result
-        dropToken={dropOnPool}
-        dispatchGameState={dispatchGameState}
-        gameState={gameState}
-      ></Result>
+          dropToken={dropOnPool}
+          dispatchGameState={dispatchGameState}
+          gameState={gameState}
+          setDisplay={setDisplay}
+        ></Result>
       ) : (
         <Pool
           pieces={gameState.pieces}
@@ -108,7 +109,6 @@ function Game({ dispatchGameState, gameState }) {
           handlePoolDragEnter={handlePoolDragEnter}
           dragToken={dragToken}
         ></Pool>
-        
       )}
     </div>
   );

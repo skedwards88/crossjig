@@ -98,7 +98,7 @@ export default function Stats({ stats, setDisplay }) {
       <button
         className="close"
         id="statsClose"
-        onClick={() => setDisplay("game")}
+        onClick={() => setDisplay("daily")}
       >
         CLOSE
       </button>

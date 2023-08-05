@@ -23,7 +23,7 @@ export default function App() {
   );
   const [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
-    {isDaily: true},
+    { isDaily: true },
     gameInit
   );
 
@@ -80,31 +80,32 @@ export default function App() {
       );
 
     case "daily":
-      if (dailyGameState.gameIsSolved) {
-        return (
-          <Stats setDisplay={setDisplay} stats={dailyGameState.stats}></Stats>
-        );
-      } else {
-        return (
-          <div className="App" id="crossjig">
-            <div id="exitDaily">
-              <button
-                id="helpButton"
-                className="controlButton"
-                disabled={dailyGameState.gameIsSolved}
-                onClick={() => dailyDispatchGameState({ action: "getHint" })}
-              ></button>
-              <button onClick={() => setDisplay("game")}>
-                Exit daily challenge
-              </button>
-            </div>
-            <Game
-              dispatchGameState={dailyDispatchGameState}
-              gameState={dailyGameState}
-            ></Game>
+      return (
+        <div className="App" id="crossjig">
+          <div id="exitDaily">
+            <button
+              id="helpButton"
+              className="controlButton"
+              disabled={dailyGameState.gameIsSolved}
+              onClick={() => dailyDispatchGameState({ action: "getHint" })}
+            ></button>
+            <button onClick={() => setDisplay("game")}>
+              Exit daily challenge
+            </button>
           </div>
-        );
-      }
+          <Game
+            dispatchGameState={dailyDispatchGameState}
+            gameState={dailyGameState}
+            setDisplay={setDisplay}
+          ></Game>
+        </div>
+      );
+
+    case "dailyStats":
+      return (
+        <Stats setDisplay={setDisplay} stats={dailyGameState.stats}></Stats>
+      );
+
     default:
       return (
         <div className="App" id="crossjig">

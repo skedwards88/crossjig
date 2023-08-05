@@ -1,7 +1,12 @@
 import React from "react";
 import GameOver from "./GameOver";
 
-export default function Result({ dropToken, dispatchGameState, gameState }) {
+export default function Result({
+  dropToken,
+  dispatchGameState,
+  gameState,
+  setDisplay,
+}) {
   return (
     <div
       id="result"
@@ -17,6 +22,7 @@ export default function Result({ dropToken, dispatchGameState, gameState }) {
         <GameOver
           dispatchGameState={dispatchGameState}
           gameState={gameState}
+          setDisplay={setDisplay}
         ></GameOver>
       ) : (
         gameState.gameIsSolvedReason
