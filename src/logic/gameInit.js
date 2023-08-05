@@ -43,8 +43,10 @@ export function gameInit({ numLetters, useSaved = true, isDaily = false }) {
     savedState.numLetters &&
     savedState.allPiecesAreUsed != undefined &&
     savedState.gameIsSolved != undefined &&
-    savedState.gameIsSolvedReason &&
-    savedState.stats
+    savedState.gameIsSolvedReason != undefined &&
+    savedState.stats && 
+    savedState.hintTally != undefined &&
+    savedState.dragData
   ) {
     return savedState;
   }
@@ -100,5 +102,7 @@ export function gameInit({ numLetters, useSaved = true, isDaily = false }) {
     allPiecesAreUsed: false,
     gameIsSolved: false,
     gameIsSolvedReason: "",
+    hintTally: 0,
+    dragData: {},
   };
 }
