@@ -45,6 +45,7 @@ export default function Board({
   handleBoardDrop,
   gridSize,
   dragToken,
+  gameIsSolved,
 }) {
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
@@ -60,7 +61,7 @@ export default function Board({
         <div
           className={
             isLetter
-              ? `boardLetter${
+              ? `boardLetter ${gameIsSolved ? " filled" : ""}${
                   grid[rowIndex][colIndex].borderTop ? " borderTop" : ""
                 }${
                   grid[rowIndex][colIndex].borderBottom ? " borderBottom" : ""

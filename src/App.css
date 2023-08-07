@@ -324,6 +324,12 @@ a {
   font-size: var(--default-font-size);
 }
 
+#crossjig .boardLetter.filled {
+ background-color: var(--light-color);
+ color: var(--dark-color);
+ transition: background-color 3s;
+}
+
 #crossjig .boardLetter.overlapping {
   color: rgb(226 88 88);
 }

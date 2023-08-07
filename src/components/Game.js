@@ -94,6 +94,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
         handleBoardDrop={handleBoardDrop}
         gridSize={gameState.gridSize}
         dragToken={dragToken}
+        gameIsSolved={gameState.gameIsSolved}
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result
