@@ -217,7 +217,7 @@ function getCompletionData(currentGameState) {
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({ ...payload, useSaved: false });
+    return gameInit({ ...payload, seed: undefined, useSaved: false });
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
     const newPieces = giveHint(currentGameState);

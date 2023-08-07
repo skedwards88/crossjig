@@ -13,12 +13,17 @@ import { gameInit } from "../logic/gameInit";
 import { gameReducer } from "../logic/gameReducer";
 
 export default function App() {
+  const searchParams = new URLSearchParams(document.location.search)
+  const seedQuery = searchParams.get('puzzle');
+
   const [display, setDisplay] = React.useState("game");
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
-    {},
+    {
+      seed: seedQuery
+    },
     gameInit
   );
   const [dailyGameState, dailyDispatchGameState] = React.useReducer(
@@ -89,7 +94,7 @@ export default function App() {
               disabled={dailyGameState.gameIsSolved}
               onClick={() => dailyDispatchGameState({ action: "getHint" })}
             ></button>
-            <button onClick={() => setDisplay("game")}>
+            <button id="exitDailyButton" onClick={() => setDisplay("game")}>
               Exit daily challenge
             </button>
           </div>

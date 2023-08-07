@@ -1,12 +1,12 @@
 import React from "react";
 import sendAnalytics from "../common/sendAnalytics";
 
-function handleShare(text) {
+function handleShare({text, fullUrl}) {
   navigator
     .share({
       title: "Crossjig",
       text: `${text}\n\n`,
-      url: "https://crossjig.com/",
+      url: fullUrl,
     })
     .then(() => console.log("Successful share"))
     .catch((error) => {
@@ -17,18 +17,21 @@ function handleShare(text) {
   sendAnalytics("share");
 }
 
-function handleCopy(text) {
+function handleCopy({text, fullUrl}) {
   try {
-    navigator.clipboard.writeText(`${text}\n\nhttps://crossjig.com/`);
+    navigator.clipboard.writeText(`${text}\n\n${fullUrl}`);
   } catch (error) {
     console.log(error);
   }
 }
 
-export default function Share({ text }) {
+export default function Share({ text, seed }) {
+  const url = "https://crossjig.com/";
+  const fullUrl = seed ? `${url}?puzzle=${seed}` : url
+
   if (navigator.canShare) {
-    return <button onClick={() => handleShare(text)}>Share</button>;
+    return <button onClick={() => handleShare({text, fullUrl})}>Share</button>;
   } else {
-    return <button onClick={() => handleCopy(text)}>Copy sharing link</button>;
+    return <button onClick={() => handleCopy({text, fullUrl})}>Copy sharing link</button>;
   }
 }

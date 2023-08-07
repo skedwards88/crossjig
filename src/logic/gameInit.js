@@ -1,7 +1,12 @@
 import sendAnalytics from "../common/sendAnalytics";
 import { generatePuzzle } from "./generatePuzzle";
 
-function getSeed() {
+function getRandomSeed() {
+  const currentDate = new Date();
+  return currentDate.getTime();
+}
+
+function getDailySeed() {
   // Get a seed based on today's date 'YYYYMMDD'
   const currentDate = new Date();
   const seed = `${currentDate.getFullYear()}${(currentDate.getMonth() + 1)
@@ -27,9 +32,16 @@ function getNumLettersForDay() {
   return wordLengths[today];
 }
 
-export function gameInit({ numLetters, useSaved = true, isDaily = false }) {
+export function gameInit({ numLetters, useSaved = true, isDaily = false, seed }) {
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
-  const seed = isDaily ? getSeed() : undefined;
+
+  if (isDaily) {
+    seed = getDailySeed()
+  }
+
+  if (!seed) {
+    seed = getRandomSeed()
+  }
 
   const savedState = useSaved
     ? JSON.parse(localStorage.getItem(savedStateName))
