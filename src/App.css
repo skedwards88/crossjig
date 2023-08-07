@@ -302,7 +302,7 @@ a {
   grid-template-rows: auto 1fr;
 }
 
-#crossjig #board {
+#board {
   grid-area: board;
   display: grid;
   touch-action: none;
@@ -317,40 +317,40 @@ a {
   margin: 3vmin 0 0;
 }
 
-#crossjig .boardLetter {
+.boardLetter {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);
 }
 
-#crossjig .boardLetter.filled {
+.boardLetter.filled {
  background-color: var(--light-color);
  color: var(--dark-color);
  transition: background-color 3s;
 }
 
-#crossjig .boardLetter.overlapping {
+.boardLetter.overlapping {
   color: rgb(226 88 88);
 }
 
-#crossjig .borderTop {
+.borderTop {
   border-top: 1px solid var(--light-color);
 }
 
-#crossjig .borderLeft {
+.borderLeft {
   border-left: 1px solid var(--light-color);
 }
 
-#crossjig .borderRight {
+.borderRight {
   border-right: 1px solid var(--light-color);
 }
 
-#crossjig .borderBottom {
+.borderBottom {
   border-bottom: 1px solid var(--light-color);
 }
 
-#crossjig #pool {
+#pool {
   grid-area: pool;
   width: 100%;
   height: 100%;
@@ -361,7 +361,7 @@ a {
   min-height: calc(3 * var(--box-size));
 }
 
-#crossjig .poolPiece {
+.poolPiece {
   display: grid;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
   grid-template-rows: repeat(var(--numRows), var(--box-size));
@@ -373,21 +373,21 @@ a {
   align-content: center;
 }
 
-#crossjig .poolLetter {
+.poolLetter {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);
 }
 
-#crossjig #result {
+#result {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
-#crossjig .dragging {
+.dragging {
   opacity: 0.5;
 }
 
