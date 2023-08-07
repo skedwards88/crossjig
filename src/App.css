@@ -510,6 +510,7 @@ a {
     grid-template-areas: 
       "board pool";
     grid-template-columns: auto 1fr;
+    align-self: center;
   }
 
   #board {
@@ -525,12 +526,19 @@ a {
     height: fit-content;
   }
 
-  #controls {
+  #controls, #exitDaily {
     flex-direction: column;
     border: solid var(--light-color);
     border-width: 0 2px 0 0;
     align-items: center;
     height: 100%;
+    width: calc(var(--box-size) * 1.5);
+  }
+
+  #exitDailyButton {
+    transform: rotate(270deg);
+    width: fit-content;
+    white-space: nowrap;
   }
 }
 
