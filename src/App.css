@@ -497,7 +497,7 @@ a {
 
 /* Landscape, small screen */
 
-@media (orientation: landscape) and (max-width: 800px) {
+@media (orientation: landscape) {
   #crossjig {
     grid-template-areas: "controls game";
     grid-template-columns: auto 1fr;
