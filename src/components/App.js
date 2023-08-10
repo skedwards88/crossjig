@@ -13,16 +13,20 @@ import { gameInit } from "../logic/gameInit";
 import { gameReducer } from "../logic/gameReducer";
 
 export default function App() {
-  const searchParams = new URLSearchParams(document.location.search)
-  const seedQuery = searchParams.get('puzzle');
+  const searchParams = new URLSearchParams(document.location.search);
+  const seedQuery = searchParams.get("puzzle");
 
-  const [display, setDisplay] = React.useState("game");
+  const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
+  const [display, setDisplay] = React.useState(
+    savedDisplay === "game" || savedDisplay === "daily" ? savedDisplay : "game"
+  );
+
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
     {
-      seed: seedQuery
+      seed: seedQuery,
     },
     gameInit
   );
@@ -56,6 +60,10 @@ export default function App() {
     );
     return () => window.removeEventListener("appinstalled", handleAppInstalled);
   }, []);
+
+  React.useEffect(() => {
+    window.localStorage.setItem("crossjigDisplay", JSON.stringify(display));
+  }, [display]);
 
   React.useEffect(() => {
     window.localStorage.setItem("crossjigState", JSON.stringify(gameState));
