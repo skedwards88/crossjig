@@ -6,7 +6,7 @@ function getRandomSeed() {
   return currentDate.getTime();
 }
 
-function getDailySeed() {
+export function getDailySeed() {
   // Get a seed based on today's date 'YYYYMMDD'
   const currentDate = new Date();
   const seed = `${currentDate.getFullYear()}${(currentDate.getMonth() + 1)
@@ -32,15 +32,20 @@ function getNumLettersForDay() {
   return wordLengths[today];
 }
 
-export function gameInit({ numLetters, useSaved = true, isDaily = false, seed }) {
+export function gameInit({
+  numLetters,
+  useSaved = true,
+  isDaily = false,
+  seed,
+}) {
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
 
   if (isDaily) {
-    seed = getDailySeed()
+    seed = getDailySeed();
   }
 
   if (!seed) {
-    seed = getRandomSeed()
+    seed = getRandomSeed();
   }
 
   const savedState = useSaved
@@ -56,7 +61,7 @@ export function gameInit({ numLetters, useSaved = true, isDaily = false, seed })
     savedState.allPiecesAreUsed != undefined &&
     savedState.gameIsSolved != undefined &&
     savedState.gameIsSolvedReason != undefined &&
-    savedState.stats && 
+    savedState.stats &&
     savedState.hintTally != undefined &&
     savedState.dragData
   ) {

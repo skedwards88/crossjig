@@ -9,7 +9,7 @@ import {
   handleBeforeInstallPrompt,
 } from "../common/handleInstall";
 import Settings from "./Settings";
-import { gameInit } from "../logic/gameInit";
+import { gameInit, getDailySeed } from "../logic/gameInit";
 import { gameReducer } from "../logic/gameReducer";
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
     },
     gameInit
   );
-  const [dailyGameState, dailyDispatchGameState] = React.useReducer(
+  let [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
     { isDaily: true },
     gameInit
@@ -93,6 +93,10 @@ export default function App() {
       );
 
     case "daily":
+      // force reinitialize the daily state if the day has changed
+      if (dailyGameState.seed != getDailySeed()) {
+        dailyGameState = gameInit({ isDaily: true, useSaved: false });
+      }
       return (
         <div className="App" id="crossjig">
           <div id="exitDaily">

@@ -1,7 +1,5 @@
 # TODO
 
-- retain daily vs game view
-- force daily init if expired
 - make way to drag group
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
