@@ -2,6 +2,89 @@ import { gameInit } from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
 import { gameSolvedQ } from "./gameSolvedQ";
 
+function getPieceIDGrid(pieces, gridSize) {
+  // at each space in the grid, find the ID of the piece at that space, if any
+
+  let grid = JSON.parse(
+    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill([])))
+  );
+
+  for (let index = 0; index < pieces.length; index++) {
+    if (
+      pieces[index].boardTop === undefined &&
+      pieces[index].boardLeft === undefined
+    ) {
+      continue;
+    }
+
+    const letters = pieces[index].letters;
+    const id = pieces[index].id;
+    let top = pieces[index].boardTop;
+    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
+      let left = pieces[index].boardLeft;
+      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
+        if (letters[rowIndex][colIndex]) {
+          // to account for overlapping pieces, use array if IDs instead of singleton ID
+          grid[top][left].push(id);
+        }
+        left += 1;
+      }
+      top += 1;
+    }
+  }
+  return grid;
+}
+
+function getConnectedPieceIDs({ pieces, gridSize, draggedPieceID }) {
+  // Find all pieces that touch a given piece on the board
+
+  const pieceIDGrid = getPieceIDGrid(pieces, gridSize);
+
+  let touchingIDs = new Set([draggedPieceID]);
+  let idsToCheck = [draggedPieceID];
+  while (idsToCheck.length) {
+    const idToCheck = idsToCheck.pop();
+    // For each grid entry, check top/bottom/left/right of grid spaces that contain the current ID
+    // If we find a surrounding ID that is not the current ID and we haven't already recorded the ID as touching
+    // add the new ID to the list of touching IDs and the list of IDs to check
+    for (let rowIndex = 0; rowIndex < pieceIDGrid.length; rowIndex++) {
+      for (
+        let colIndex = 0;
+        colIndex < pieceIDGrid[rowIndex].length;
+        colIndex++
+      ) {
+        if (pieceIDGrid[rowIndex][colIndex].includes(idToCheck)) {
+          const surroundingIndexes = [
+            [rowIndex - 1, colIndex],
+            [rowIndex + 1, colIndex],
+            [rowIndex, colIndex - 1],
+            [rowIndex, colIndex + 1],
+          ];
+          for (const [
+            surroundingRowIndex,
+            surroundingColIndex,
+          ] of surroundingIndexes) {
+            const neighboringIDs =
+              pieceIDGrid?.[surroundingRowIndex]?.[surroundingColIndex] || [];
+            if (neighboringIDs.length) {
+              neighboringIDs.forEach((neighboringID) => {
+                if (
+                  !touchingIDs.has(neighboringID) &&
+                  neighboringID != idToCheck
+                ) {
+                  touchingIDs.add(neighboringID);
+                  idsToCheck.push(neighboringID);
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+  return Array.from(touchingIDs);
+}
+
 function giveHint(currentGameState) {
   const pieces = JSON.parse(JSON.stringify(currentGameState.pieces));
   const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
@@ -232,6 +315,33 @@ export function gameReducer(currentGameState, payload) {
       hintTally: currentGameState.hintTally + 1,
       ...completionData,
     };
+  } else if (payload.action === "multiSelect") {
+    // if the drag is already started, don't multiselect (return early)
+    if (currentGameState.dragData?.pieceID != undefined) {
+      return { ...currentGameState };
+    }
+
+    const connectedPieceIDs = getConnectedPieceIDs({
+      pieces: currentGameState.pieces,
+      gridSize: currentGameState.gridSize,
+      draggedPieceID: payload.pieceID,
+    });
+
+    return {
+      ...currentGameState,
+      dragData: {
+        connectedPieceIDs,
+      },
+    };
+  } else if (payload.action === "endMultiSelect") {
+    // if we are in the middle of a drag, don't clear (return early)
+    if (currentGameState.dragData?.pieceID != undefined) {
+      return { ...currentGameState };
+    }
+    return {
+      ...currentGameState,
+      dragData: {},
+    };
   } else if (payload.action === "startDrag") {
     // store drag data in the game state
     // since drag event data is only available to
@@ -239,6 +349,7 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       dragData: {
+        ...currentGameState.dragData,
         pieceID: payload.pieceID,
         dragArea: payload.dragArea,
         relativeTop: payload.relativeTop,
@@ -258,6 +369,11 @@ export function gameReducer(currentGameState, payload) {
       return {
         ...currentGameState,
       };
+    }
+
+    // if dragging multiple pieces, return early
+    if (dragData.connectedPieceIDs) {
+      return { ...currentGameState };
     }
 
     let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
@@ -385,11 +501,14 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       pieces: newPieces,
-      dragData: {
-        ...dragData,
-        boardTop: payload.dropRowIndex,
-        boardLeft: payload.dropColIndex,
-      },
+      dragData:
+        payload.action === "dropOnBoard"
+          ? {}
+          : {
+              ...dragData,
+              boardTop: payload.dropRowIndex,
+              boardLeft: payload.dropColIndex,
+            },
     };
   }
 
@@ -401,42 +520,52 @@ export function gameReducer(currentGameState, payload) {
     let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
     const dragData = currentGameState.dragData;
 
-    let newTop = payload.dropRowIndex - dragData.relativeTop;
-    let newLeft = payload.dropColIndex - dragData.relativeLeft;
+    const rowShift = payload.dropRowIndex - (dragData.boardTop || 0);
+    const colShift = payload.dropColIndex - (dragData.boardLeft || 0);
 
-    // if top or left is off grid, return early
-    if (newTop < 0 || newLeft < 0) {
-      return {
-        ...currentGameState,
-      };
+    for (const pieceID of currentGameState.dragData.connectedPieceIDs || [
+      dragData.pieceID,
+    ]) {
+      const piece = newPieces[pieceID];
+      const pieceBoardTop = piece.boardTop || 0;
+      const pieceBoardLeft = piece.boardLeft || 0;
+      // return early if any piece would go off board
+      if (
+        pieceBoardTop + rowShift < 0 ||
+        pieceBoardLeft + colShift < 0 ||
+        pieceBoardTop + piece.letters.length + rowShift >
+          currentGameState.gridSize ||
+        pieceBoardLeft + piece.letters[0].length + colShift >
+          currentGameState.gridSize
+      ) {
+        return {
+          ...currentGameState,
+        };
+      }
+      piece.boardTop = pieceBoardTop + rowShift;
+      piece.boardLeft = pieceBoardLeft + colShift;
     }
 
-    // if bottom or right would go off grid, return early
-    const letters = newPieces[dragData.pieceID].letters;
-    if (newTop + letters.length > currentGameState.gridSize) {
-      return {
-        ...currentGameState,
-      };
-    }
-    if (newLeft + letters[0].length > currentGameState.gridSize) {
-      return {
-        ...currentGameState,
-      };
-    }
-
-    newPieces[dragData.pieceID].boardTop = newTop;
-    newPieces[dragData.pieceID].boardLeft = newLeft;
     if (payload.action === "dropOnBoard") {
       newPieces[dragData.pieceID].poolIndex = undefined;
     }
+
     const completionData = getCompletionData({
       ...currentGameState,
       pieces: newPieces,
     });
+
     return {
       ...currentGameState,
       pieces: newPieces,
-      dragData: payload.action === "dropOnBoard" ? {} : dragData,
+      dragData:
+        payload.action === "dropOnBoard"
+          ? {}
+          : {
+              ...dragData,
+              boardTop: payload.dropRowIndex,
+              boardLeft: payload.dropColIndex,
+            },
       ...completionData,
     };
   } else if (payload.action === "clearStreakIfNeeded") {

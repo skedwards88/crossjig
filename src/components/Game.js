@@ -95,6 +95,13 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
         gridSize={gameState.gridSize}
         dragToken={dragToken}
         gameIsSolved={gameState.gameIsSolved}
+        dispatchGameState={dispatchGameState}
+        draggedPieceIDs={
+          gameState.dragData?.connectedPieceIDs || [
+            gameState.dragData?.pieceID,
+          ] ||
+          []
+        }
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result
