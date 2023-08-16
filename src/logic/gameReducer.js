@@ -299,7 +299,7 @@ function getCompletionData(currentGameState) {
 }
 
 export function gameReducer(currentGameState, payload) {
-  console.log(payload.action)
+  console.log(payload.action);
   if (payload.action === "newGame") {
     return gameInit({ ...payload, seed: undefined, useSaved: false });
   } else if (payload.action === "getHint") {
@@ -317,8 +317,11 @@ export function gameReducer(currentGameState, payload) {
       ...completionData,
     };
   } else if (payload.action === "multiSelect") {
-    // if the drag is already started, don't multiselect (return early)
-    if (currentGameState.dragData?.isDragging) {
+    // if the drag is already started, don't multiselect unless the drag has not moved (return early)
+    if (
+      currentGameState.dragData?.isDragging &&
+      currentGameState.dragData?.dragHasMoved
+    ) {
       return { ...currentGameState };
     }
 
@@ -331,6 +334,7 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       dragData: {
+        ...currentGameState.dragData,
         connectedPieceIDs,
       },
     };
@@ -352,6 +356,7 @@ export function gameReducer(currentGameState, payload) {
       dragData: {
         ...currentGameState.dragData,
         isDragging: true,
+        dragHasMoved: false,
         pieceID: payload.pieceID,
         dragArea: payload.dragArea,
         relativeTop: payload.relativeTop,
@@ -439,7 +444,10 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       pieces: newPieces,
-      dragData: payload.action === "dropOnPool" ? {} : dragData,
+      dragData:
+        payload.action === "dropOnPool"
+          ? {}
+          : { ...dragData, dragHasMoved: true },
       ...completionData,
     };
   }
@@ -508,6 +516,7 @@ export function gameReducer(currentGameState, payload) {
           ? {}
           : {
               ...dragData,
+              dragHasMoved: true,
               boardTop: payload.dropRowIndex,
               boardLeft: payload.dropColIndex,
             },
@@ -567,6 +576,7 @@ export function gameReducer(currentGameState, payload) {
               ...dragData,
               boardTop: payload.dropRowIndex,
               boardLeft: payload.dropColIndex,
+              dragHasMoved: true,
             },
       ...completionData,
     };

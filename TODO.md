@@ -1,5 +1,7 @@
 # TODO
 
+- looks like start drag can be triggered before multiselect
+- - also looks like endmultiselect can be triggered without end drag
 - when long touch but don't drag, end touch is not triggered on phone
 - when long touch and jiggle finger without dragging, doesn't multi select. maybe add delay for drag start or tell if drag moved?
 
