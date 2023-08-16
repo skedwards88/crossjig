@@ -1,6 +1,8 @@
 # TODO
 
-- make way to drag group
+- when long touch but don't drag, end touch is not triggered on phone
+- when long touch and jiggle finger without dragging, doesn't multi select. maybe add delay for drag start or tell if drag moved?
+
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
 - Make a way to move chunks of connected pieces instead of the whole puzzle
