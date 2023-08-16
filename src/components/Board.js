@@ -46,30 +46,7 @@ export default function Board({
   gridSize,
   dragToken,
   gameIsSolved,
-  dispatchGameState,
-  draggedPieceIDs,
 }) {
-  const timerID = React.useRef();
-  function handleTouchStart(pieceID) {
-    timerID.current = setTimeout(() => {
-      // If the press exceeds the timeout, it is long
-      // At this point, initiate the multi-select
-      if (pieceID != undefined) {
-        dispatchGameState({ action: "multiSelect", pieceID });
-      }
-    }, 500);
-  }
-
-  function handleTouchEnd(event) {
-    event.preventDefault();
-
-    if (timerID.current) {
-      clearTimeout(timerID.current);
-    }
-
-    dispatchGameState({ action: "endMultiSelect" });
-  }
-
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
@@ -80,16 +57,13 @@ export default function Board({
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
       const isLetter = Boolean(grid[rowIndex][colIndex]?.letter);
-      const isDragging = draggedPieceIDs.includes(
-        grid[rowIndex][colIndex]?.pieceID
-      );
       const element = (
         <div
           className={
             isLetter
               ? `boardLetter ${gameIsSolved ? " filled" : ""}${
-                  isDragging ? " dragging" : ""
-                }${grid[rowIndex][colIndex].borderTop ? " borderTop" : ""}${
+                  grid[rowIndex][colIndex].borderTop ? " borderTop" : ""
+                }${
                   grid[rowIndex][colIndex].borderBottom ? " borderBottom" : ""
                 }${grid[rowIndex][colIndex].borderLeft ? " borderLeft" : ""}${
                   grid[rowIndex][colIndex].borderRight ? " borderRight" : ""
@@ -130,13 +104,6 @@ export default function Board({
               boardTop: rowIndex,
               boardLeft: colIndex,
             });
-          }}
-          onPointerDown={() =>
-            handleTouchStart(grid[rowIndex][colIndex]?.pieceID)
-          }
-          onPointerUp={handleTouchEnd}
-          onContextMenu={(event) => {
-            event.preventDefault();
           }}
         >
           {grid[rowIndex][colIndex]?.letter}
