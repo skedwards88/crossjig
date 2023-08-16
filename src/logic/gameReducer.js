@@ -339,8 +339,11 @@ export function gameReducer(currentGameState, payload) {
       },
     };
   } else if (payload.action === "endMultiSelect") {
-    // if we are in the middle of a drag, don't clear (return early)
-    if (currentGameState.dragData?.isDragging) {
+    // if we are in the middle of a drag, don't clear unless the drag has not moved (return early)
+    if (
+      currentGameState.dragData?.isDragging &&
+      currentGameState.dragData?.dragHasMoved
+    ) {
       return currentGameState;
     }
     return {
