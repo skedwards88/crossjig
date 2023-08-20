@@ -1,5 +1,6 @@
 # TODO
 
+- use lodash deep clone
 - hide drag image do like did in sector
   
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?

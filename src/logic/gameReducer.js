@@ -625,12 +625,31 @@ export function gameReducer(currentGameState, payload) {
     // according to the HTML spec, the drop event fires before the dragEnd event,
     // so we can assume that we can safely clear any drag data now
     // (This is here to handle the case where the user drops the pieces somewhere
-    // that is not a drop target, meaning the drop event didn't fire)
+    // that is not a drop target, meaning the drop event didn't fire.)
+    // In this case, we need to clear the drag data.
+    // We also want to make sure that the dragged piece isn't registered both as on the board and on the pool
 
-    return {
-      ...currentGameState,
-      dragData: {},
-    };
+    const draggedPieceID = currentGameState.dragData?.pieceID;
+    if (
+      draggedPieceID != undefined &&
+      currentGameState.pieces[draggedPieceID].poolIndex != undefined &&
+      currentGameState.pieces[draggedPieceID].boardTop != undefined &&
+      currentGameState.pieces[draggedPieceID].boardLeft != undefined
+    ) {
+      let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+      newPieces[draggedPieceID].poolIndex = undefined;
+
+      return {
+        ...currentGameState,
+        dragData: {},
+        pieces: newPieces,
+      };
+    } else {
+      return {
+        ...currentGameState,
+        dragData: {},
+      };
+    }
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;
     const wonYesterday = isYesterday(lastDateWon);
