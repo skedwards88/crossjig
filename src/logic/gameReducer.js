@@ -309,6 +309,8 @@ function shiftPieces({
 
   for (const pieceID of pieceIDsToShift) {
     const piece = shiftedPieces[pieceID];
+    // get the current board row/col that corresponds to the top left of the piece
+    // if undefined, use 0
     const pieceBoardTop = piece.boardTop || 0;
     const pieceBoardLeft = piece.boardLeft || 0;
     // return early with the unchanged pieces if any piece would go off board
@@ -404,7 +406,7 @@ export function gameReducer(currentGameState, payload) {
   ) {
     const dragData = currentGameState.dragData;
 
-    // if dragging a blank space from the pool, return early
+    // if dragging a blank space, return early
     if (dragData.pieceID === undefined) {
       return currentGameState;
     }
@@ -483,6 +485,54 @@ export function gameReducer(currentGameState, payload) {
     };
   }
 
+  // if dragging from pool to board
+  else if (
+    currentGameState.dragData.dragArea === "pool" &&
+    currentGameState.dragData.pieceID !== undefined &&
+    (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
+  ) {
+    let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+
+    const dragData = currentGameState.dragData;
+
+    // will drop the piece on the board at the drop row/col, but will adjust to make sure the entire piece is on the board
+    const dropRowIndex = payload.dropRowIndex;
+    const maxRowIndex =
+      currentGameState.gridSize - newPieces[dragData.pieceID].letters.length;
+    const rowIndex = Math.max(Math.min(dropRowIndex, maxRowIndex), 0);
+
+    const dropColIndex = payload.dropColIndex;
+    const maxColIndex =
+      currentGameState.gridSize - newPieces[dragData.pieceID].letters[0].length;
+    const colIndex = Math.max(Math.min(dropColIndex, maxColIndex), 0);
+
+    newPieces[dragData.pieceID].boardTop = rowIndex;
+    newPieces[dragData.pieceID].boardLeft = colIndex;
+
+    if (payload.action === "dropOnBoard") {
+      newPieces[dragData.pieceID].poolIndex = undefined;
+    }
+
+    const completionData = getCompletionData({
+      ...currentGameState,
+      pieces: newPieces,
+    });
+
+    return {
+      ...currentGameState,
+      pieces: newPieces,
+      dragData:
+        payload.action === "dropOnBoard"
+          ? {}
+          : {
+              ...dragData,
+              boardTop: payload.dropRowIndex,
+              boardLeft: payload.dropColIndex,
+              dragHasMoved: true,
+            },
+      ...completionData,
+    };
+  }
   // if dragging a blank spot on the board
   else if (
     currentGameState.dragData.pieceID === undefined &&

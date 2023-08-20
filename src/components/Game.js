@@ -85,7 +85,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       dropColIndex: colIndex,
     });
   }
-  console.log(JSON.stringify(gameState.pieces));
+
   return (
     <div id="game">
       <Board
