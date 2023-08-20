@@ -1,13 +1,11 @@
 # TODO
 
-- looks like start drag can be triggered before multiselect
-- - also looks like endmultiselect can be triggered without end drag
-- when long touch but don't drag, end touch is not triggered on phone
-- when long touch and jiggle finger without dragging, doesn't multi select. maybe add delay for drag start or tell if drag moved?
-
+- handle cases where drop outside of target
+- drag image do like did in other game
+- make drag styling same for pool and board (use the board strategy)
+  
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
-- Make a way to move chunks of connected pieces instead of the whole puzzle
 - Add a tutorial video that pops up at the start. like palette
 
 - icons uniform

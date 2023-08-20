@@ -6,12 +6,12 @@ import Board from "./Board";
 function Game({ dispatchGameState, gameState, setDisplay }) {
   function dragToken({
     event,
-    dragArea,
-    pieceID,
-    relativeTop,
-    relativeLeft,
-    boardTop,
-    boardLeft,
+    dragArea, // where the drag originated: board or pool
+    pieceID, // the ID of the piece being dragged (undefined if dragging blank spot on board)
+    relativeTop, // the row of letters in the piece being dragged (undefined if dragging blank spot on board)
+    relativeLeft, // the col of letters in the piece being dragged (undefined if dragging blank spot on board)
+    boardTop, // the row on the board being dragged (undefined if dragging piece from pool)
+    boardLeft, // the col on the board being dragged (undefined if dragging piece from pool)
   }) {
     event.dataTransfer.setDragImage(document.createElement("img"), 0, 0);
     event.dataTransfer.setData(
@@ -85,7 +85,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       dropColIndex: colIndex,
     });
   }
-
+  console.log(JSON.stringify(gameState.pieces));
   return (
     <div id="game">
       <Board

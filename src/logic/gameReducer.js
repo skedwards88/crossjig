@@ -298,18 +298,48 @@ function getCompletionData(currentGameState) {
   };
 }
 
+function shiftPieces({
+  pieces,
+  pieceIDsToShift,
+  rowShift,
+  colShift,
+  gridSize,
+}) {
+  let shiftedPieces = JSON.parse(JSON.stringify(pieces));
+
+  for (const pieceID of pieceIDsToShift) {
+    const piece = shiftedPieces[pieceID];
+    const pieceBoardTop = piece.boardTop || 0;
+    const pieceBoardLeft = piece.boardLeft || 0;
+    // return early with the unchanged pieces if any piece would go off board
+    if (
+      pieceBoardTop + rowShift < 0 ||
+      pieceBoardLeft + colShift < 0 ||
+      pieceBoardTop + piece.letters.length + rowShift > gridSize ||
+      pieceBoardLeft + piece.letters[0].length + colShift > gridSize
+    ) {
+      return pieces;
+    }
+    piece.boardTop = pieceBoardTop + rowShift;
+    piece.boardLeft = pieceBoardLeft + colShift;
+  }
+  return shiftedPieces;
+}
+
 export function gameReducer(currentGameState, payload) {
   console.log(payload.action);
   if (payload.action === "newGame") {
     return gameInit({ ...payload, seed: undefined, useSaved: false });
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
+
     const newPieces = giveHint(currentGameState);
 
     const completionData = getCompletionData({
       ...currentGameState,
       pieces: newPieces,
     });
+
     return {
       ...currentGameState,
       pieces: newPieces,
@@ -322,7 +352,7 @@ export function gameReducer(currentGameState, payload) {
       currentGameState.dragData?.isDragging &&
       currentGameState.dragData?.dragHasMoved
     ) {
-      return { ...currentGameState };
+      return currentGameState;
     }
 
     const connectedPieceIDs = getConnectedPieceIDs({
@@ -376,14 +406,12 @@ export function gameReducer(currentGameState, payload) {
 
     // if dragging a blank space from the pool, return early
     if (dragData.pieceID === undefined) {
-      return {
-        ...currentGameState,
-      };
+      return currentGameState;
     }
 
     // if dragging multiple pieces, return early
     if (dragData.connectedPieceIDs) {
-      return { ...currentGameState };
+      return currentGameState;
     }
 
     let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
@@ -460,60 +488,34 @@ export function gameReducer(currentGameState, payload) {
     currentGameState.dragData.pieceID === undefined &&
     (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
   ) {
-    let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+    let pieceIDsToShift = currentGameState.pieces
+      .filter((piece) => piece.boardTop >= 0 && piece.boardLeft >= 0)
+      .map((piece) => piece.id);
 
-    let boardPieces = newPieces.filter(
-      (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
-    );
-
-    if (!boardPieces.length) {
+    if (!pieceIDsToShift.length) {
       // return early if the board is empty
-      return { ...currentGameState };
+      return currentGameState;
     }
+
     const dragData = currentGameState.dragData;
-    const oldRowIndex = dragData.boardTop;
+    const oldRowIndex = dragData.boardTop || 0;
     const newRowIndex = payload.dropRowIndex;
     const rowShift = newRowIndex - oldRowIndex;
-    const oldColIndex = dragData.boardLeft;
+    const oldColIndex = dragData.boardLeft || 0;
     const newColIndex = payload.dropColIndex;
     const colShift = newColIndex - oldColIndex;
 
-    // shift the pieces
-    for (let pieceIndex = 0; pieceIndex < newPieces.length; pieceIndex++) {
-      // skip the piece if not on the board
-      if (newPieces[pieceIndex].boardTop === undefined) {
-        continue;
-      }
-      // return early if any piece would go off board
-      if (
-        newPieces[pieceIndex].boardTop + rowShift < 0 ||
-        newPieces[pieceIndex].boardLeft + colShift < 0 ||
-        newPieces[pieceIndex].boardTop +
-          newPieces[pieceIndex].letters.length +
-          rowShift >
-          currentGameState.gridSize ||
-        newPieces[pieceIndex].boardLeft +
-          newPieces[pieceIndex].letters[0].length +
-          colShift >
-          currentGameState.gridSize
-      ) {
-        return {
-          ...currentGameState,
-          dragData: {
-            ...dragData,
-            boardTop: payload.dropRowIndex,
-            boardLeft: payload.dropColIndex,
-          },
-        };
-      }
-      newPieces[pieceIndex].boardTop =
-        newPieces[pieceIndex].boardTop + rowShift;
-      newPieces[pieceIndex].boardLeft =
-        newPieces[pieceIndex].boardLeft + colShift;
-    }
+    const shiftedPieces = shiftPieces({
+      pieces: JSON.parse(JSON.stringify(currentGameState.pieces)),
+      pieceIDsToShift,
+      rowShift,
+      colShift,
+      gridSize: currentGameState.gridSize,
+    });
+
     return {
       ...currentGameState,
-      pieces: newPieces,
+      pieces: shiftedPieces,
       dragData:
         payload.action === "dropOnBoard"
           ? {}
@@ -531,47 +533,33 @@ export function gameReducer(currentGameState, payload) {
     currentGameState.dragData.pieceID !== undefined &&
     (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
   ) {
-    let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
     const dragData = currentGameState.dragData;
 
     const rowShift = payload.dropRowIndex - (dragData.boardTop || 0);
     const colShift = payload.dropColIndex - (dragData.boardLeft || 0);
 
-    for (const pieceID of currentGameState.dragData.connectedPieceIDs || [
-      dragData.pieceID,
-    ]) {
-      const piece = newPieces[pieceID];
-      const pieceBoardTop = piece.boardTop || 0;
-      const pieceBoardLeft = piece.boardLeft || 0;
-      // return early if any piece would go off board
-      if (
-        pieceBoardTop + rowShift < 0 ||
-        pieceBoardLeft + colShift < 0 ||
-        pieceBoardTop + piece.letters.length + rowShift >
-          currentGameState.gridSize ||
-        pieceBoardLeft + piece.letters[0].length + colShift >
-          currentGameState.gridSize
-      ) {
-        return {
-          ...currentGameState,
-        };
-      }
-      piece.boardTop = pieceBoardTop + rowShift;
-      piece.boardLeft = pieceBoardLeft + colShift;
-    }
+    const shiftedPieces = shiftPieces({
+      pieces: JSON.parse(JSON.stringify(currentGameState.pieces)),
+      pieceIDsToShift: currentGameState.dragData.connectedPieceIDs || [
+        dragData.pieceID,
+      ],
+      rowShift,
+      colShift,
+      gridSize: currentGameState.gridSize,
+    });
 
     if (payload.action === "dropOnBoard") {
-      newPieces[dragData.pieceID].poolIndex = undefined;
+      shiftedPieces[dragData.pieceID].poolIndex = undefined;
     }
 
     const completionData = getCompletionData({
       ...currentGameState,
-      pieces: newPieces,
+      pieces: shiftedPieces,
     });
 
     return {
       ...currentGameState,
-      pieces: newPieces,
+      pieces: shiftedPieces,
       dragData:
         payload.action === "dropOnBoard"
           ? {}
@@ -607,6 +595,6 @@ export function gameReducer(currentGameState, payload) {
     }
   } else {
     console.log(`unknown action: ${payload.action}`);
-    return { ...currentGameState };
+    return currentGameState;
   }
 }
