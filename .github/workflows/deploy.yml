@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - "README.md"
       - "TODO.md"
+      - ".github/ISSUE_TEMPLATE/*"
   workflow_dispatch:
 
 permissions:
