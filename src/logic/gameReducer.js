@@ -1,3 +1,4 @@
+import cloneDeep from "lodash.clonedeep";
 import { gameInit } from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
 import { gameSolvedQ } from "./gameSolvedQ";
@@ -86,7 +87,7 @@ function getConnectedPieceIDs({ pieces, gridSize, draggedPieceID }) {
 }
 
 function giveHint(currentGameState) {
-  const pieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+  const pieces = cloneDeep(currentGameState.pieces);
   const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
     currentGameState;
 
@@ -305,7 +306,7 @@ function shiftPieces({
   colShift,
   gridSize,
 }) {
-  let shiftedPieces = JSON.parse(JSON.stringify(pieces));
+  let shiftedPieces = cloneDeep(pieces);
 
   for (const pieceID of pieceIDsToShift) {
     const piece = shiftedPieces[pieceID];
@@ -416,7 +417,7 @@ export function gameReducer(currentGameState, payload) {
       return currentGameState;
     }
 
-    let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+    let newPieces = cloneDeep(currentGameState.pieces);
     const allPoolIndexes = newPieces
       .filter((i) => i.poolIndex >= 0)
       .map((i) => i.poolIndex);
@@ -491,7 +492,7 @@ export function gameReducer(currentGameState, payload) {
     currentGameState.dragData.pieceID !== undefined &&
     (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
   ) {
-    let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+    let newPieces = cloneDeep(currentGameState.pieces);
 
     const dragData = currentGameState.dragData;
 
@@ -556,7 +557,7 @@ export function gameReducer(currentGameState, payload) {
     const colShift = newColIndex - oldColIndex;
 
     const shiftedPieces = shiftPieces({
-      pieces: JSON.parse(JSON.stringify(currentGameState.pieces)),
+      pieces: cloneDeep(currentGameState.pieces),
       pieceIDsToShift,
       rowShift,
       colShift,
@@ -589,7 +590,7 @@ export function gameReducer(currentGameState, payload) {
     const colShift = payload.dropColIndex - (dragData.boardLeft || 0);
 
     const shiftedPieces = shiftPieces({
-      pieces: JSON.parse(JSON.stringify(currentGameState.pieces)),
+      pieces: cloneDeep(currentGameState.pieces),
       pieceIDsToShift: currentGameState.dragData.connectedPieceIDs || [
         dragData.pieceID,
       ],
@@ -636,7 +637,7 @@ export function gameReducer(currentGameState, payload) {
       currentGameState.pieces[draggedPieceID].boardTop != undefined &&
       currentGameState.pieces[draggedPieceID].boardLeft != undefined
     ) {
-      let newPieces = JSON.parse(JSON.stringify(currentGameState.pieces));
+      let newPieces = cloneDeep(currentGameState.pieces);
       newPieces[draggedPieceID].poolIndex = undefined;
 
       return {

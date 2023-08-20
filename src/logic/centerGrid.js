@@ -1,7 +1,8 @@
+import cloneDeep from "lodash.clonedeep";
 import { getMaxShifts } from "./getMaxShifts";
 
 export function centerGrid(grid) {
-  let shiftedGrid = JSON.parse(JSON.stringify(grid));
+  let shiftedGrid = cloneDeep(grid);
 
   const emptyRow = Array(grid.length).fill("");
 

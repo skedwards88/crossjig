@@ -1,10 +1,11 @@
+import cloneDeep from "lodash.clonedeep";
 import { assemblePiece } from "./assemblePiece";
 import { getPieceDimension } from "./getPieceDimension";
 
 export function makePieces(grid) {
   const maxPieceLetters = 5; //todo can randomize num letters
   const maxPieceDimension = 3;
-  const remainingGrid = JSON.parse(JSON.stringify(grid));
+  const remainingGrid = cloneDeep(grid);
   const piecesData = [];
 
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
