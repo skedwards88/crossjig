@@ -1,0 +1,16 @@
+name: Feature Request
+description: Let us know about a feature that you are interested in having
+title: "[Request]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to share your thoughts!
+  - type: textarea
+    id: request
+    attributes:
+      label: What is your request?
+      description: Tell us about the feature that you would like us to add.
+      placeholder: Please include as much info as possible to help us understand your request.
+    validations:
+      required: true

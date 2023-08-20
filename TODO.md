@@ -1,14 +1,14 @@
 # TODO
 
 - handle cases where drop outside of target
-- drag image do like did in other game
+- hide drag image do like did in sector
   
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
 - Add a tutorial video that pops up at the start. like palette
 
 - icons uniform
-- package to import to wordgames
+- delete from wordgames and redirect to here instead
 - add tests
 
 For screenshots:

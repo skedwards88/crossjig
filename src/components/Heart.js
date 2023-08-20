@@ -1,9 +1,8 @@
 import React from "react";
 import Share from "./Share";
-import packageJson from "../../package.json";
 
 export default function Heart({ setDisplay }) {
-  const feedbackLink = `https://github.com/skedwards88/crossjig/issues/new?body=Crossjig+version+${packageJson.version}`;
+  const feedbackLink = `https://github.com/skedwards88/crossjig/issues/new`;
 
   return (
     <div className="App info">
@@ -22,7 +21,7 @@ export default function Heart({ setDisplay }) {
         {`\n`}
         {"Feedback? "}
         <a href={feedbackLink}>Open an issue</a>
-        {" on GitHub."}
+        {" on GitHub or email SECTgames@gmail.com."}
         {`\n\n`}
         {<hr></hr>}
         {`\n`}

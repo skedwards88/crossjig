@@ -1,0 +1,31 @@
+name: Bug Report
+description: Let us know about a bug that you encountered
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please include screenshots to help us understand the problem.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of the app are you using? You can find this info by clicking the heart button in the app.
+    validations:
+      required: true
+  - type: textarea
+    id: platform
+    attributes:
+      label: Platform
+      description: What device are you using? Please tell us the device, operating system, and browser. (e.g. Google Pixel 6 Pro running Android version 13 and Google Chrome)
+      placeholder: Please tell us the device, operating system, and browser.
+    validations:
+      required: true
+  - type: textarea
+    id: bug
+    attributes:
+      label: What is wrong?
+      description: Tell us about the bug that you encountered. Please include screenshots.
+      placeholder: Please include as much info as possible to help us understand the bug. Screenshots are helpful.
+    validations:
+      required: true
