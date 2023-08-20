@@ -621,6 +621,16 @@ export function gameReducer(currentGameState, payload) {
             },
       ...completionData,
     };
+  } else if (payload.action === "dragEnd") {
+    // according to the HTML spec, the drop event fires before the dragEnd event,
+    // so we can assume that we can safely clear any drag data now
+    // (This is here to handle the case where the user drops the pieces somewhere
+    // that is not a drop target, meaning the drop event didn't fire)
+
+    return {
+      ...currentGameState,
+      dragData: {},
+    };
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;
     const wonYesterday = isYesterday(lastDateWon);

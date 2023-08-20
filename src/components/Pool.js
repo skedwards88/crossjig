@@ -12,6 +12,7 @@ function Letter({
   letters,
   dragToken,
   isDragging,
+  dispatchGameState,
 }) {
   let className = "poolLetter";
   if (isDragging) {
@@ -47,7 +48,9 @@ function Letter({
         });
       }}
       onDragEnd={(event) => {
+        // according to the HTML spec, the drop event fires before the dragEnd event
         event.preventDefault();
+        dispatchGameState({ action: "dragEnd" });
       }}
       onDragEnter={(event) => {
         event.preventDefault();
@@ -71,6 +74,7 @@ function Piece({
   dragToken,
   dropOnPool,
   draggedPieceIDs,
+  dispatchGameState,
 }) {
   let letterElements = [];
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
@@ -85,6 +89,7 @@ function Piece({
           key={`${pieceID}-${rowIndex}-${colIndex}`}
           dragToken={dragToken}
           isDragging={isDragging}
+          dispatchGameState={dispatchGameState}
         ></Letter>
       );
     }
@@ -125,6 +130,7 @@ export default function Pool({
   handlePoolDragEnter,
   dragToken,
   draggedPieceIDs,
+  dispatchGameState,
 }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
@@ -138,6 +144,7 @@ export default function Pool({
       dragToken={dragToken}
       dropOnPool={dropOnPool}
       draggedPieceIDs={draggedPieceIDs}
+      dispatchGameState={dispatchGameState}
     ></Piece>
   ));
 

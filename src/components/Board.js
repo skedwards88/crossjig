@@ -107,7 +107,9 @@ export default function Board({
             });
           }}
           onDragEnd={(event) => {
+            // according to the HTML spec, the drop event fires before the dragEnd event
             event.preventDefault();
+            dispatchGameState({ action: "dragEnd" });
           }}
           onDragOver={(event) => {
             event.preventDefault();

@@ -103,6 +103,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       ) : (
         <Pool
           pieces={gameState.pieces}
+          dispatchGameState={dispatchGameState}
           dropOnPool={dropOnPool}
           handlePoolDragEnter={handlePoolDragEnter}
           dragToken={dragToken}
