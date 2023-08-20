@@ -2,7 +2,6 @@
 
 - handle cases where drop outside of target
 - drag image do like did in other game
-- make drag styling same for pool and board (use the board strategy)
   
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 

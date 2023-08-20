@@ -18,9 +18,6 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       "draggedElementID",
       event.target.parentElement.id
     );
-    if (dragArea === "pool") {
-      event.target.parentElement.classList.add("dragging");
-    }
     dispatchGameState({
       action: "startDrag",
       pieceID: pieceID,
@@ -40,10 +37,6 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
 
     event.preventDefault();
 
-    document
-      .getElementById(event.dataTransfer.getData("draggedElementID"))
-      .classList.remove("dragging");
-
     dispatchGameState({
       action: "dropOnPool",
       targetPieceID: targetPieceID,
@@ -52,9 +45,6 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
 
   function handleBoardDrop({ event, rowIndex, colIndex }) {
     event.preventDefault();
-    document
-      .getElementById(event.dataTransfer.getData("draggedElementID"))
-      .classList.remove("dragging");
 
     dispatchGameState({
       action: "dropOnBoard",
@@ -116,6 +106,12 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
           dropOnPool={dropOnPool}
           handlePoolDragEnter={handlePoolDragEnter}
           dragToken={dragToken}
+          draggedPieceIDs={
+            gameState.dragData?.connectedPieceIDs || [
+              gameState.dragData?.pieceID,
+            ] ||
+            []
+          }
         ></Pool>
       )}
     </div>

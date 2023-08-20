@@ -5,8 +5,18 @@ polyfill({
   dragImageCenterOnTouch: true,
 });
 
-function Letter({ pieceID, rowIndex, colIndex, letters, dragToken }) {
+function Letter({
+  pieceID,
+  rowIndex,
+  colIndex,
+  letters,
+  dragToken,
+  isDragging,
+}) {
   let className = "poolLetter";
+  if (isDragging) {
+    className = `${className} dragging`;
+  }
   if (letters[rowIndex][colIndex]) {
     if (!letters[rowIndex - 1]?.[colIndex]) {
       className = `${className} borderTop`;
@@ -60,10 +70,12 @@ function Piece({
   handlePoolDragEnter,
   dragToken,
   dropOnPool,
+  draggedPieceIDs,
 }) {
   let letterElements = [];
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
+      const isDragging = draggedPieceIDs.includes(pieceID);
       letterElements.push(
         <Letter
           pieceID={pieceID}
@@ -72,6 +84,7 @@ function Piece({
           letters={letters}
           key={`${pieceID}-${rowIndex}-${colIndex}`}
           dragToken={dragToken}
+          isDragging={isDragging}
         ></Letter>
       );
     }
@@ -111,6 +124,7 @@ export default function Pool({
   dropOnPool,
   handlePoolDragEnter,
   dragToken,
+  draggedPieceIDs,
 }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
@@ -123,6 +137,7 @@ export default function Pool({
       key={piece.id}
       dragToken={dragToken}
       dropOnPool={dropOnPool}
+      draggedPieceIDs={draggedPieceIDs}
     ></Piece>
   ));
 
