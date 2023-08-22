@@ -427,7 +427,6 @@ export function gameReducer(currentGameState, payload) {
       0
     );
 
-    console.log(payload.targetPieceID)
     // if dragging pool to pool and dropping on another piece,
     // swap the positions of those pieces
     if (dragData.dragArea === "pool" && payload.targetPieceID != undefined) {
