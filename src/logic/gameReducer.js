@@ -4,7 +4,7 @@ import sendAnalytics from "../common/sendAnalytics";
 import { gameSolvedQ } from "./gameSolvedQ";
 
 function getPieceIDGrid(pieces, gridSize) {
-  // at each space in the grid, find the ID of the piece at that space, if any
+  // at each space in the grid, find the IDs of the pieces at that space, if any
 
   let grid = JSON.parse(
     JSON.stringify(Array(gridSize).fill(Array(gridSize).fill([])))
@@ -427,9 +427,10 @@ export function gameReducer(currentGameState, payload) {
       0
     );
 
+    console.log(payload.targetPieceID)
     // if dragging pool to pool and dropping on another piece,
     // swap the positions of those pieces
-    if (dragData.dragArea === "pool" && payload.targetPieceID) {
+    if (dragData.dragArea === "pool" && payload.targetPieceID != undefined) {
       const oldPoolIndex = newPieces[dragData.pieceID].poolIndex;
       const newPoolIndex = newPieces[payload.targetPieceID].poolIndex;
       newPieces[dragData.pieceID].poolIndex = newPoolIndex;
@@ -437,7 +438,7 @@ export function gameReducer(currentGameState, payload) {
     }
     // // if dragging pool to pool and dropping at end,
     // // move the piece to the end and downshift everything that was after
-    else if (dragData.dragArea === "pool" && !payload.targetPieceID) {
+    else if (dragData.dragArea === "pool" && payload.targetPieceID === undefined) {
       for (let index = 0; index < newPieces.length; index++) {
         const piece = newPieces[index];
         if (piece.poolIndex > newPieces[dragData.pieceID].poolIndex) {
@@ -448,14 +449,14 @@ export function gameReducer(currentGameState, payload) {
     }
     // if dragging board to pool and dropping at end,
     // just add the piece to the end
-    else if (dragData.dragArea === "board" && !payload.targetPieceID) {
+    else if (dragData.dragArea === "board" && payload.targetPieceID === undefined) {
       newPieces[dragData.pieceID].poolIndex = allPoolIndexes.length
         ? maxPoolIndex + 1
         : 0;
     }
     // if dragging board to pool and dropping on another piece,
     // insert the piece and upshift everything after
-    else if (dragData.dragArea === "board" && payload.targetPieceID) {
+    else if (dragData.dragArea === "board" && payload.targetPieceID != undefined) {
       const newPoolIndex = newPieces[payload.targetPieceID].poolIndex;
       for (let index = 0; index < newPieces.length; index++) {
         const piece = newPieces[index];
