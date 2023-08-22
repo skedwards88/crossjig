@@ -540,6 +540,10 @@ a {
     width: fit-content;
     white-space: nowrap;
   }
+
+  #calendarButton {
+    width: var(--default-font-size);
+  }
 }
 
 /* Large screen */
