@@ -319,6 +319,7 @@ a {
 
 .boardLetter {
   display: flex;
+  touch-action: none;
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);
@@ -365,6 +366,7 @@ a {
 
 .poolPiece {
   display: grid;
+  touch-action: none;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
   grid-template-rows: repeat(var(--numRows), var(--box-size));
   justify-content: center;
@@ -376,6 +378,7 @@ a {
 
 .poolLetter {
   display: flex;
+  touch-action: none;
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);

@@ -3,6 +3,8 @@ import { polyfill } from "mobile-drag-drop";
 
 polyfill({
   dragImageCenterOnTouch: true,
+  // force apply is required to skip the drag delay on ipad
+  forceApply: true,
 });
 
 function Letter({
