@@ -303,6 +303,7 @@ a {
 }
 
 #board {
+  overflow: hidden;
   grid-area: board;
   display: grid;
   touch-action: none;

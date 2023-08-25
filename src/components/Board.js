@@ -60,6 +60,12 @@ export default function Board({
     }, 500);
   }
 
+  // ios cancels the drag event after a certain amount of time
+  // even with event.preventDefault() and touch-action:none and modifying the viewport meta tag
+  // so track when that happens so I can skip calling the dispatcher when it does
+  // (I don't like how hacky this is)
+  const [wasCanceledPrematurely, setWasCanceledPrematurely] = React.useState(false);
+
   function handleTouchEnd(event) {
     event.preventDefault();
 
@@ -109,7 +115,13 @@ export default function Board({
           onDragEnd={(event) => {
             // according to the HTML spec, the drop event fires before the dragEnd event
             event.preventDefault();
-            dispatchGameState({ action: "dragEnd" });
+            // only call the dispatcher if ios didn't force end the drag prematurely
+            // otherwise just reset the state
+            if (!wasCanceledPrematurely) {
+              dispatchGameState({ action: "dragEnd" });
+            } else {
+              setWasCanceledPrematurely(false)
+            }
           }}
           onDragOver={(event) => {
             event.preventDefault();
@@ -137,6 +149,19 @@ export default function Board({
             handleTouchStart(grid[rowIndex][colIndex]?.pieceID)
           }
           onPointerUp={handleTouchEnd}
+          onPointerCancel={(event)=> {
+            // ios cancels the pointer event which then cancels the drag event,
+            // so we need to catch that and stop the dispatcher from being called in the drag end handler.
+            event.stopPropagation();
+            event.preventDefault();
+            // stopPropagation and preventDefault don't actually stop this
+            // (but I left them in place in hopes that ios will follow standards in the future),
+            // so track whether the drag was canceled prematurely via the state
+            setWasCanceledPrematurely(true);
+          }}
+          onPointerMove={(event) => {
+            event.preventDefault()}
+          }
           onContextMenu={(event) => {
             event.preventDefault();
           }}
