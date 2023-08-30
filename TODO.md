@@ -1,16 +1,16 @@
 # TODO
 
-- safari is messed up
+- ***need to release new update by oct 31 -- same for dragon
 
-- hide drag image do like did in sector
-  
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
 - Add a tutorial video that pops up at the start. like palette
 
 - icons uniform
-- delete from wordgames and redirect to here instead
 - add tests
+
+- piece rotation
+- transpose grid/game solved logic will only work for square grid
 
 For screenshots:
 

@@ -3,7 +3,7 @@ import { generatePuzzle } from "./generatePuzzle";
 
 function getRandomSeed() {
   const currentDate = new Date();
-  return currentDate.getTime();
+  return currentDate.getTime().toString();
 }
 
 export function getDailySeed() {
@@ -13,7 +13,7 @@ export function getDailySeed() {
     .toString()
     .padStart(2, "0")}${currentDate.getDate().toString().padStart(2, "0")}`;
 
-  return seed;
+  return seed.toString();
 }
 
 function getNumLettersForDay() {
