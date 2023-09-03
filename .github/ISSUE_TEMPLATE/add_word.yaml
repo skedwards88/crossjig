@@ -1,0 +1,14 @@
+name: Add word to dictionary
+description: Let us know about words that you think should be in the game's dictionary
+title: "[Add words]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Note: The repository owner will make the final decision about whether to add words to the dictionary. Words that are deemed uncommon will not be included. 
+  - type: textarea
+    id: request
+    attributes:
+      label: What words do you want to add? (The repository owner will make the final decision about whether to add words to the dictionary. Words that are deemed uncommon will not be included.)
+    validations:
+      required: true
