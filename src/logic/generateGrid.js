@@ -1,7 +1,6 @@
 import getPatternsForRow from "./getRegexForRow.js";
 import { shuffleArray } from "@skedwards88/word_logic";
 import {
-  commonWordsLen3,
   commonWordsLen4,
   commonWordsLen5,
   commonWordsLen6,
@@ -28,10 +27,13 @@ function removeWordThatMatches(pattern, wordList) {
 }
 
 export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
+  // Generates an interconnected grid of words
+  // that fits within the specified gridSize.
+  // The total number of letters used will be minLetters or slightly higher.
+
   const minWordLength = 4;
   let wordList = shuffleArray(
     [
-      ...commonWordsLen3,
       ...commonWordsLen4,
       ...commonWordsLen5,
       ...commonWordsLen6,
@@ -70,7 +72,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     }
 
     //
-    // Use this inner loop with the safeguard to let us short circuit if we aren't finding anything
+    // Use this inner loop with the "count" safeguard to short circuit if it looks like the puzzle hit a dead end
     //
     while (letterCount < minLetters && count < 20) {
       // transpose the grid to start searching in the opposite orientation
@@ -92,12 +94,13 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
       ) {
         let matchingWord;
         let startPosition;
-        // Get each regex pattern along with the starting index for the pattern
-        const patterns = getPatternsForRow(
+        // Get each regex pattern that could make a new word in the row, along with the starting index for the pattern
+        let patterns = getPatternsForRow(
           grid,
           rowIndexesByCounts[metaIndex],
           minWordLength
         );
+        patterns = shuffleArray(patterns, pseudoRandomGenerator);
         for (
           let patternIndex = 0;
           patternIndex < patterns.length;
