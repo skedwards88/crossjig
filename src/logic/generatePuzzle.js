@@ -16,7 +16,7 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
   while (!foundPuzzleWithAcceptableSingletons) {
     count++;
 
-    // Generate grid with words that are 4-7 letters
+    // Generate an interconnected grid of words
     const grid = generateGrid({
       gridSize: gridSize,
       minLetters: minLetters,
