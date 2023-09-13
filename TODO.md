@@ -1,7 +1,5 @@
 # TODO
 
-- ***need to release new update by oct 31 -- same for dragon
-
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
 - Add a tutorial video that pops up at the start. like palette
