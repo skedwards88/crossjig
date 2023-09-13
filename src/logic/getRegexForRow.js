@@ -1,4 +1,7 @@
 export default function getPatternsForRow(grid, rowIndex, minLength) {
+  // For a specified row in the grid,
+  // get the regex patterns that could make a new word in that row
+  // in the form [[pattern, column index where pattern starts],...]
   let patterns = [];
   const row = grid[rowIndex];
 
