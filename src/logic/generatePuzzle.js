@@ -10,6 +10,9 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
   let foundPuzzleWithAcceptableSingletons = false;
   const maxFractionSingles = 0.1;
 
+  let tempStartingWordsPuzzle = [];
+  let tempAllWordsPuzzle = [];
+
   // Create a new seedable random number generator
   let pseudoRandomGenerator = seed ? seedrandom(seed) : seedrandom();
 
@@ -17,12 +20,16 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
     count++;
 
     // Generate an interconnected grid of words
-    const grid = generateGrid({
+    const { grid, tempStartingWordsGrid, tempAllWordsGrid } = generateGrid({
       gridSize: gridSize,
       minLetters: minLetters,
       pseudoRandomGenerator: pseudoRandomGenerator,
     });
 
+    tempStartingWordsPuzzle = [
+      ...tempStartingWordsPuzzle,
+      ...tempStartingWordsGrid,
+    ];
     const centeredGrid = centerGrid(grid);
 
     const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
@@ -52,12 +59,15 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
       numSingletons / numPieces < maxFractionSingles;
 
     if (foundPuzzleWithAcceptableSingletons || count > 100) {
+      tempAllWordsPuzzle = [...tempAllWordsPuzzle, ...tempAllWordsGrid];
       return {
         pieces: pieceData,
         maxShiftLeft: maxShiftLeft,
         maxShiftRight: maxShiftRight,
         maxShiftUp: maxShiftUp,
         maxShiftDown: maxShiftDown,
+        tempStartingWordsPuzzle,
+        tempAllWordsPuzzle,
       };
     }
   }

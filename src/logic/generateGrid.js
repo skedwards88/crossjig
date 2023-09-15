@@ -31,6 +31,9 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
   // that fits within the specified gridSize.
   // The total number of letters used will be minLetters or slightly higher.
 
+  let tempStartingWordsGrid = [];
+  let tempAllWordsGrid = [];
+
   const minWordLength = 4;
   let wordList = shuffleArray(
     [
@@ -58,6 +61,9 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     //
     let startingWord;
     [startingWord, wordList] = removeWordThatMatches(".+", wordList);
+    tempStartingWordsGrid.push(startingWord);
+    tempAllWordsGrid = [startingWord];
+
     letterCount = startingWord.length;
     const startingRowIndex = Math.floor(pseudoRandomGenerator() * gridSize);
     const startingColIndex = Math.floor(
@@ -111,6 +117,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
           [matchingWord, wordList] = removeWordThatMatches(pattern, wordList);
 
           if (matchingWord) {
+            tempAllWordsGrid.push(matchingWord);
             // inject the word into the grid
             for (
               let index = startPosition;
@@ -136,5 +143,5 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
       );
     }
   }
-  return grid;
+  return { grid, tempStartingWordsGrid, tempAllWordsGrid };
 }

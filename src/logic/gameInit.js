@@ -38,6 +38,59 @@ export function gameInit({
   isDaily = false,
   seed,
 }) {
+
+  if (!isDaily) {
+    const numIterations = 1000;
+    console.log(`getting data for ${numIterations} puzzles...`);
+    let tempStartingWordsInit = [];
+    let tempAllWordsInit = [];
+    for (let index = 0; index < numIterations; index++) {
+      const { tempStartingWordsPuzzle, tempAllWordsPuzzle } = generatePuzzle({
+        gridSize: 12,
+        minLetters: 40,
+        seed: getRandomSeed(),
+      });
+
+      tempStartingWordsInit = [
+        ...tempStartingWordsInit,
+        ...tempStartingWordsPuzzle,
+      ];
+      tempAllWordsInit = [...tempAllWordsInit, ...tempAllWordsPuzzle];
+    }
+    // console.log(tempStartingWordsInit)
+    // console.log(Array.from(new Set(tempStartingWordsInit)).length)
+    // console.log(tempStartingWordsInit.length)
+    // console.log(tempAllWordsInit)
+    // console.log(Array.from(new Set(tempAllWordsInit)).length)
+    // console.log(tempAllWordsInit.length)
+
+    let wordToCount = {};
+    for (const word of tempAllWordsInit) {
+      wordToCount[word] = wordToCount[word] ? wordToCount[word] + 1 : 1;
+    }
+
+    let countToWords = {};
+    for (const word in wordToCount) {
+      const count = wordToCount[word];
+      if (count === 1) {
+        continue;
+      }
+      countToWords[count] = countToWords[count]
+        ? [...countToWords[count], word]
+        : [word];
+    }
+
+    console.log(
+      `Words that were present 2 or more times in ${numIterations} puzzles (${
+        tempAllWordsInit.length
+      } total words, ${
+        Array.from(new Set(tempAllWordsInit)).length
+      } unique words), in the form {numberOccurrences: words}`
+    );
+    console.log(countToWords);
+    console.log(JSON.stringify(countToWords));
+  }
+
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
 
   if (isDaily) {
