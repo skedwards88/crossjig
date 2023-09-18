@@ -11,9 +11,23 @@ function removeWordThatMatches(pattern, wordList) {
   // Given a patten and a list of words, finds a word that matches the pattern
   // and returns the word and the list with the word deleted
   // If no match was found, returns undefined and the unchanged wordlist
-  const wordIndex = wordList.findIndex((word) => word.match(`^${pattern}$`));
+  const patternRegExp = new RegExp(`^${pattern}$`);
+  // const wordIndex = wordList.findIndex((word) => patternRegExp.exec(word));
 
-  if (wordIndex > -1) {
+  const minMatches = 5;
+  let wordIndexes = [];
+  for (let index = 0; index < wordList.length; index++) {
+    const word = wordList[index];
+    if (patternRegExp.exec(word)) {
+      wordIndexes.push(index);
+    }
+    if (wordIndexes.length === minMatches) {
+      break;
+    }
+  }
+
+  if (wordIndexes.length === minMatches) {
+    const wordIndex = wordIndexes[0];
     const word = wordList[wordIndex];
     const newWordList = [
       ...wordList.slice(0, wordIndex),

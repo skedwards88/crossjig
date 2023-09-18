@@ -1,6 +1,13 @@
 import sendAnalytics from "../common/sendAnalytics";
 import { generatePuzzle } from "./generatePuzzle";
 
+import {
+  commonWordsLen4,
+  commonWordsLen5,
+  commonWordsLen6,
+  commonWordsLen7,
+} from "@skedwards88/word_lists";
+
 function getRandomSeed() {
   const currentDate = new Date();
   return currentDate.getTime().toString();
@@ -38,9 +45,8 @@ export function gameInit({
   isDaily = false,
   seed,
 }) {
-
   if (!isDaily) {
-    const numIterations = 1000;
+    const numIterations = 1;
     console.log(`getting data for ${numIterations} puzzles...`);
     let tempStartingWordsInit = [];
     let tempAllWordsInit = [];
@@ -57,6 +63,16 @@ export function gameInit({
       ];
       tempAllWordsInit = [...tempAllWordsInit, ...tempAllWordsPuzzle];
     }
+
+    const allWords = [
+      ...commonWordsLen4,
+      ...commonWordsLen5,
+      ...commonWordsLen6,
+      ...commonWordsLen7,
+    ];
+
+    const unusedWords = allWords.filter((i) => !tempAllWordsInit.includes(i));
+
     // console.log(tempStartingWordsInit)
     // console.log(Array.from(new Set(tempStartingWordsInit)).length)
     // console.log(tempStartingWordsInit.length)
@@ -70,25 +86,116 @@ export function gameInit({
     }
 
     let countToWords = {};
+    let countToWords4 = {};
+    let countToWords5 = {};
+    let countToWords6 = {};
+    let countToWords7 = {};
+    countToWords["0"] = unusedWords;
     for (const word in wordToCount) {
       const count = wordToCount[word];
-      if (count === 1) {
-        continue;
-      }
       countToWords[count] = countToWords[count]
         ? [...countToWords[count], word]
         : [word];
+
+      switch (word.length) {
+        case 4:
+          countToWords4[count] = countToWords4[count]
+            ? [...countToWords4[count], word]
+            : [word];
+          break;
+        case 5:
+          countToWords5[count] = countToWords5[count]
+            ? [...countToWords5[count], word]
+            : [word];
+          break;
+        case 6:
+          countToWords6[count] = countToWords6[count]
+            ? [...countToWords6[count], word]
+            : [word];
+          break;
+        case 7:
+          countToWords7[count] = countToWords7[count]
+            ? [...countToWords7[count], word]
+            : [word];
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    for (const word of unusedWords) {
+      const count = "0";
+      switch (word.length) {
+        case 4:
+          countToWords4[count] = countToWords4[count]
+            ? [...countToWords4[count], word]
+            : [word];
+          break;
+        case 5:
+          countToWords5[count] = countToWords5[count]
+            ? [...countToWords5[count], word]
+            : [word];
+          break;
+        case 6:
+          countToWords6[count] = countToWords6[count]
+            ? [...countToWords6[count], word]
+            : [word];
+          break;
+        case 7:
+          countToWords7[count] = countToWords7[count]
+            ? [...countToWords7[count], word]
+            : [word];
+          break;
+
+        default:
+          break;
+      }
     }
 
     console.log(
-      `Words that were present 2 or more times in ${numIterations} puzzles (${
+      `Words that were present in ${numIterations} puzzles (${
         tempAllWordsInit.length
       } total words, ${
         Array.from(new Set(tempAllWordsInit)).length
-      } unique words), in the form {numberOccurrences: words}`
+      } unique words), in the form {numberOccurrences: words}. ${
+        11402 - Array.from(new Set(tempAllWordsInit)).length
+      } words were unused.`
     );
     console.log(countToWords);
-    console.log(JSON.stringify(countToWords));
+    // console.log(JSON.stringify(countToWords));
+
+    const replicateCountToWordCount = {};
+    for (const replicateCount in countToWords) {
+      replicateCountToWordCount[replicateCount] =
+        countToWords[replicateCount].length;
+    }
+    const replicateCountToWordCount4 = {};
+    for (const replicateCount in countToWords4) {
+      replicateCountToWordCount4[replicateCount] =
+        countToWords4[replicateCount].length;
+    }
+    const replicateCountToWordCount5 = {};
+    for (const replicateCount in countToWords5) {
+      replicateCountToWordCount5[replicateCount] =
+        countToWords5[replicateCount].length;
+    }
+    const replicateCountToWordCount6 = {};
+    for (const replicateCount in countToWords6) {
+      replicateCountToWordCount6[replicateCount] =
+        countToWords6[replicateCount].length;
+    }
+    const replicateCountToWordCount7 = {};
+    for (const replicateCount in countToWords7) {
+      replicateCountToWordCount7[replicateCount] =
+        countToWords7[replicateCount].length;
+    }
+
+    console.log(JSON.stringify(replicateCountToWordCount));
+    console.log(JSON.stringify(replicateCountToWordCount4));
+    console.log(JSON.stringify(replicateCountToWordCount5));
+    console.log(JSON.stringify(replicateCountToWordCount6));
+    console.log(JSON.stringify(replicateCountToWordCount7));
   }
 
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
