@@ -13,11 +13,12 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
     boardTop, // the row on the board being dragged (undefined if dragging piece from pool)
     boardLeft, // the col on the board being dragged (undefined if dragging piece from pool)
   }) {
-    let dragImage = new Image()
+    let dragImage = new Image();
     // 1x1 px transparent gif
     // (Safari won't drag if there is an issue setting the drag image)
-    dragImage.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-    dragImage.style.visibility = 'hidden';
+    dragImage.src =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    dragImage.style.visibility = "hidden";
     event.dataTransfer.setDragImage(dragImage, 0, 0);
 
     event.dataTransfer.setData(

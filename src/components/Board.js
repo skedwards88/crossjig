@@ -64,7 +64,8 @@ export default function Board({
   // even with event.preventDefault() and touch-action:none and modifying the viewport meta tag
   // so track when that happens so I can skip calling the dispatcher when it does
   // (I don't like how hacky this is)
-  const [wasCanceledPrematurely, setWasCanceledPrematurely] = React.useState(false);
+  const [wasCanceledPrematurely, setWasCanceledPrematurely] =
+    React.useState(false);
 
   function handleTouchEnd(event) {
     event.preventDefault();
@@ -120,7 +121,7 @@ export default function Board({
             if (!wasCanceledPrematurely) {
               dispatchGameState({ action: "dragEnd" });
             } else {
-              setWasCanceledPrematurely(false)
+              setWasCanceledPrematurely(false);
             }
           }}
           onDragOver={(event) => {
@@ -149,7 +150,7 @@ export default function Board({
             handleTouchStart(grid[rowIndex][colIndex]?.pieceID)
           }
           onPointerUp={handleTouchEnd}
-          onPointerCancel={(event)=> {
+          onPointerCancel={(event) => {
             // ios cancels the pointer event which then cancels the drag event,
             // so we need to catch that and stop the dispatcher from being called in the drag end handler.
             event.stopPropagation();
@@ -160,8 +161,8 @@ export default function Board({
             setWasCanceledPrematurely(true);
           }}
           onPointerMove={(event) => {
-            event.preventDefault()}
-          }
+            event.preventDefault();
+          }}
           onContextMenu={(event) => {
             event.preventDefault();
           }}

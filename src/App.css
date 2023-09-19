@@ -167,7 +167,8 @@ input[type="range"]:focus::-ms-fill-upper {
   align-items: baseline;
 }
 
-#controls, #exitDaily {
+#controls,
+#exitDaily {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -218,12 +219,9 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 
 #calendarButton {
-  background-image: url("./images/daily.svg"), radial-gradient(
-    circle,
-    rgba(239, 239, 239, 0.6) 30%,
-    rgba(55, 54, 71)
-    );
-    width: calc(var(--default-font-size) * 2);
+  background-image: url("./images/daily.svg"),
+    radial-gradient(circle, rgba(239, 239, 239, 0.6) 30%, rgba(55, 54, 71));
+  width: calc(var(--default-font-size) * 2);
 }
 
 #calendarButtonSolved {
@@ -297,7 +295,7 @@ a {
 #game {
   display: grid;
   grid-area: game;
-  grid-template-areas: 
+  grid-template-areas:
     "board"
     "pool";
   grid-template-rows: auto 1fr;
@@ -328,9 +326,9 @@ a {
 }
 
 .boardLetter.filled {
- background-color: var(--light-color);
- color: var(--dark-color);
- transition: background-color 3s;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  transition: background-color 3s;
 }
 
 .boardLetter.overlapping {
@@ -479,12 +477,12 @@ a {
   margin: 10px 0;
 }
 
-.statsBar>.statsDay {
+.statsBar > .statsDay {
   align-self: center;
   width: calc(var(--default-font-size) * 1);
   padding: 0 2vw;
 }
-.statsBar>.statsWon {
+.statsBar > .statsWon {
   background-color: var(--light-color);
   height: calc(var(--default-font-size) * 1.2);
 }
@@ -493,7 +491,7 @@ a {
   text-align: center;
   margin: 1vh 0;
 }
-.statsNumber>.number {
+.statsNumber > .number {
   font-size: calc(var(--default-font-size) * 1.5);
 }
 
@@ -513,8 +511,7 @@ a {
   #game {
     display: grid;
     grid-area: game;
-    grid-template-areas: 
-      "board pool";
+    grid-template-areas: "board pool";
     grid-template-columns: auto 1fr;
     align-self: center;
   }
@@ -533,7 +530,8 @@ a {
     height: fit-content;
   }
 
-  #controls, #exitDaily {
+  #controls,
+  #exitDaily {
     flex-direction: column;
     border: solid var(--light-color);
     border-width: 0 2px 0 0;

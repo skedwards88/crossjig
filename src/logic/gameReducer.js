@@ -437,7 +437,10 @@ export function gameReducer(currentGameState, payload) {
     }
     // // if dragging pool to pool and dropping at end,
     // // move the piece to the end and downshift everything that was after
-    else if (dragData.dragArea === "pool" && payload.targetPieceID === undefined) {
+    else if (
+      dragData.dragArea === "pool" &&
+      payload.targetPieceID === undefined
+    ) {
       for (let index = 0; index < newPieces.length; index++) {
         const piece = newPieces[index];
         if (piece.poolIndex > newPieces[dragData.pieceID].poolIndex) {
@@ -448,14 +451,20 @@ export function gameReducer(currentGameState, payload) {
     }
     // if dragging board to pool and dropping at end,
     // just add the piece to the end
-    else if (dragData.dragArea === "board" && payload.targetPieceID === undefined) {
+    else if (
+      dragData.dragArea === "board" &&
+      payload.targetPieceID === undefined
+    ) {
       newPieces[dragData.pieceID].poolIndex = allPoolIndexes.length
         ? maxPoolIndex + 1
         : 0;
     }
     // if dragging board to pool and dropping on another piece,
     // insert the piece and upshift everything after
-    else if (dragData.dragArea === "board" && payload.targetPieceID != undefined) {
+    else if (
+      dragData.dragArea === "board" &&
+      payload.targetPieceID != undefined
+    ) {
       const newPoolIndex = newPieces[payload.targetPieceID].poolIndex;
       for (let index = 0; index < newPieces.length; index++) {
         const piece = newPieces[index];
