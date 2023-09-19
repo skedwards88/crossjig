@@ -7,33 +7,20 @@ polyfill({
   forceApply: true,
 });
 
+function ignoreEvent(event) {
+  event.preventDefault();
+}
+
 function PoolLetter({
+  id = null,
   pieceID,
   rowIndex,
   colIndex,
   letterInfo,
+  gameIsSolved,
   dragToken,
   dispatchGameState,
 }) {
-  let className = "poolLetter";
-  if (letterInfo) {
-    if (letterInfo.isDragging) {
-      className += " dragging";
-    }
-    if (letterInfo.border.top) {
-      className += " borderTop";
-    }
-    if (letterInfo.border.bottom) {
-      className += " borderBottom";
-    }
-    if (letterInfo.border.left) {
-      className += " borderLeft";
-    }
-    if (letterInfo.border.right) {
-      className += " borderRight";
-    }
-  }
-
   // closes over dispatchGameState, dragToken, pieceID, rowIndex, colIndex; but note rowIndex and colIndex don't have
   // the same meaning as for board letters.
   const eventHandlers = {
@@ -51,27 +38,57 @@ function PoolLetter({
       event.preventDefault();
       dispatchGameState({ action: "dragEnd" });
     },
-    onDragEnter: (event) => {
-      event.preventDefault();
-    },
-    onDragOver: (event) => {
-      event.preventDefault();
-    },
-    onDrop: (event) => {
-      event.preventDefault();
-    },
+    onDragEnter: ignoreEvent,
+    onDragOver: ignoreEvent,
+    onDrop: ignoreEvent,
+    onPointerDown: null,
+    onPointerUp: null,
+    onPointerCancel: null,
+    onPointerMove: null,
+    onContextMenu: null,
   };
+
+  let className = "poolLetter";
+  if (letterInfo) {
+    if (gameIsSolved) {
+      className += " filled";
+    }
+    if (letterInfo.isDragging) {
+      className += " dragging";
+    }
+    if (letterInfo.border.top) {
+      className += " borderTop";
+    }
+    if (letterInfo.border.bottom) {
+      className += " borderBottom";
+    }
+    if (letterInfo.border.left) {
+      className += " borderLeft";
+    }
+    if (letterInfo.border.right) {
+      className += " borderRight";
+    }
+    if (letterInfo.overlapping) {
+      className += " overlapping";
+    }
+  }
 
   return (
     <div
-      id={`poolLetter-${pieceID}`}
+      id={id}
       className={className}
       draggable="true"
+      key={`${rowIndex}-${colIndex}`}
       onDragStart={eventHandlers.onDragStart}
-      onDragEnd={eventHandlers.onDragEnd}
       onDragEnter={eventHandlers.onDragEnter}
       onDragOver={eventHandlers.onDragOver}
       onDrop={eventHandlers.onDrop}
+      onDragEnd={eventHandlers.onDragEnd}
+      onPointerDown={eventHandlers.onPointerDown}
+      onPointerUp={eventHandlers.onPointerUp}
+      onPointerCancel={eventHandlers.onPointerCancel}
+      onPointerMove={eventHandlers.onPointerMove}
+      onContextMenu={eventHandlers.onContextMenu}
     >
       {letterInfo?.letter}
     </div>
@@ -92,6 +109,64 @@ export function BoardSquare({
   setWasCanceledPrematurely,
   dispatchGameState,
 }) {
+  let eventHandlers = {
+    onDragStart: (event) => {
+      dragToken({
+        event: event,
+        dragArea: "board",
+        pieceID: letterInfo?.pieceID,
+        relativeTop: letterInfo?.relativeTop,
+        relativeLeft: letterInfo?.relativeLeft,
+        boardTop: rowIndex,
+        boardLeft: colIndex,
+      });
+    },
+    onDragOver: ignoreEvent,
+    onDragEnter: (event) => {
+      event.preventDefault();
+      handleBoardDragEnter({
+        event: event,
+        rowIndex: rowIndex,
+        colIndex: colIndex,
+      });
+    },
+    onDrop: (event) => {
+      event.preventDefault();
+      handleBoardDrop({
+        event: event,
+        rowIndex: rowIndex,
+        colIndex: colIndex,
+      });
+    },
+    onDragEnd: (event) => {
+      // according to the HTML spec, the drop event fires before the dragEnd event
+      event.preventDefault();
+      // only call the dispatcher if ios didn't force end the drag prematurely
+      // otherwise just reset the state
+      if (!wasCanceledPrematurely) {
+        dispatchGameState({ action: "dragEnd" });
+      } else {
+        setWasCanceledPrematurely(false);
+      }
+    },
+    onPointerDown: () => {
+      handleTouchStart(letterInfo?.pieceID);
+    },
+    onPointerUp: handleTouchEnd,
+    onPointerCancel: (event) => {
+      // ios cancels the pointer event which then cancels the drag event,
+      // so we need to catch that and stop the dispatcher from being called in the drag end handler.
+      event.stopPropagation();
+      event.preventDefault();
+      // stopPropagation and preventDefault don't actually stop this
+      // (but I left them in place in hopes that ios will follow standards in the future),
+      // so track whether the drag was canceled prematurely via the state
+      setWasCanceledPrematurely(true);
+    },
+    onPointerMove: ignoreEvent,
+    onContextMenu: ignoreEvent,
+  };
+
   let className = "boardLetter";
   if (letterInfo) {
     if (gameIsSolved) {
@@ -116,79 +191,18 @@ export function BoardSquare({
       className += " overlapping";
     }
   }
-  let eventHandlers = {
-    onDrop: (event) => {
-      event.preventDefault();
-      handleBoardDrop({
-        event: event,
-        rowIndex: rowIndex,
-        colIndex: colIndex,
-      });
-    },
-    onDragEnd: (event) => {
-      // according to the HTML spec, the drop event fires before the dragEnd event
-      event.preventDefault();
-      // only call the dispatcher if ios didn't force end the drag prematurely
-      // otherwise just reset the state
-      if (!wasCanceledPrematurely) {
-        dispatchGameState({ action: "dragEnd" });
-      } else {
-        setWasCanceledPrematurely(false);
-      }
-    },
-    onDragOver: (event) => {
-      event.preventDefault();
-    },
-    onDragEnter: (event) => {
-      event.preventDefault();
-      handleBoardDragEnter({
-        event: event,
-        rowIndex: rowIndex,
-        colIndex: colIndex,
-      });
-    },
-    onDragStart: (event) => {
-      dragToken({
-        event: event,
-        dragArea: "board",
-        pieceID: letterInfo?.pieceID,
-        relativeTop: letterInfo?.relativeTop,
-        relativeLeft: letterInfo?.relativeLeft,
-        boardTop: rowIndex,
-        boardLeft: colIndex,
-      });
-    },
-    onPointerDown: () => {
-      handleTouchStart(letterInfo?.pieceID);
-    },
-    onPointerUp: handleTouchEnd,
-    onPointerCancel: (event) => {
-      // ios cancels the pointer event which then cancels the drag event,
-      // so we need to catch that and stop the dispatcher from being called in the drag end handler.
-      event.stopPropagation();
-      event.preventDefault();
-      // stopPropagation and preventDefault don't actually stop this
-      // (but I left them in place in hopes that ios will follow standards in the future),
-      // so track whether the drag was canceled prematurely via the state
-      setWasCanceledPrematurely(true);
-    },
-    onPointerMove: (event) => {
-      event.preventDefault();
-    },
-    onContextMenu: (event) => {
-      event.preventDefault();
-    },
-  };
 
   return (
     <div
+      id={null}
       className={className}
-      draggable
+      draggable="true"
       key={`${rowIndex}-${colIndex}`}
       onDragEnter={eventHandlers.onDragEnter}
       onDragOver={eventHandlers.onDragOver}
       onDrop={eventHandlers.onDrop}
       onDragStart={eventHandlers.onDragStart}
+      onDragEnd={eventHandlers.onDragEnd}
       onPointerDown={eventHandlers.onPointerDown}
       onPointerUp={eventHandlers.onPointerUp}
       onPointerCancel={eventHandlers.onPointerCancel}
@@ -229,11 +243,13 @@ export default function Piece({
         : undefined;
       letterElements.push(
         <PoolLetter
+          key={`${pieceID}-${rowIndex}-${colIndex}`}
+          id={`poolLetter-${pieceID}-${rowIndex}-${colIndex}`}
           pieceID={pieceID}
           rowIndex={rowIndex}
           colIndex={colIndex}
           letterInfo={letterInfo}
-          key={`${pieceID}-${rowIndex}-${colIndex}`}
+          gameIsSolved={false}
           dragToken={dragToken}
           dispatchGameState={dispatchGameState}
         />
@@ -254,12 +270,8 @@ export default function Piece({
           targetPieceID: pieceID,
         });
       }}
-      onDragEnd={(event) => {
-        event.preventDefault();
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
-      }}
+      onDragEnd={ignoreEvent}
+      onDragOver={ignoreEvent}
       onDrop={(event) => {
         event.preventDefault();
         dropOnPool({ event: event, targetPieceID: pieceID });

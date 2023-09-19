@@ -87,7 +87,11 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const grid = generateGridFromBoardPieces(boardPieces, gridSize, draggedPieceIDs);
+  const grid = generateGridFromBoardPieces(
+    boardPieces,
+    gridSize,
+    draggedPieceIDs
+  );
 
   let boardElements = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
