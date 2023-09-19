@@ -6,30 +6,35 @@ polyfill({
   dragImageCenterOnTouch: true,
 });
 
-function generateGridFromBoardPieces(boardPieces, gridSize) {
-  let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill("")))
-  );
+function generateGridFromBoardPieces(boardPieces, gridSize, draggedPieceIDs) {
+  let grid = Array(gridSize)
+    .fill(undefined)
+    .map(() => Array(gridSize).fill(undefined));
 
   for (let index = 0; index < boardPieces.length; index++) {
     const letters = boardPieces[index].letters;
-    const id = boardPieces[index].id;
+    const pieceID = boardPieces[index].id;
     let top = boardPieces[index].boardTop;
+    let isDragging = draggedPieceIDs.includes(pieceID);
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = boardPieces[index].boardLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        if (letters[rowIndex][colIndex]) {
-          const overlapping = Boolean(grid[top][left].letter);
+        let letter = letters[rowIndex][colIndex];
+        if (letter) {
+          const overlapping = grid[top][left] !== undefined;
           grid[top][left] = {
-            letter: letters[rowIndex][colIndex],
+            letter,
             relativeTop: rowIndex,
             relativeLeft: colIndex,
-            pieceID: id,
-            borderTop: !letters[rowIndex - 1]?.[colIndex],
-            borderBottom: !letters[rowIndex + 1]?.[colIndex],
-            borderLeft: !letters[rowIndex][colIndex - 1],
-            borderRight: !letters[rowIndex][colIndex + 1],
-            overlapping: overlapping,
+            pieceID,
+            border: {
+              top: !letters[rowIndex - 1]?.[colIndex],
+              bottom: !letters[rowIndex + 1]?.[colIndex],
+              left: !letters[rowIndex][colIndex - 1],
+              right: !letters[rowIndex][colIndex + 1],
+            },
+            overlapping,
+            isDragging,
           };
         }
         left += 1;
@@ -82,31 +87,20 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const grid = generateGridFromBoardPieces(boardPieces, gridSize);
+  const grid = generateGridFromBoardPieces(boardPieces, gridSize, draggedPieceIDs);
 
   let boardElements = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
       const letterInfo = grid[rowIndex][colIndex];
-      const isLetter = Boolean(letterInfo?.letter);
-      const isDragging = draggedPieceIDs.includes(letterInfo?.pieceID);
-      const className = isLetter
-        ? `boardLetter ${gameIsSolved ? " filled" : ""}${
-            isDragging ? " dragging" : ""
-          }${letterInfo.borderTop ? " borderTop" : ""}${
-            letterInfo.borderBottom ? " borderBottom" : ""
-          }${letterInfo.borderLeft ? " borderLeft" : ""}${
-            letterInfo.borderRight ? " borderRight" : ""
-          }${letterInfo.overlapping ? " overlapping" : ""}`
-        : "boardLetter";
 
       boardElements.push(
         <BoardSquare
           key={`${rowIndex}-${colIndex}`}
           rowIndex={rowIndex}
           colIndex={colIndex}
-          className={className}
           letterInfo={letterInfo}
+          gameIsSolved={gameIsSolved}
           handleBoardDragEnter={handleBoardDragEnter}
           handleBoardDrop={handleBoardDrop}
           wasCanceledPrematurely={wasCanceledPrematurely}

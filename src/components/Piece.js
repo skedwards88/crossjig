@@ -11,27 +11,26 @@ function PoolLetter({
   pieceID,
   rowIndex,
   colIndex,
-  letters,
+  letterInfo,
   dragToken,
-  isDragging,
   dispatchGameState,
 }) {
   let className = "poolLetter";
-  if (isDragging) {
-    className = `${className} dragging`;
-  }
-  if (letters[rowIndex][colIndex]) {
-    if (!letters[rowIndex - 1]?.[colIndex]) {
-      className = `${className} borderTop`;
+  if (letterInfo) {
+    if (letterInfo.isDragging) {
+      className += " dragging";
     }
-    if (!letters[rowIndex + 1]?.[colIndex]) {
-      className = `${className} borderBottom`;
+    if (letterInfo.border.top) {
+      className += " borderTop";
     }
-    if (!letters[rowIndex][colIndex - 1]) {
-      className = `${className} borderLeft`;
+    if (letterInfo.border.bottom) {
+      className += " borderBottom";
     }
-    if (!letters[rowIndex][colIndex + 1]) {
-      className = `${className} borderRight`;
+    if (letterInfo.border.left) {
+      className += " borderLeft";
+    }
+    if (letterInfo.border.right) {
+      className += " borderRight";
     }
   }
 
@@ -74,7 +73,7 @@ function PoolLetter({
       onDragOver={eventHandlers.onDragOver}
       onDrop={eventHandlers.onDrop}
     >
-      {letters[rowIndex][colIndex]}
+      {letterInfo?.letter}
     </div>
   );
 }
@@ -82,8 +81,8 @@ function PoolLetter({
 export function BoardSquare({
   rowIndex,
   colIndex,
-  className,
   letterInfo,
+  gameIsSolved,
   handleBoardDragEnter,
   handleBoardDrop,
   handleTouchStart,
@@ -93,6 +92,30 @@ export function BoardSquare({
   setWasCanceledPrematurely,
   dispatchGameState,
 }) {
+  let className = "boardLetter";
+  if (letterInfo) {
+    if (gameIsSolved) {
+      className += " filled";
+    }
+    if (letterInfo.isDragging) {
+      className += " dragging";
+    }
+    if (letterInfo.border.top) {
+      className += " borderTop";
+    }
+    if (letterInfo.border.bottom) {
+      className += " borderBottom";
+    }
+    if (letterInfo.border.left) {
+      className += " borderLeft";
+    }
+    if (letterInfo.border.right) {
+      className += " borderRight";
+    }
+    if (letterInfo.overlapping) {
+      className += " overlapping";
+    }
+  }
   let eventHandlers = {
     onDrop: (event) => {
       event.preventDefault();
@@ -187,18 +210,31 @@ export default function Piece({
   dispatchGameState,
 }) {
   let letterElements = [];
+  const isDragging = draggedPieceIDs.includes(pieceID);
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-      const isDragging = draggedPieceIDs.includes(pieceID);
+      const letterStr = letters[rowIndex][colIndex];
+      const letterInfo = letterStr
+        ? {
+            letter: letterStr,
+            border: {
+              top: !letters[rowIndex - 1]?.[colIndex],
+              bottom: !letters[rowIndex + 1]?.[colIndex],
+              left: !letters[rowIndex][colIndex - 1],
+              right: !letters[rowIndex][colIndex + 1],
+            },
+            overlapping: false,
+            isDragging,
+          }
+        : undefined;
       letterElements.push(
         <PoolLetter
           pieceID={pieceID}
           rowIndex={rowIndex}
           colIndex={colIndex}
-          letters={letters}
+          letterInfo={letterInfo}
           key={`${pieceID}-${rowIndex}-${colIndex}`}
           dragToken={dragToken}
-          isDragging={isDragging}
           dispatchGameState={dispatchGameState}
         />
       );
