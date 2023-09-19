@@ -93,6 +93,15 @@ export default function Board({
     draggedPieceIDs
   );
 
+  let dragController = {
+    handleBoardDragEnter,
+    handleBoardDrop,
+    dragToken,
+    wasCanceledPrematurely,
+    setWasCanceledPrematurely,
+    handleTouchStart,
+    handleTouchEnd,
+  };
   let boardElements = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
@@ -105,13 +114,7 @@ export default function Board({
           colIndex={colIndex}
           letterInfo={letterInfo}
           gameIsSolved={gameIsSolved}
-          handleBoardDragEnter={handleBoardDragEnter}
-          handleBoardDrop={handleBoardDrop}
-          wasCanceledPrematurely={wasCanceledPrematurely}
-          setWasCanceledPrematurely={setWasCanceledPrematurely}
-          handleTouchStart={handleTouchStart}
-          handleTouchEnd={handleTouchEnd}
-          dragToken={dragToken}
+          dragController={dragController}
         />
       );
     }
