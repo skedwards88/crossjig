@@ -86,88 +86,109 @@ export default function Board({
   let boardElements = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
-      const isLetter = Boolean(grid[rowIndex][colIndex]?.letter);
+      const letterInfo = grid[rowIndex][colIndex];
+      const isLetter = Boolean(letterInfo?.letter);
       const isDragging = draggedPieceIDs.includes(
-        grid[rowIndex][colIndex]?.pieceID
+        letterInfo?.pieceID
       );
+      const className = isLetter
+        ? `boardLetter ${
+            gameIsSolved ? " filled" : ""
+          }${
+            isDragging ? " dragging" : ""
+          }${
+            letterInfo.borderTop ? " borderTop" : ""
+          }${
+            letterInfo.borderBottom ? " borderBottom" : ""
+          }${
+            letterInfo.borderLeft ? " borderLeft" : ""
+          }${
+            letterInfo.borderRight ? " borderRight" : ""
+          }${
+            letterInfo.overlapping ? " overlapping" : ""
+          }`
+        : "boardLetter";
+
+      let eventHandlers = {
+        onDrop: (event) => {
+          event.preventDefault();
+          handleBoardDrop({
+            event: event,
+            rowIndex: rowIndex,
+            colIndex: colIndex,
+          });
+        },
+        onDragEnd: (event) => {
+          // according to the HTML spec, the drop event fires before the dragEnd event
+          event.preventDefault();
+          // only call the dispatcher if ios didn't force end the drag prematurely
+          // otherwise just reset the state
+          if (!wasCanceledPrematurely) {
+            dispatchGameState({ action: "dragEnd" });
+          } else {
+            setWasCanceledPrematurely(false);
+          }
+        },
+        onDragOver: (event) => {
+          event.preventDefault();
+        },
+        onDragEnter: (event) => {
+          event.preventDefault();
+          handleBoardDragEnter({
+            event: event,
+            rowIndex: rowIndex,
+            colIndex: colIndex,
+          });
+        },
+        onDragStart: (event) => {
+          dragToken({
+            event: event,
+            dragArea: "board",
+            pieceID: letterInfo?.pieceID,
+            relativeTop: letterInfo?.relativeTop,
+            relativeLeft: letterInfo?.relativeLeft,
+            boardTop: rowIndex,
+            boardLeft: colIndex,
+          });
+        },
+        onPointerDown: () => {
+          handleTouchStart(letterInfo?.pieceID);
+        },
+        onPointerUp: handleTouchEnd,
+        onPointerCancel: (event) => {
+          // ios cancels the pointer event which then cancels the drag event,
+          // so we need to catch that and stop the dispatcher from being called in the drag end handler.
+          event.stopPropagation();
+          event.preventDefault();
+          // stopPropagation and preventDefault don't actually stop this
+          // (but I left them in place in hopes that ios will follow standards in the future),
+          // so track whether the drag was canceled prematurely via the state
+          setWasCanceledPrematurely(true);
+        },
+        onPointerMove: (event) => {
+          event.preventDefault();
+        },
+        onContextMenu: (event) => {
+          event.preventDefault();
+        },
+      };
+
       const element = (
         <div
-          className={
-            isLetter
-              ? `boardLetter ${gameIsSolved ? " filled" : ""}${
-                  isDragging ? " dragging" : ""
-                }${grid[rowIndex][colIndex].borderTop ? " borderTop" : ""}${
-                  grid[rowIndex][colIndex].borderBottom ? " borderBottom" : ""
-                }${grid[rowIndex][colIndex].borderLeft ? " borderLeft" : ""}${
-                  grid[rowIndex][colIndex].borderRight ? " borderRight" : ""
-                }${grid[rowIndex][colIndex].overlapping ? " overlapping" : ""}`
-              : "boardLetter"
-          }
+          className={className}
           draggable
           key={`${rowIndex}-${colIndex}`}
-          onDrop={(event) => {
-            event.preventDefault();
-            handleBoardDrop({
-              event: event,
-              rowIndex: rowIndex,
-              colIndex: colIndex,
-            });
-          }}
-          onDragEnd={(event) => {
-            // according to the HTML spec, the drop event fires before the dragEnd event
-            event.preventDefault();
-            // only call the dispatcher if ios didn't force end the drag prematurely
-            // otherwise just reset the state
-            if (!wasCanceledPrematurely) {
-              dispatchGameState({ action: "dragEnd" });
-            } else {
-              setWasCanceledPrematurely(false);
-            }
-          }}
-          onDragOver={(event) => {
-            event.preventDefault();
-          }}
-          onDragEnter={(event) => {
-            event.preventDefault();
-            handleBoardDragEnter({
-              event: event,
-              rowIndex: rowIndex,
-              colIndex: colIndex,
-            });
-          }}
-          onDragStart={(event) => {
-            dragToken({
-              event: event,
-              dragArea: "board",
-              pieceID: grid[rowIndex][colIndex]?.pieceID,
-              relativeTop: grid[rowIndex][colIndex]?.relativeTop,
-              relativeLeft: grid[rowIndex][colIndex]?.relativeLeft,
-              boardTop: rowIndex,
-              boardLeft: colIndex,
-            });
-          }}
-          onPointerDown={() =>
-            handleTouchStart(grid[rowIndex][colIndex]?.pieceID)
-          }
-          onPointerUp={handleTouchEnd}
-          onPointerCancel={(event) => {
-            // ios cancels the pointer event which then cancels the drag event,
-            // so we need to catch that and stop the dispatcher from being called in the drag end handler.
-            event.stopPropagation();
-            event.preventDefault();
-            // stopPropagation and preventDefault don't actually stop this
-            // (but I left them in place in hopes that ios will follow standards in the future),
-            // so track whether the drag was canceled prematurely via the state
-            setWasCanceledPrematurely(true);
-          }}
-          onPointerMove={(event) => {
-            event.preventDefault();
-          }}
-          onContextMenu={(event) => {
-            event.preventDefault();
-          }}
+          onDragEnter={eventHandlers.onDragEnter}
+          onDragOver={eventHandlers.onDragOver}
+          onDrop={eventHandlers.onDrop}
+          onDragStart={eventHandlers.onDragStart}
+          onPointerDown={eventHandlers.onPointerDown}
+          onPointerUp={eventHandlers.onPointerUp}
+          onPointerCancel={eventHandlers.onPointerCancel}
+          onPointerMove={eventHandlers.onPointerMove}
+          onContextMenu={eventHandlers.onContextMenu}
         >
-          {grid[rowIndex][colIndex]?.letter}
+          {letterInfo?.letter}
         </div>
       );
       boardElements.push(element);

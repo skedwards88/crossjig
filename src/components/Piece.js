@@ -6,7 +6,7 @@ polyfill({
   // force apply is required to skip the drag delay on ipad
   forceApply: true,
 });
-
+    
 function Letter({
   pieceID,
   rowIndex,
@@ -35,34 +35,42 @@ function Letter({
     }
   }
 
+  const eventHandlers = {
+    onDragStart: (event) => {
+      dragToken({
+        event: event,
+        pieceID: pieceID,
+        dragArea: "pool",
+        relativeTop: rowIndex,
+        relativeLeft: colIndex,
+      });
+    },
+    onDragEnd: (event) => {
+      // according to the HTML spec, the drop event fires before the dragEnd event
+      event.preventDefault();
+      dispatchGameState({ action: "dragEnd" });
+    },
+    onDragEnter: (event) => {
+      event.preventDefault();
+    },
+    onDragOver: (event) => {
+      event.preventDefault();
+    },
+    onDrop: (event) => {
+      event.preventDefault();
+    },
+  };
+
   return (
     <div
       id={`poolLetter-${pieceID}`}
       className={className}
       draggable="true"
-      onDragStart={(event) => {
-        dragToken({
-          event: event,
-          pieceID: pieceID,
-          dragArea: "pool",
-          relativeTop: rowIndex,
-          relativeLeft: colIndex,
-        });
-      }}
-      onDragEnd={(event) => {
-        // according to the HTML spec, the drop event fires before the dragEnd event
-        event.preventDefault();
-        dispatchGameState({ action: "dragEnd" });
-      }}
-      onDragEnter={(event) => {
-        event.preventDefault();
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
-      }}
-      onDrop={(event) => {
-        event.preventDefault();
-      }}
+      onDragStart={eventHandlers.onDragStart}
+      onDragEnd={eventHandlers.onDragEnd}
+      onDragEnter={eventHandlers.onDragEnter}
+      onDragOver={eventHandlers.onDragOver}
+      onDrop={eventHandlers.onDrop}
     >
       {letters[rowIndex][colIndex]}
     </div>
