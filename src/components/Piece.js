@@ -11,7 +11,7 @@ function ignoreEvent(event) {
   event.preventDefault();
 }
 
-function PoolLetter({
+export function Letter({
   isOnBoard,
   pieceID,
   letterInfo,
@@ -161,24 +161,6 @@ function PoolLetter({
   );
 }
 
-export function BoardSquare({
-  rowIndex: gridRowIndex,
-  colIndex: gridColIndex,
-  letterInfo,
-  gameIsSolved,
-  dragController,
-}) {
-  return PoolLetter({
-    isOnBoard: true,
-    pieceID: letterInfo?.pieceID,
-    letterInfo,
-    gridRowIndex,
-    gridColIndex,
-    gameIsSolved,
-    dragController,
-  });
-}
-
 export default function Piece({
   letters,
   pieceID,
@@ -209,7 +191,7 @@ export default function Piece({
           }
         : undefined;
       letterElements.push(
-        <PoolLetter
+        <Letter
           key={`${pieceID}-${rowIndex}-${colIndex}`}
           isOnBoard={false}
           pieceID={pieceID}

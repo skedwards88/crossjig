@@ -1,6 +1,6 @@
 import React from "react";
 import { polyfill } from "mobile-drag-drop";
-import { BoardSquare } from "./Piece";
+import { Letter } from "./Piece";
 
 polyfill({
   dragImageCenterOnTouch: true,
@@ -108,11 +108,13 @@ export default function Board({
       const letterInfo = grid[rowIndex][colIndex];
 
       boardElements.push(
-        <BoardSquare
+        <Letter
           key={`${rowIndex}-${colIndex}`}
-          rowIndex={rowIndex}
-          colIndex={colIndex}
+          isOnBoard={true}
+          pieceID={letterInfo?.pieceID}
           letterInfo={letterInfo}
+          gridRowIndex={rowIndex}
+          gridColIndex={colIndex}
           gameIsSolved={gameIsSolved}
           dragController={dragController}
         />
