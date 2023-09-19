@@ -12,7 +12,6 @@ function ignoreEvent(event) {
 }
 
 function PoolLetter({
-  id = null,
   pieceID,
   rowIndex,
   colIndex,
@@ -75,7 +74,6 @@ function PoolLetter({
 
   return (
     <div
-      id={id}
       className={className}
       draggable="true"
       key={`${rowIndex}-${colIndex}`}
@@ -194,7 +192,6 @@ export function BoardSquare({
 
   return (
     <div
-      id={null}
       className={className}
       draggable="true"
       key={`${rowIndex}-${colIndex}`}
@@ -244,7 +241,6 @@ export default function Piece({
       letterElements.push(
         <PoolLetter
           key={`${pieceID}-${rowIndex}-${colIndex}`}
-          id={`poolLetter-${pieceID}-${rowIndex}-${colIndex}`}
           pieceID={pieceID}
           rowIndex={rowIndex}
           colIndex={colIndex}
