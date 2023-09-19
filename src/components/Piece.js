@@ -12,9 +12,8 @@ function ignoreEvent(event) {
 }
 
 function PoolLetter({
+  isOnBoard,
   pieceID,
-  rowIndex,
-  colIndex,
   letterInfo,
   gameIsSolved,
   dragToken,
@@ -23,23 +22,26 @@ function PoolLetter({
   // closes over dispatchGameState, dragToken, pieceID, rowIndex, colIndex; but note rowIndex and colIndex don't have
   // the same meaning as for board letters.
   const eventHandlers = {
-    onDragStart: (event) => {
-      dragToken({
-        event: event,
-        pieceID: pieceID,
-        dragArea: "pool",
-        relativeTop: rowIndex,
-        relativeLeft: colIndex,
-      });
-    },
+    onDragStart: 
+      letterInfo
+      ? (event) => {
+        dragToken({
+          event: event,
+          pieceID: pieceID,
+          dragArea: "pool",
+          relativeTop: letterInfo.pieceRowIndex,
+          relativeLeft: letterInfo.pieceColIndex,
+        });
+      }
+      : ignoreEvent,
+    onDragEnter: ignoreEvent,
+    onDragOver: ignoreEvent,
+    onDrop: ignoreEvent,
     onDragEnd: (event) => {
       // according to the HTML spec, the drop event fires before the dragEnd event
       event.preventDefault();
       dispatchGameState({ action: "dragEnd" });
     },
-    onDragEnter: ignoreEvent,
-    onDragOver: ignoreEvent,
-    onDrop: ignoreEvent,
     onPointerDown: null,
     onPointerUp: null,
     onPointerCancel: null,
@@ -47,7 +49,7 @@ function PoolLetter({
     onContextMenu: null,
   };
 
-  let className = "poolLetter";
+  let className = isOnBoard ? "boardLetter" : "poolLetter";
   if (letterInfo) {
     if (gameIsSolved) {
       className += " filled";
@@ -76,7 +78,6 @@ function PoolLetter({
     <div
       className={className}
       draggable="true"
-      key={`${rowIndex}-${colIndex}`}
       onDragStart={eventHandlers.onDragStart}
       onDragEnter={eventHandlers.onDragEnter}
       onDragOver={eventHandlers.onDragOver}
@@ -94,8 +95,8 @@ function PoolLetter({
 }
 
 export function BoardSquare({
-  rowIndex,
-  colIndex,
+  rowIndex: gridRowIndex,
+  colIndex: gridColIndex,
   letterInfo,
   gameIsSolved,
   handleBoardDragEnter,
@@ -115,25 +116,25 @@ export function BoardSquare({
         pieceID: letterInfo?.pieceID,
         relativeTop: letterInfo?.relativeTop,
         relativeLeft: letterInfo?.relativeLeft,
-        boardTop: rowIndex,
-        boardLeft: colIndex,
+        boardTop: gridRowIndex,
+        boardLeft: gridColIndex,
       });
     },
-    onDragOver: ignoreEvent,
     onDragEnter: (event) => {
       event.preventDefault();
       handleBoardDragEnter({
         event: event,
-        rowIndex: rowIndex,
-        colIndex: colIndex,
+        rowIndex: gridRowIndex,
+        colIndex: gridColIndex,
       });
     },
+    onDragOver: ignoreEvent,
     onDrop: (event) => {
       event.preventDefault();
       handleBoardDrop({
         event: event,
-        rowIndex: rowIndex,
-        colIndex: colIndex,
+        rowIndex: gridRowIndex,
+        colIndex: gridColIndex,
       });
     },
     onDragEnd: (event) => {
@@ -194,7 +195,7 @@ export function BoardSquare({
     <div
       className={className}
       draggable="true"
-      key={`${rowIndex}-${colIndex}`}
+      key={`${gridRowIndex}-${gridColIndex}`}
       onDragEnter={eventHandlers.onDragEnter}
       onDragOver={eventHandlers.onDragOver}
       onDrop={eventHandlers.onDrop}
@@ -228,6 +229,8 @@ export default function Piece({
       const letterInfo = letterStr
         ? {
             letter: letterStr,
+            pieceRowIndex: rowIndex,
+            pieceColIndex: colIndex,
             border: {
               top: !letters[rowIndex - 1]?.[colIndex],
               bottom: !letters[rowIndex + 1]?.[colIndex],
@@ -241,6 +244,7 @@ export default function Piece({
       letterElements.push(
         <PoolLetter
           key={`${pieceID}-${rowIndex}-${colIndex}`}
+          isOnBoard={false}
           pieceID={pieceID}
           rowIndex={rowIndex}
           colIndex={colIndex}
