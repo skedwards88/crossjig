@@ -9,7 +9,7 @@
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint --ignore-path .gitignore .",
-    "prettier": "npx prettier --ignore-path .gitignore --write .",
+    "prettier": "npx prettier --write .",
     "style": "npx stylelint '**/*.css' --fix"
   },
   "repository": {
