@@ -1,5 +1,6 @@
 import React from "react";
 import { polyfill } from "mobile-drag-drop";
+import { BoardSquare } from "./Piece";
 
 polyfill({
   dragImageCenterOnTouch: true,
@@ -88,110 +89,33 @@ export default function Board({
     for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
       const letterInfo = grid[rowIndex][colIndex];
       const isLetter = Boolean(letterInfo?.letter);
-      const isDragging = draggedPieceIDs.includes(
-        letterInfo?.pieceID
-      );
+      const isDragging = draggedPieceIDs.includes(letterInfo?.pieceID);
       const className = isLetter
-        ? `boardLetter ${
-            gameIsSolved ? " filled" : ""
-          }${
+        ? `boardLetter ${gameIsSolved ? " filled" : ""}${
             isDragging ? " dragging" : ""
-          }${
-            letterInfo.borderTop ? " borderTop" : ""
-          }${
+          }${letterInfo.borderTop ? " borderTop" : ""}${
             letterInfo.borderBottom ? " borderBottom" : ""
-          }${
-            letterInfo.borderLeft ? " borderLeft" : ""
-          }${
+          }${letterInfo.borderLeft ? " borderLeft" : ""}${
             letterInfo.borderRight ? " borderRight" : ""
-          }${
-            letterInfo.overlapping ? " overlapping" : ""
-          }`
+          }${letterInfo.overlapping ? " overlapping" : ""}`
         : "boardLetter";
 
-      let eventHandlers = {
-        onDrop: (event) => {
-          event.preventDefault();
-          handleBoardDrop({
-            event: event,
-            rowIndex: rowIndex,
-            colIndex: colIndex,
-          });
-        },
-        onDragEnd: (event) => {
-          // according to the HTML spec, the drop event fires before the dragEnd event
-          event.preventDefault();
-          // only call the dispatcher if ios didn't force end the drag prematurely
-          // otherwise just reset the state
-          if (!wasCanceledPrematurely) {
-            dispatchGameState({ action: "dragEnd" });
-          } else {
-            setWasCanceledPrematurely(false);
-          }
-        },
-        onDragOver: (event) => {
-          event.preventDefault();
-        },
-        onDragEnter: (event) => {
-          event.preventDefault();
-          handleBoardDragEnter({
-            event: event,
-            rowIndex: rowIndex,
-            colIndex: colIndex,
-          });
-        },
-        onDragStart: (event) => {
-          dragToken({
-            event: event,
-            dragArea: "board",
-            pieceID: letterInfo?.pieceID,
-            relativeTop: letterInfo?.relativeTop,
-            relativeLeft: letterInfo?.relativeLeft,
-            boardTop: rowIndex,
-            boardLeft: colIndex,
-          });
-        },
-        onPointerDown: () => {
-          handleTouchStart(letterInfo?.pieceID);
-        },
-        onPointerUp: handleTouchEnd,
-        onPointerCancel: (event) => {
-          // ios cancels the pointer event which then cancels the drag event,
-          // so we need to catch that and stop the dispatcher from being called in the drag end handler.
-          event.stopPropagation();
-          event.preventDefault();
-          // stopPropagation and preventDefault don't actually stop this
-          // (but I left them in place in hopes that ios will follow standards in the future),
-          // so track whether the drag was canceled prematurely via the state
-          setWasCanceledPrematurely(true);
-        },
-        onPointerMove: (event) => {
-          event.preventDefault();
-        },
-        onContextMenu: (event) => {
-          event.preventDefault();
-        },
-      };
-
-      const element = (
-        <div
-          className={className}
-          draggable
+      boardElements.push(
+        <BoardSquare
           key={`${rowIndex}-${colIndex}`}
-          onDragEnter={eventHandlers.onDragEnter}
-          onDragOver={eventHandlers.onDragOver}
-          onDrop={eventHandlers.onDrop}
-          onDragStart={eventHandlers.onDragStart}
-          onPointerDown={eventHandlers.onPointerDown}
-          onPointerUp={eventHandlers.onPointerUp}
-          onPointerCancel={eventHandlers.onPointerCancel}
-          onPointerMove={eventHandlers.onPointerMove}
-          onContextMenu={eventHandlers.onContextMenu}
-        >
-          {letterInfo?.letter}
-        </div>
+          rowIndex={rowIndex}
+          colIndex={colIndex}
+          className={className}
+          letterInfo={letterInfo}
+          handleBoardDragEnter={handleBoardDragEnter}
+          handleBoardDrop={handleBoardDrop}
+          wasCanceledPrematurely={wasCanceledPrematurely}
+          setWasCanceledPrematurely={setWasCanceledPrematurely}
+          handleTouchStart={handleTouchStart}
+          handleTouchEnd={handleTouchEnd}
+          dragToken={dragToken}
+        />
       );
-      boardElements.push(element);
     }
   }
 
