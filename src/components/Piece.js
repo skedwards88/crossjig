@@ -32,76 +32,59 @@ export function Letter({
   },
 }) {
   const eventHandlers = {
-    onDragStart: 
-      isOnBoard
-      ? (event) => {
+    onDragStart: (event) => {
+      if (isOnBoard || letterInfo) {
         dragToken({
           event: event,
-          dragArea: "board",
-          pieceID: letterInfo?.pieceID,
-          relativeTop: letterInfo?.relativeTop,
-          relativeLeft: letterInfo?.relativeLeft,
-          boardTop: gridRowIndex,
-          boardLeft: gridColIndex,
-        });
-      }
-      : letterInfo
-      ? (event) => {
-        dragToken({
-          event: event,
-          dragArea: "pool",
+          dragArea: isOnBoard ? "board" : "pool",
           pieceID: pieceID,
-          relativeTop: letterInfo.pieceRowIndex,
-          relativeLeft: letterInfo.pieceColIndex,
-          boardTop: undefined,
-          boardLeft: undefined,
+          relativeTop: isOnBoard ? letterInfo?.relativeTop : letterInfo.pieceRowIndex,
+          relativeLeft: isOnBoard ? letterInfo?.relativeLeft : letterInfo.pieceColIndex,
+          boardTop: isOnBoard ? gridRowIndex : undefined,
+          boardLeft: isOnBoard ? gridColIndex : undefined,
         });
-      }
-      : ignoreEvent,
-    onDragEnter: isOnBoard
-      ? (event) => {
+      } else {
         event.preventDefault();
+      }
+    },
+    onDragEnter: (event) => {
+      event.preventDefault();
+      if (isOnBoard) {
         handleBoardDragEnter({
           event: event,
           rowIndex: gridRowIndex,
           colIndex: gridColIndex,
         });
       }
-      : ignoreEvent,
+    },
     onDragOver: ignoreEvent,
-    onDrop: isOnBoard
-      ? (event) => {
-        event.preventDefault();
+    onDrop: (event) => {
+      event.preventDefault();
+      if (isOnBoard) {
         handleBoardDrop({
           event: event,
           rowIndex: gridRowIndex,
           colIndex: gridColIndex,
         });
       }
-      : ignoreEvent,
-    onDragEnd: isOnBoard
-      ? (event) => {
-        // according to the HTML spec, the drop event fires before the dragEnd event
-        event.preventDefault();
+    },
+    onDragEnd: (event) => {
+      // according to the HTML spec, the drop event fires before the dragEnd event
+      event.preventDefault();
+      if (isOnBoard && wasCanceledPrematurely) {
         // only call the dispatcher if ios didn't force end the drag prematurely
         // otherwise just reset the state
-        if (!wasCanceledPrematurely) {
-          dispatchGameState({ action: "dragEnd" });
-        } else {
-          setWasCanceledPrematurely(false);
-        }
-      }
-      : (event) => {
-        // according to the HTML spec, the drop event fires before the dragEnd event
-        event.preventDefault();
+        setWasCanceledPrematurely(false);
+      } else {
         dispatchGameState({ action: "dragEnd" });
-      },
+      }
+    },
     onPointerDown: isOnBoard
       ? () => {
         handleTouchStart(letterInfo?.pieceID);
       }
-      : null,
-    onPointerUp: isOnBoard ? handleTouchEnd : null,
+      : undefined,
+    onPointerUp: isOnBoard ? handleTouchEnd : undefined,
     onPointerCancel: isOnBoard
       ? (event) => {
         // ios cancels the pointer event which then cancels the drag event,
@@ -113,9 +96,9 @@ export function Letter({
         // so track whether the drag was canceled prematurely via the state
         setWasCanceledPrematurely(true);
       }
-      : null,
-    onPointerMove: isOnBoard ? ignoreEvent : null,
-    onContextMenu: isOnBoard ? ignoreEvent : null,
+      : undefined,
+    onPointerMove: isOnBoard ? ignoreEvent : undefined,
+    onContextMenu: isOnBoard ? ignoreEvent : undefined,
   };
 
   let className = isOnBoard ? "boardLetter" : "poolLetter";
