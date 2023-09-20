@@ -18,9 +18,9 @@ export default function Pool({
       pieceID={piece.id}
       handlePoolDragEnter={handlePoolDragEnter}
       key={piece.id}
+      isDragging={draggedPieceIDs.includes(piece.id)}
       dragToken={dragToken}
       dropOnPool={dropOnPool}
-      draggedPieceIDs={draggedPieceIDs}
       dispatchGameState={dispatchGameState}
     ></Piece>
   ));
@@ -30,15 +30,13 @@ export default function Pool({
       id="pool"
       onDrop={(event) => {
         event.preventDefault();
-        dropOnPool({ event: event });
+        dropOnPool({ event });
       }}
       onDragEnd={(event) => {
         event.preventDefault();
       }}
       onDragEnter={(event) => {
-        handlePoolDragEnter({
-          event: event,
-        });
+        handlePoolDragEnter({ event });
       }}
       onDragOver={(event) => {
         event.preventDefault();

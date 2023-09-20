@@ -323,6 +323,8 @@ a {
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);
+  background-color: var(--dark-color);
+  color: var(--light-color);
 }
 
 .boardLetter.filled {
@@ -365,7 +367,7 @@ a {
   justify-content: center;
 }
 
-.poolPiece {
+.poolPiece, .boardPiece {
   display: grid;
   touch-action: none;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
@@ -373,8 +375,11 @@ a {
   justify-content: center;
   font-size: var(--default-font-size);
   width: fit-content;
-  padding: 3vmin;
   align-content: center;
+}
+
+.poolPiece {
+  padding: 3vmin;
 }
 
 .poolLetter {
@@ -526,7 +531,7 @@ a {
     height: 100svh;
   }
 
-  .poolPiece {
+  .boardPiece, .poolPiece {
     height: fit-content;
   }
 

@@ -17,6 +17,8 @@ export function Letter({
   letterInfo,
   gridRowIndex,
   gridColIndex,
+  pieceRowIndex,
+  pieceColIndex,
   gameIsSolved,
   dragController: {
     handleBoardDragEnter,
@@ -144,6 +146,10 @@ export function Letter({
   return (
     <div
       className={className}
+      style={{
+        gridRow: (letterInfo ? letterInfo.pieceRowIndex : gridRowIndex) + 1,
+        gridColumn: (letterInfo ? letterInfo.pieceColIndex : gridColIndex) + 1,
+      }}
       draggable="true"
       onDragStart={eventHandlers.onDragStart}
       onDragEnter={eventHandlers.onDragEnter}
@@ -161,47 +167,107 @@ export function Letter({
   );
 }
 
+export function BoardPiece({
+  grid,
+  piece,
+  isDragging,
+  gameIsSolved,
+  dragController,
+}) {
+  const letterElements = [];
+  const letters = piece.letters;
+  let top = piece.boardTop;
+  for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
+    let left = piece.boardLeft;
+    for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
+      let letter = letters[rowIndex][colIndex];
+      if (letter) {
+        const letterInfo = {
+          letter,
+          relativeTop: rowIndex,
+          relativeLeft: colIndex,
+          pieceID: piece.id,
+          pieceRowIndex: rowIndex,
+          pieceColIndex: colIndex,
+          border: {
+            top: !letters[rowIndex - 1]?.[colIndex],
+            bottom: !letters[rowIndex + 1]?.[colIndex],
+            left: !letters[rowIndex][colIndex - 1],
+            right: !letters[rowIndex][colIndex + 1],
+          },
+          overlapping: grid[top][left] > 1,
+          isDragging,
+        };
+        letterElements.push(
+          <Letter
+            key={`${piece.id}-${rowIndex}-${colIndex}`}
+            isOnBoard={true}
+            pieceID={piece.id}
+            letterInfo={letterInfo}
+            gridRowIndex={top}
+            gridColIndex={left}
+            gameIsSolved={gameIsSolved}
+            dragController={dragController}
+          />
+        );
+      }
+      left += 1;
+    }
+    top += 1;
+  }
+
+  return (
+    <div
+      className="boardPiece"
+      style={{
+        "--numRows": `${letters.length}`,
+        "--numCols": `${letters[0].length}`,
+        gridRow: piece.boardTop + 1,
+        gridColumn: piece.boardLeft + 1,
+      }}
+    >
+      {letterElements}
+    </div>
+  );
+}
+
 export default function Piece({
   letters,
   pieceID,
+  isDragging,
   handlePoolDragEnter,
   dragToken,
   dropOnPool,
-  draggedPieceIDs,
   dispatchGameState,
 }) {
   let letterElements = [];
-  const isDragging = draggedPieceIDs.includes(pieceID);
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
       const letterStr = letters[rowIndex][colIndex];
-      const letterInfo = letterStr
-        ? {
-            letter: letterStr,
-            pieceRowIndex: rowIndex,
-            pieceColIndex: colIndex,
-            border: {
-              top: !letters[rowIndex - 1]?.[colIndex],
-              bottom: !letters[rowIndex + 1]?.[colIndex],
-              left: !letters[rowIndex][colIndex - 1],
-              right: !letters[rowIndex][colIndex + 1],
-            },
-            overlapping: false,
-            isDragging,
-          }
-        : undefined;
-      letterElements.push(
-        <Letter
-          key={`${pieceID}-${rowIndex}-${colIndex}`}
-          isOnBoard={false}
-          pieceID={pieceID}
-          rowIndex={rowIndex}
-          colIndex={colIndex}
-          letterInfo={letterInfo}
-          gameIsSolved={false}
-          dragController={{dragToken, dispatchGameState}}
-        />
-      );
+      if (letterStr) {
+        letterElements.push(
+          <Letter
+            key={`${pieceID}-${rowIndex}-${colIndex}`}
+            isOnBoard={false}
+            pieceID={pieceID}
+            letterInfo={{
+              letter: letterStr,
+              pieceRowIndex: rowIndex,
+              pieceColIndex: colIndex,
+              border: {
+                top: !letters[rowIndex - 1]?.[colIndex],
+                bottom: !letters[rowIndex + 1]?.[colIndex],
+                left: !letters[rowIndex][colIndex - 1],
+                right: !letters[rowIndex][colIndex + 1],
+              },
+              overlapping: false,
+              isDragging,
+            }}
+            gameIsSolved={false}
+            dragController={{dragToken, dispatchGameState}}
+          />
+        );
+      }
     }
   }
   return (

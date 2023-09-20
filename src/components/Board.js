@@ -1,41 +1,25 @@
 import React from "react";
 import { polyfill } from "mobile-drag-drop";
-import { Letter } from "./Piece";
+import { Letter, BoardPiece } from "./Piece";
 
 polyfill({
   dragImageCenterOnTouch: true,
 });
 
-function generateGridFromBoardPieces(boardPieces, gridSize, draggedPieceIDs) {
+function countingGrid(gridSize, boardPieces) {
   let grid = Array(gridSize)
     .fill(undefined)
-    .map(() => Array(gridSize).fill(undefined));
+    .map(() => Array(gridSize).fill(0));
 
   for (let index = 0; index < boardPieces.length; index++) {
     const letters = boardPieces[index].letters;
-    const pieceID = boardPieces[index].id;
     let top = boardPieces[index].boardTop;
-    let isDragging = draggedPieceIDs.includes(pieceID);
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = boardPieces[index].boardLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         let letter = letters[rowIndex][colIndex];
         if (letter) {
-          const overlapping = grid[top][left] !== undefined;
-          grid[top][left] = {
-            letter,
-            relativeTop: rowIndex,
-            relativeLeft: colIndex,
-            pieceID,
-            border: {
-              top: !letters[rowIndex - 1]?.[colIndex],
-              bottom: !letters[rowIndex + 1]?.[colIndex],
-              left: !letters[rowIndex][colIndex - 1],
-              right: !letters[rowIndex][colIndex + 1],
-            },
-            overlapping,
-            isDragging,
-          };
+          grid[top][left]++;
         }
         left += 1;
       }
@@ -87,12 +71,7 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const grid = generateGridFromBoardPieces(
-    boardPieces,
-    gridSize,
-    draggedPieceIDs
-  );
-
+  const grid = countingGrid(gridSize, boardPieces);
   let dragController = {
     handleBoardDragEnter,
     handleBoardDrop,
@@ -102,25 +81,41 @@ export default function Board({
     handleTouchStart,
     handleTouchEnd,
   };
-  let boardElements = [];
-  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
-    for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
-      const letterInfo = grid[rowIndex][colIndex];
-
-      boardElements.push(
-        <Letter
-          key={`${rowIndex}-${colIndex}`}
-          isOnBoard={true}
-          pieceID={letterInfo?.pieceID}
-          letterInfo={letterInfo}
-          gridRowIndex={rowIndex}
-          gridColIndex={colIndex}
-          gameIsSolved={gameIsSolved}
-          dragController={dragController}
-        />
-      );
+  let pieceElements = boardPieces.map((piece) => 
+    <BoardPiece
+      key={piece.id}
+      grid={grid}
+      piece={piece}
+      isDragging={draggedPieceIDs.includes(piece.id)}
+      gameIsSolved={gameIsSolved}
+      dragController={dragController}
+      />
+  );
+  let gridDropTargets = [];
+  for (let rowIndex = 0; rowIndex < gridSize; rowIndex++) {
+    for (let colIndex = 0; colIndex < gridSize; colIndex++) {
+      if (grid[rowIndex][colIndex] == 0) {
+        gridDropTargets.push(
+          <Letter
+            isOnBoard={true}
+            pieceID={undefined}
+            letterInfo={null}
+            gridRowIndex={rowIndex}
+            gridColIndex={colIndex}
+            gameIsSolved={gameIsSolved}
+            dragController={dragController}
+          />
+        );
+      }
     }
   }
 
-  return <div id="board">{boardElements}</div>;
+  // The drop targets must go on top of the pieces because drop events are not
+  // delivered to them when they're underneath a transparent part of a Piece.
+  return (
+    <div id="board">
+      {pieceElements}
+      {gridDropTargets}
+    </div>
+  );
 }
