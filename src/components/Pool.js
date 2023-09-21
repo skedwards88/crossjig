@@ -20,9 +20,8 @@ export default function Pool({
   };
   const pieceElements = poolPieces.map((piece) => (
     <Piece
-      letters={piece.letters}
-      pieceID={piece.id}
       key={piece.id}
+      piece={piece}
       isDragging={draggedPieceIDs.includes(piece.id)}
       dragController={dragController}
     ></Piece>

@@ -215,8 +215,7 @@ export function BoardPiece({
 }
 
 export default function Piece({
-  letters,
-  pieceID,
+  piece,
   isDragging,
   dragController: {
     handlePoolDragEnter,
@@ -225,6 +224,7 @@ export default function Piece({
     dispatchGameState,
   },
 }) {
+  const letters = piece.letters;
   let letterElements = [];
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
@@ -232,9 +232,9 @@ export default function Piece({
       if (letterStr) {
         letterElements.push(
           <Letter
-            key={`${pieceID}-${rowIndex}-${colIndex}`}
+            key={`${piece.id}-${rowIndex}-${colIndex}`}
             isOnBoard={false}
-            pieceID={pieceID}
+            pieceID={piece.id}
             letterInfo={{
               letter: letterStr,
               pieceRowIndex: rowIndex,
@@ -258,7 +258,7 @@ export default function Piece({
   return (
     <div
       className="poolPiece"
-      id={`poolPiece-${pieceID}`}
+      id={`poolPiece-${piece.id}`}
       style={{
         "--numRows": `${letters.length}`,
         "--numCols": `${letters[0].length}`,
