@@ -218,10 +218,12 @@ export default function Piece({
   letters,
   pieceID,
   isDragging,
-  handlePoolDragEnter,
-  dragToken,
-  dropOnPool,
-  dispatchGameState,
+  dragController: {
+    handlePoolDragEnter,
+    dragToken,
+    dropOnPool,
+    dispatchGameState,
+  },
 }) {
   let letterElements = [];
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {

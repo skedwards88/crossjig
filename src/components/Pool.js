@@ -12,16 +12,19 @@ export default function Pool({
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
+  const dragController = {
+    dragToken: dragToken,
+    handlePoolDragEnter: handlePoolDragEnter,
+    dropOnPool: dropOnPool,
+    dispatchGameState: dispatchGameState,
+  };
   const pieceElements = poolPieces.map((piece) => (
     <Piece
       letters={piece.letters}
       pieceID={piece.id}
-      handlePoolDragEnter={handlePoolDragEnter}
       key={piece.id}
       isDragging={draggedPieceIDs.includes(piece.id)}
-      dragToken={dragToken}
-      dropOnPool={dropOnPool}
-      dispatchGameState={dispatchGameState}
+      dragController={dragController}
     ></Piece>
   ));
 
