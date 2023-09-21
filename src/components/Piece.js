@@ -148,93 +148,35 @@ export function Letter({
   );
 }
 
-export function BoardPiece({
-  grid,
+export function NewPiece({
   piece,
+  isOnBoard,
+  isInPool,
+  overlapGrid,
   isDragging,
   gameIsSolved,
   dragController,
 }) {
-  const letterElements = [];
-  const letters = piece.letters;
-  let top = piece.boardTop;
-  for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-    let left = piece.boardLeft;
-    for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-      let letter = letters[rowIndex][colIndex];
-      if (letter) {
-        const letterInfo = {
-          letter,
-          relativeTop: rowIndex,
-          relativeLeft: colIndex,
-          pieceID: piece.id,
-          pieceRowIndex: rowIndex,
-          pieceColIndex: colIndex,
-          border: {
-            top: !letters[rowIndex - 1]?.[colIndex],
-            bottom: !letters[rowIndex + 1]?.[colIndex],
-            left: !letters[rowIndex][colIndex - 1],
-            right: !letters[rowIndex][colIndex + 1],
-          },
-          overlapping: grid[top][left] > 1,
-          isDragging,
-        };
-        letterElements.push(
-          <Letter
-            key={`${piece.id}-${rowIndex}-${colIndex}`}
-            isOnBoard={true}
-            pieceID={piece.id}
-            letterInfo={letterInfo}
-            gridRowIndex={top}
-            gridColIndex={left}
-            gameIsSolved={gameIsSolved}
-            dragController={dragController}
-          />
-        );
-      }
-      left += 1;
-    }
-    top += 1;
-  }
-
-  return (
-    <div
-      className="boardPiece"
-      style={{
-        "--numRows": `${letters.length}`,
-        "--numCols": `${letters[0].length}`,
-        gridRow: piece.boardTop + 1,
-        gridColumn: piece.boardLeft + 1,
-      }}
-    >
-      {letterElements}
-    </div>
-  );
-}
-
-export default function Piece({
-  piece,
-  isDragging,
-  dragController: {
-    handlePoolDragEnter,
-    dragToken,
-    dropOnPool,
-    dispatchGameState,
-  },
-}) {
   const letters = piece.letters;
   let letterElements = [];
+  let letterDragController = isOnBoard
+    ? dragController
+    : {
+      dragToken: dragController.dragToken,
+      dispatchGameState: dragController.dispatchGameState
+    };
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-      const letterStr = letters[rowIndex][colIndex];
-      if (letterStr) {
+      const letter = letters[rowIndex][colIndex];
+      if (letter) {
         letterElements.push(
           <Letter
             key={`${piece.id}-${rowIndex}-${colIndex}`}
-            isOnBoard={false}
+            isOnBoard={isOnBoard}
             pieceID={piece.id}
             letterInfo={{
-              letter: letterStr,
+              letter,
+              pieceID: piece.id,
               pieceRowIndex: rowIndex,
               pieceColIndex: colIndex,
               border: {
@@ -243,38 +185,90 @@ export default function Piece({
                 left: !letters[rowIndex][colIndex - 1],
                 right: !letters[rowIndex][colIndex + 1],
               },
-              overlapping: false,
+              overlapping: isOnBoard && overlapGrid[piece.boardTop + rowIndex][piece.boardLeft + colIndex] > 1,
               isDragging,
             }}
-            gameIsSolved={false}
-            dragController={{dragToken, dispatchGameState}}
+            gridRowIndex={isOnBoard ? top : undefined}
+            gridColIndex={isOnBoard ? left : undefined}
+            gameIsSolved={gameIsSolved}
+            dragController={letterDragController}
           />
         );
       }
     }
   }
+
+  let onDragEnter, onDragEnd, onDragOver, onDrop;
+  let className = "poolPiece";
+  let layoutStyle = {};
+  if (isOnBoard) {
+    className = "boardPiece";
+    layoutStyle.gridRow = piece.boardTop + 1,
+    layoutStyle.gridColumn = piece.boardLeft + 1,
+  } else if (isInPool) {
+    onDragEnter = (event) => {
+      handlePoolDragEnter({
+        event: event,
+        targetPieceID: pieceID,
+      });
+    };
+    onDragEnd = ignoreEvent;
+    onDragOver = ignoreEvent;
+    onDrop = (event) => {
+      event.preventDefault();
+      dropOnPool({ event: event, targetPieceID: pieceID });
+    };
+  }
+
   return (
     <div
-      className="poolPiece"
-      id={`poolPiece-${piece.id}`}
+      id={`piece-${piece.id}`}
+      className={className}
       style={{
         "--numRows": `${letters.length}`,
         "--numCols": `${letters[0].length}`,
+        ...layoutStyle
       }}
-      onDragEnter={(event) => {
-        handlePoolDragEnter({
-          event: event,
-          targetPieceID: pieceID,
-        });
-      }}
-      onDragEnd={ignoreEvent}
-      onDragOver={ignoreEvent}
-      onDrop={(event) => {
-        event.preventDefault();
-        dropOnPool({ event: event, targetPieceID: pieceID });
-      }}
+      onDragEnter={onDragEnter}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
       {letterElements}
     </div>
   );
+}
+
+export function BoardPiece({
+  overlapGrid,
+  piece,
+  isDragging,
+  gameIsSolved,
+  dragController,
+}) {
+  return NewPiece({
+    piece,
+    isOnBoard: true,
+    isInPool: false,
+    overlapGrid,
+    isDragging,
+    gameIsSolved,
+    dragController,
+  });
+}
+
+
+export default function Piece({
+  piece,
+  isDragging,
+  dragController,
+}) {
+  return NewPiece({
+    piece,
+    isOnBoard: false,
+    isInPool: true,
+    isDragging,
+    gameIsSolved: false,
+    dragController,
+  });
 }

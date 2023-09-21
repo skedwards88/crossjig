@@ -71,7 +71,7 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const grid = countingGrid(gridSize, boardPieces);
+  const overlapGrid = countingGrid(gridSize, boardPieces);
   let dragController = {
     handleBoardDragEnter,
     handleBoardDrop,
@@ -84,7 +84,7 @@ export default function Board({
   let pieceElements = boardPieces.map((piece) => 
     <BoardPiece
       key={piece.id}
-      grid={grid}
+      overlapGrid={overlapGrid}
       piece={piece}
       isDragging={draggedPieceIDs.includes(piece.id)}
       gameIsSolved={gameIsSolved}
@@ -94,7 +94,7 @@ export default function Board({
   let gridDropTargets = [];
   for (let rowIndex = 0; rowIndex < gridSize; rowIndex++) {
     for (let colIndex = 0; colIndex < gridSize; colIndex++) {
-      if (grid[rowIndex][colIndex] == 0) {
+      if (overlapGrid[rowIndex][colIndex] == 0) {
         gridDropTargets.push(
           <Letter
             isOnBoard={true}
