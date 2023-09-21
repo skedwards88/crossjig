@@ -148,15 +148,16 @@ export function Letter({
   );
 }
 
-export function NewPiece({
+export function Piece({
   piece,
-  isOnBoard,
-  isInPool,
+  where,
   overlapGrid,
   isDragging,
   gameIsSolved,
   dragController,
 }) {
+  const isOnBoard = where == "board";
+  const isInPool = where == "pool";
   const letters = piece.letters;
   let letterElements = [];
   let letterDragController = isOnBoard
@@ -188,8 +189,8 @@ export function NewPiece({
               overlapping: isOnBoard && overlapGrid[piece.boardTop + rowIndex][piece.boardLeft + colIndex] > 1,
               isDragging,
             }}
-            gridRowIndex={isOnBoard ? top : undefined}
-            gridColIndex={isOnBoard ? left : undefined}
+            gridRowIndex={isOnBoard ? piece.boardTop + rowIndex : undefined}
+            gridColIndex={isOnBoard ? piece.boardLeft + colIndex : undefined}
             gameIsSolved={gameIsSolved}
             dragController={letterDragController}
           />
@@ -203,20 +204,20 @@ export function NewPiece({
   let layoutStyle = {};
   if (isOnBoard) {
     className = "boardPiece";
-    layoutStyle.gridRow = piece.boardTop + 1,
-    layoutStyle.gridColumn = piece.boardLeft + 1,
+    layoutStyle.gridRow = piece.boardTop + 1;
+    layoutStyle.gridColumn = piece.boardLeft + 1;
   } else if (isInPool) {
     onDragEnter = (event) => {
-      handlePoolDragEnter({
+      dragController.handlePoolDragEnter({
         event: event,
-        targetPieceID: pieceID,
+        targetPieceID: piece.id,
       });
     };
     onDragEnd = ignoreEvent;
     onDragOver = ignoreEvent;
     onDrop = (event) => {
       event.preventDefault();
-      dropOnPool({ event: event, targetPieceID: pieceID });
+      dropOnPool({ event: event, targetPieceID: piece.id });
     };
   }
 
@@ -237,38 +238,4 @@ export function NewPiece({
       {letterElements}
     </div>
   );
-}
-
-export function BoardPiece({
-  overlapGrid,
-  piece,
-  isDragging,
-  gameIsSolved,
-  dragController,
-}) {
-  return NewPiece({
-    piece,
-    isOnBoard: true,
-    isInPool: false,
-    overlapGrid,
-    isDragging,
-    gameIsSolved,
-    dragController,
-  });
-}
-
-
-export default function Piece({
-  piece,
-  isDragging,
-  dragController,
-}) {
-  return NewPiece({
-    piece,
-    isOnBoard: false,
-    isInPool: true,
-    isDragging,
-    gameIsSolved: false,
-    dragController,
-  });
 }

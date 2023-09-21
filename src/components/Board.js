@@ -1,6 +1,6 @@
 import React from "react";
 import { polyfill } from "mobile-drag-drop";
-import { Letter, BoardPiece } from "./Piece";
+import { Letter, Piece } from "./Piece";
 
 polyfill({
   dragImageCenterOnTouch: true,
@@ -82,10 +82,11 @@ export default function Board({
     handleTouchEnd,
   };
   let pieceElements = boardPieces.map((piece) => 
-    <BoardPiece
+    <Piece
       key={piece.id}
-      overlapGrid={overlapGrid}
       piece={piece}
+      where="board"
+      overlapGrid={overlapGrid}
       isDragging={draggedPieceIDs.includes(piece.id)}
       gameIsSolved={gameIsSolved}
       dragController={dragController}

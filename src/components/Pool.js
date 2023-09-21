@@ -1,5 +1,5 @@
 import React from "react";
-import Piece from "./Piece";
+import {Piece} from "./Piece";
 
 export default function Pool({
   pieces,
@@ -22,9 +22,12 @@ export default function Pool({
     <Piece
       key={piece.id}
       piece={piece}
+      where="pool"
+      overlapGrid={undefined}
       isDragging={draggedPieceIDs.includes(piece.id)}
+      gameIsSolved={false}
       dragController={dragController}
-    ></Piece>
+    />
   ));
 
   return (
