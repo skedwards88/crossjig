@@ -17,8 +17,6 @@ export function Letter({
   letterInfo,
   gridRowIndex,
   gridColIndex,
-  pieceRowIndex,
-  pieceColIndex,
   gameIsSolved,
   dragController: {
     handleBoardDragEnter,
