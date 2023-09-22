@@ -62,8 +62,7 @@ export function gameInit({
     savedState.gameIsSolved != undefined &&
     savedState.gameIsSolvedReason != undefined &&
     savedState.stats &&
-    savedState.hintTally != undefined &&
-    savedState.dragData
+    savedState.hintTally != undefined
   ) {
     return savedState;
   }
@@ -120,6 +119,6 @@ export function gameInit({
     gameIsSolved: false,
     gameIsSolvedReason: "",
     hintTally: 0,
-    dragData: {},
+    dragState: undefined,
   };
 }

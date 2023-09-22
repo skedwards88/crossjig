@@ -1,23 +1,9 @@
 import React from "react";
 import GameOver from "./GameOver";
 
-export default function Result({
-  dropToken,
-  dispatchGameState,
-  gameState,
-  setDisplay,
-}) {
+export default function Result({ dispatchGameState, gameState, setDisplay }) {
   return (
-    <div
-      id="result"
-      onDrop={(event) => dropToken({ event: event })}
-      onDragOver={(event) => {
-        event.preventDefault();
-      }}
-      onDragEnter={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <div id="result">
       {gameState.gameIsSolved ? (
         <GameOver
           dispatchGameState={dispatchGameState}

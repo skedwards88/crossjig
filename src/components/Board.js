@@ -1,10 +1,5 @@
 import React from "react";
-import { polyfill } from "mobile-drag-drop";
-import { Letter, Piece } from "./Piece";
-
-polyfill({
-  dragImageCenterOnTouch: true,
-});
+import Piece from "./Piece";
 
 function countingGrid(gridSize, boardPieces) {
   let grid = Array(gridSize)
@@ -31,92 +26,37 @@ function countingGrid(gridSize, boardPieces) {
 
 export default function Board({
   pieces,
-  handleBoardDragEnter,
-  handleBoardDrop,
   gridSize,
-  dragToken,
   gameIsSolved,
   dispatchGameState,
-  draggedPieceIDs,
 }) {
-  const timerID = React.useRef();
-  function handleTouchStart(pieceID) {
-    timerID.current = setTimeout(() => {
-      // If the press exceeds the timeout, it is long
-      // At this point, initiate the multi-select
-      if (pieceID != undefined) {
-        dispatchGameState({ action: "multiSelect", pieceID });
-      }
-    }, 500);
-  }
-
-  // ios cancels the drag event after a certain amount of time
-  // even with event.preventDefault() and touch-action:none and modifying the viewport meta tag
-  // so track when that happens so I can skip calling the dispatcher when it does
-  // (I don't like how hacky this is)
-  const [wasCanceledPrematurely, setWasCanceledPrematurely] =
-    React.useState(false);
-
-  function handleTouchEnd(event) {
-    event.preventDefault();
-
-    if (timerID.current) {
-      clearTimeout(timerID.current);
-    }
-
-    dispatchGameState({ action: "endMultiSelect" });
-  }
-
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
   const overlapGrid = countingGrid(gridSize, boardPieces);
-  let dragController = {
-    handleBoardDragEnter,
-    handleBoardDrop,
-    dragToken,
-    wasCanceledPrematurely,
-    setWasCanceledPrematurely,
-    handleTouchStart,
-    handleTouchEnd,
-  };
-  let pieceElements = boardPieces.map((piece) => 
+  let dragController = { dispatchGameState };
+  let pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
       piece={piece}
       where="board"
       overlapGrid={overlapGrid}
-      isDragging={draggedPieceIDs.includes(piece.id)}
       gameIsSolved={gameIsSolved}
       dragController={dragController}
-      />
-  );
-  let gridDropTargets = [];
-  for (let rowIndex = 0; rowIndex < gridSize; rowIndex++) {
-    for (let colIndex = 0; colIndex < gridSize; colIndex++) {
-      if (overlapGrid[rowIndex][colIndex] == 0) {
-        gridDropTargets.push(
-          <Letter
-            isOnBoard={true}
-            pieceID={undefined}
-            letterInfo={null}
-            gridRowIndex={rowIndex}
-            gridColIndex={colIndex}
-            gameIsSolved={gameIsSolved}
-            dragController={dragController}
-          />
-        );
-      }
-    }
-  }
+    />
+  ));
 
   // The drop targets must go on top of the pieces because drop events are not
   // delivered to them when they're underneath a transparent part of a Piece.
   return (
-    <div id="board">
+    <div id="board"
+      onPointerDown={(event) => {
+        event.preventDefault();
+        dispatchGameState({action: "shiftStart", pointer: {x: event.clientX, y: event.clientY}});
+      }}
+    >
       {pieceElements}
-      {gridDropTargets}
     </div>
   );
 }

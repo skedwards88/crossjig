@@ -3,6 +3,8 @@ html {
   --box-size: min(8vw, 5.5vh);
   --default-font-size: calc(var(--box-size) * 0.9);
   --dark-color: rgb(55 54 71);
+  --shadow-color: rgba(20 19 25 / 50%);
+  --drag-color: rgba(65 64 82);
   --light-color: rgb(239 239 239);
 
   background-color: var(--dark-color);
@@ -317,7 +319,7 @@ a {
   margin: 3vmin 0 0;
 }
 
-.boardLetter {
+.letter {
   display: flex;
   touch-action: none;
   align-items: center;
@@ -327,13 +329,13 @@ a {
   color: var(--light-color);
 }
 
-.boardLetter.filled {
+.letter.filled {
   background-color: var(--light-color);
   color: var(--dark-color);
   transition: background-color 3s;
 }
 
-.boardLetter.overlapping {
+.letter.overlapping {
   color: rgb(226 88 88);
 }
 
@@ -367,7 +369,7 @@ a {
   justify-content: center;
 }
 
-.poolPiece, .boardPiece {
+.piece {
   display: grid;
   touch-action: none;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
@@ -378,16 +380,8 @@ a {
   align-content: center;
 }
 
-.poolPiece {
-  padding: 3vmin;
-}
-
-.poolLetter {
-  display: flex;
-  touch-action: none;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--default-font-size);
+#pool > .piece {
+  margin: 3vmin;
 }
 
 #result {
@@ -398,7 +392,8 @@ a {
 }
 
 .dragging {
-  opacity: 0.5;
+  background-color: var(--drag-color);
+  box-shadow: var(--shadow-color) 3px 3px 3px;
 }
 
 .rules {
@@ -531,7 +526,7 @@ a {
     height: 100svh;
   }
 
-  .boardPiece, .poolPiece {
+  .piece {
     height: fit-content;
   }
 

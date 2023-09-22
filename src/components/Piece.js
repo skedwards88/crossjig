@@ -1,171 +1,87 @@
 import React from "react";
-import { polyfill } from "mobile-drag-drop";
 
-polyfill({
-  dragImageCenterOnTouch: true,
-  // force apply is required to skip the drag delay on ipad
-  forceApply: true,
-});
-
-function ignoreEvent(event) {
-  event.preventDefault();
-}
-
-export function Letter({
-  isOnBoard,
+function Letter({
   pieceID,
-  letterInfo,
-  gridRowIndex,
-  gridColIndex,
+  letter,
+  pieceRowIndex,
+  pieceColIndex,
+  border,
+  overlapping,
+  isDragging,
   gameIsSolved,
-  dragController: {
-    handleBoardDragEnter,
-    handleBoardDrop,
-    handleTouchStart,
-    handleTouchEnd,
-    wasCanceledPrematurely,
-    setWasCanceledPrematurely,
-    dragToken,
-    dispatchGameState,
-  },
+  dragController: { dispatchGameState },
 }) {
-  const eventHandlers = {
-    onDragStart: (event) => {
-      if (isOnBoard || letterInfo) {
-        dragToken({
-          event: event,
-          dragArea: isOnBoard ? "board" : "pool",
-          pieceID: pieceID,
-          relativeTop: isOnBoard ? letterInfo?.relativeTop : letterInfo.pieceRowIndex,
-          relativeLeft: isOnBoard ? letterInfo?.relativeLeft : letterInfo.pieceColIndex,
-          boardTop: isOnBoard ? gridRowIndex : undefined,
-          boardLeft: isOnBoard ? gridColIndex : undefined,
-        });
-      } else {
-        event.preventDefault();
-      }
-    },
-    onDragEnter: (event) => {
-      event.preventDefault();
-      if (isOnBoard) {
-        handleBoardDragEnter({
-          event: event,
-          rowIndex: gridRowIndex,
-          colIndex: gridColIndex,
-        });
-      }
-    },
-    onDragOver: ignoreEvent,
-    onDrop: (event) => {
-      event.preventDefault();
-      if (isOnBoard) {
-        handleBoardDrop({
-          event: event,
-          rowIndex: gridRowIndex,
-          colIndex: gridColIndex,
-        });
-      }
-    },
-    onDragEnd: (event) => {
-      // according to the HTML spec, the drop event fires before the dragEnd event
-      event.preventDefault();
-      if (isOnBoard && wasCanceledPrematurely) {
-        // only call the dispatcher if ios didn't force end the drag prematurely
-        // otherwise just reset the state
-        setWasCanceledPrematurely(false);
-      } else {
-        dispatchGameState({ action: "dragEnd" });
-      }
-    },
-    onPointerDown: isOnBoard
-      ? () => {
-        handleTouchStart(letterInfo?.pieceID);
-      }
-      : undefined,
-    onPointerUp: isOnBoard ? handleTouchEnd : undefined,
-    onPointerCancel: isOnBoard
-      ? (event) => {
-        // ios cancels the pointer event which then cancels the drag event,
-        // so we need to catch that and stop the dispatcher from being called in the drag end handler.
-        event.stopPropagation();
-        event.preventDefault();
-        // stopPropagation and preventDefault don't actually stop this
-        // (but I left them in place in hopes that ios will follow standards in the future),
-        // so track whether the drag was canceled prematurely via the state
-        setWasCanceledPrematurely(true);
-      }
-      : undefined,
-    onPointerMove: isOnBoard ? ignoreEvent : undefined,
-    onContextMenu: isOnBoard ? ignoreEvent : undefined,
+  const onPointerDown = (event) => {
+    event.preventDefault();
+    const pointer = { x: event.clientX, y: event.clientY };
+    const letterElement = event.currentTarget;
+    const pieceElement = letterElement.parentElement;
+    letterElement.setPointerCapture(event.pointerId);
+    if (letterElement.hasPointerCapture(event.pointerId)) {
+      dispatchGameState({
+        action: "dragStart",
+        pieceID,
+        pointerID: event.pointerId,
+        pointer,
+        pointerOffset: {
+          x: pointer.x - pieceElement.offsetLeft,
+          y: pointer.y - pieceElement.offsetTop,
+        },
+      });
+    }
   };
 
-  let className = isOnBoard ? "boardLetter" : "poolLetter";
-  if (letterInfo) {
-    if (gameIsSolved) {
-      className += " filled";
-    }
-    if (letterInfo.isDragging) {
-      className += " dragging";
-    }
-    if (letterInfo.border.top) {
-      className += " borderTop";
-    }
-    if (letterInfo.border.bottom) {
-      className += " borderBottom";
-    }
-    if (letterInfo.border.left) {
-      className += " borderLeft";
-    }
-    if (letterInfo.border.right) {
-      className += " borderRight";
-    }
-    if (letterInfo.overlapping) {
-      className += " overlapping";
-    }
+  let className = "letter";
+  if (gameIsSolved) {
+    className += " filled";
+  }
+  if (isDragging) {
+    className += " dragging";
+  }
+  if (border.top) {
+    className += " borderTop";
+  }
+  if (border.bottom) {
+    className += " borderBottom";
+  }
+  if (border.left) {
+    className += " borderLeft";
+  }
+  if (border.right) {
+    className += " borderRight";
+  }
+  if (overlapping) {
+    className += " overlapping";
   }
 
   return (
     <div
       className={className}
       style={{
-        gridRow: (letterInfo ? letterInfo.pieceRowIndex : gridRowIndex) + 1,
-        gridColumn: (letterInfo ? letterInfo.pieceColIndex : gridColIndex) + 1,
+        gridRow: pieceRowIndex + 1, // CSS grid coordinates are 1-based
+        gridColumn: pieceColIndex + 1,
       }}
-      draggable="true"
-      onDragStart={eventHandlers.onDragStart}
-      onDragEnter={eventHandlers.onDragEnter}
-      onDragOver={eventHandlers.onDragOver}
-      onDrop={eventHandlers.onDrop}
-      onDragEnd={eventHandlers.onDragEnd}
-      onPointerDown={eventHandlers.onPointerDown}
-      onPointerUp={eventHandlers.onPointerUp}
-      onPointerCancel={eventHandlers.onPointerCancel}
-      onPointerMove={eventHandlers.onPointerMove}
-      onContextMenu={eventHandlers.onContextMenu}
+      onPointerDown={onPointerDown}
+      onContextMenu={(event) => {
+        event.preventDefault();
+      }}
     >
-      {letterInfo?.letter}
+      {letter}
     </div>
   );
 }
 
-export function Piece({
+export default function Piece({
   piece,
   where,
   overlapGrid,
-  isDragging,
   gameIsSolved,
   dragController,
 }) {
   const isOnBoard = where == "board";
-  const isInPool = where == "pool";
+  const isDragging = where == "drag";
   const letters = piece.letters;
   let letterElements = [];
-  let letterDragController = isOnBoard
-    ? dragController
-    : {
-      dragToken: dragController.dragToken,
-      dispatchGameState: dragController.dispatchGameState
-    };
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
       const letter = letters[rowIndex][colIndex];
@@ -173,67 +89,50 @@ export function Piece({
         letterElements.push(
           <Letter
             key={`${piece.id}-${rowIndex}-${colIndex}`}
-            isOnBoard={isOnBoard}
             pieceID={piece.id}
-            letterInfo={{
-              letter,
-              pieceID: piece.id,
-              pieceRowIndex: rowIndex,
-              pieceColIndex: colIndex,
-              border: {
-                top: !letters[rowIndex - 1]?.[colIndex],
-                bottom: !letters[rowIndex + 1]?.[colIndex],
-                left: !letters[rowIndex][colIndex - 1],
-                right: !letters[rowIndex][colIndex + 1],
-              },
-              overlapping: isOnBoard && overlapGrid[piece.boardTop + rowIndex][piece.boardLeft + colIndex] > 1,
-              isDragging,
+            letter={letter}
+            pieceRowIndex={rowIndex}
+            pieceColIndex={colIndex}
+            border={{
+              top: !letters[rowIndex - 1]?.[colIndex],
+              bottom: !letters[rowIndex + 1]?.[colIndex],
+              left: !letters[rowIndex][colIndex - 1],
+              right: !letters[rowIndex][colIndex + 1],
             }}
-            gridRowIndex={isOnBoard ? piece.boardTop + rowIndex : undefined}
-            gridColIndex={isOnBoard ? piece.boardLeft + colIndex : undefined}
+            overlapping={
+              isOnBoard &&
+              overlapGrid[piece.boardTop + rowIndex][
+                piece.boardLeft + colIndex
+              ] > 1
+            }
+            isDragging={isDragging}
             gameIsSolved={gameIsSolved}
-            dragController={letterDragController}
+            dragController={dragController}
           />
         );
       }
     }
   }
 
-  let onDragEnter, onDragEnd, onDragOver, onDrop;
-  let className = "poolPiece";
   let layoutStyle = {};
   if (isOnBoard) {
-    className = "boardPiece";
     layoutStyle.gridRow = piece.boardTop + 1;
     layoutStyle.gridColumn = piece.boardLeft + 1;
-  } else if (isInPool) {
-    onDragEnter = (event) => {
-      dragController.handlePoolDragEnter({
-        event: event,
-        targetPieceID: piece.id,
-      });
-    };
-    onDragEnd = ignoreEvent;
-    onDragOver = ignoreEvent;
-    onDrop = (event) => {
-      event.preventDefault();
-      dropOnPool({ event: event, targetPieceID: piece.id });
-    };
+  } else if (isDragging) {
+    layoutStyle.position = "absolute";
+    layoutStyle.left = `calc(${piece.groupLeft} * var(--box-size))`;
+    layoutStyle.top = `calc(${piece.groupTop} * var(--box-size))`;
   }
 
   return (
     <div
       id={`piece-${piece.id}`}
-      className={className}
+      className="piece"
       style={{
         "--numRows": `${letters.length}`,
         "--numCols": `${letters[0].length}`,
-        ...layoutStyle
+        ...layoutStyle,
       }}
-      onDragEnter={onDragEnter}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
     >
       {letterElements}
     </div>
