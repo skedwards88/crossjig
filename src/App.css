@@ -321,6 +321,7 @@ a {
 
 .letter {
   display: flex;
+  pointer-events: auto;
   touch-action: none;
   align-items: center;
   justify-content: center;
@@ -372,6 +373,7 @@ a {
 .piece {
   display: grid;
   touch-action: none;
+  pointer-events: none;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
   grid-template-rows: repeat(var(--numRows), var(--box-size));
   justify-content: center;
