@@ -47,8 +47,6 @@ export default function Board({
     />
   ));
 
-  // The drop targets must go on top of the pieces because drop events are not
-  // delivered to them when they're underneath a transparent part of a Piece.
   return (
     <div id="board"
       onPointerDown={(event) => {
