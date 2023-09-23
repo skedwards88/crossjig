@@ -116,8 +116,8 @@ export default function Piece({
 
   let layoutStyle = {};
   if (isOnBoard) {
-    layoutStyle.gridRow = piece.boardTop + 1;
-    layoutStyle.gridColumn = piece.boardLeft + 1;
+    layoutStyle.gridRow = `${piece.boardTop + 1} / span ${letters.length}`;
+    layoutStyle.gridColumn = `${piece.boardLeft + 1} / span ${letters[0].length}`;
   } else if (isDragging) {
     layoutStyle.position = "absolute";
     layoutStyle.left = `calc(${piece.groupLeft} * var(--box-size))`;
