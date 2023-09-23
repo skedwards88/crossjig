@@ -48,10 +48,14 @@ export default function Board({
   ));
 
   return (
-    <div id="board"
+    <div
+      id="board"
       onPointerDown={(event) => {
         event.preventDefault();
-        dispatchGameState({action: "shiftStart", pointer: {x: event.clientX, y: event.clientY}});
+        dispatchGameState({
+          action: "shiftStart",
+          pointer: { x: event.clientX, y: event.clientY },
+        });
       }}
     >
       {pieceElements}

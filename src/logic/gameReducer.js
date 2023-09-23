@@ -158,13 +158,9 @@ function dragStart({
         boardLeft: undefined,
         poolIndex: undefined,
         groupTop:
-          groupBoardTop === undefined
-            ? 0
-            : piece.boardTop - groupBoardTop,
+          groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
         groupLeft:
-          groupBoardLeft === undefined
-            ? 0
-            : piece.boardLeft - groupBoardLeft,
+          groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
       }))
     ),
     dragState: {
@@ -276,16 +272,14 @@ function dragDestination(currentGameState, pointer) {
     const squareWidth = (boardRect.width - 1) / currentGameState.gridSize;
     const squareHeight = (boardRect.height - 1) / currentGameState.gridSize;
     const pointerOffset = currentGameState.dragState.pointerOffset;
-    const unclampedLeft = Math.round((pointer.x - pointerOffset.x - boardRect.left) / squareWidth);
-    const unclampedTop = Math.round((pointer.y - pointerOffset.y - boardRect.top) / squareHeight);
-    const left = Math.max(
-      0,
-      Math.min(maxLeft, unclampedLeft)
+    const unclampedLeft = Math.round(
+      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
     );
-    const top = Math.max(
-      0,
-      Math.min(maxTop, unclampedTop)
+    const unclampedTop = Math.round(
+      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight
     );
+    const left = Math.max(0, Math.min(maxLeft, unclampedLeft));
+    const top = Math.max(0, Math.min(maxTop, unclampedTop));
 
     return { where: "board", top, left };
   }
@@ -473,8 +467,9 @@ function getNewDailyStats(currentGameState) {
 }
 
 function getCompletionData(currentGameState) {
-  const allPiecesAreUsed =
-    currentGameState.pieces.every((piece) => piece.boardTop >= 0 && piece.boardLeft >= 0);
+  const allPiecesAreUsed = currentGameState.pieces.every(
+    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
+  );
 
   if (!allPiecesAreUsed) {
     return {

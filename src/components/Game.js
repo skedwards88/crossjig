@@ -71,11 +71,9 @@ function DragGroup({ dispatchGameState, gameState }) {
 function Game({ dispatchGameState, gameState, setDisplay }) {
   // TODO: Use a different key each time a drag starts to ensure a fresh DragGroup is mounted
   // even if there's no render between one drag ending and the next one starting.
-  const dragGroup = (
-    gameState.dragState
-    ? <DragGroup dispatchGameState={dispatchGameState} gameState={gameState} />
-    : null
-  );
+  const dragGroup = gameState.dragState ? (
+    <DragGroup dispatchGameState={dispatchGameState} gameState={gameState} />
+  ) : null;
   return (
     <div id="game">
       <Board
