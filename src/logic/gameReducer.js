@@ -507,36 +507,6 @@ function updateCompletionState(gameState) {
   };
 }
 
-function shiftPieces({
-  pieces,
-  pieceIDsToShift,
-  rowShift,
-  colShift,
-  gridSize,
-}) {
-  let shiftedPieces = cloneDeep(pieces);
-
-  for (const pieceID of pieceIDsToShift) {
-    const piece = shiftedPieces[pieceID];
-    // get the current board row/col that corresponds to the top left of the piece
-    // if undefined, use 0
-    const pieceBoardTop = piece.boardTop || 0;
-    const pieceBoardLeft = piece.boardLeft || 0;
-    // return early with the unchanged pieces if any piece would go off board
-    if (
-      pieceBoardTop + rowShift < 0 ||
-      pieceBoardLeft + colShift < 0 ||
-      pieceBoardTop + piece.letters.length + rowShift > gridSize ||
-      pieceBoardLeft + piece.letters[0].length + colShift > gridSize
-    ) {
-      return pieces;
-    }
-    piece.boardTop = pieceBoardTop + rowShift;
-    piece.boardLeft = pieceBoardLeft + colShift;
-  }
-  return shiftedPieces;
-}
-
 export function gameReducer(currentGameState, payload) {
   console.log(payload);
   if (payload.action === "newGame") {
