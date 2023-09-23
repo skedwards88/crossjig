@@ -4,7 +4,7 @@ html {
   --default-font-size: calc(var(--box-size) * 0.9);
   --dark-color: rgb(55 54 71);
   --shadow-color: rgba(20 19 25 / 50%);
-  --drag-color: rgba(65 64 82);
+  --drag-color: rgba(77 76 99);
   --light-color: rgb(239 239 239);
 
   background-color: var(--dark-color);
@@ -395,8 +395,9 @@ a {
 }
 
 .dragging {
+  --lift: calc(var(--box-size) * -0.08);
   background-color: var(--drag-color);
-  box-shadow: var(--shadow-color) 3px 3px 3px;
+  transform: translate(var(--lift), var(--lift));
 }
 
 .rules {
