@@ -13,6 +13,7 @@ function Letter({
 }) {
   const onPointerDown = (event) => {
     event.preventDefault();
+    event.stopPropagation();
     const pointer = { x: event.clientX, y: event.clientY };
     const letterElement = event.currentTarget;
     const pieceElement = letterElement.parentElement;
