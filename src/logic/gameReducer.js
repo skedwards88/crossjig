@@ -529,7 +529,7 @@ export function gameReducer(currentGameState, payload) {
       hintTally: currentGameState.hintTally + 1,
       ...completionData,
     };
-  } else if (payload.action == "dragStart") {
+  } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
     const { pieceID, pointerID, pointer, pointerOffset } = payload;
@@ -613,7 +613,7 @@ export function gameReducer(currentGameState, payload) {
         dragHasMoved: true,
       },
     };
-  } else if (payload.action == "shiftEnd") {
+  } else if (payload.action === "shiftEnd") {
     // Fired on lostpointercapture when shifting. Same behavior as for `dragEnd`.
     return dragEnd(currentGameState);
   } /*else if (
