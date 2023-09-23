@@ -547,24 +547,27 @@ export function gameReducer(currentGameState, payload) {
     // Set `piece.isDragging` on all neighbors using `destination` to figure out
     // which pieces are neighbors. Implemented by dropping the current piece, then picking
     // it and all connected pieces up again.
-    if (currentGameState.dragState === undefined) {
+    let {dragState} = currentGameState;
+    if (dragState === undefined) {
       console.warn("dragNeighbors fired with no dragState");
       return currentGameState;
     }
+    if (dragState.pieceIDs.length !== 1) {
+      console.warn("dragNeighbors fired with multiple pieces");
+      return currentGameState;
+    }
 
-    let draggedPieceID = currentGameState.dragState.pieceIDs[0];
-    let pointer = currentGameState.dragState.pointer;
-    let currentGameState = gameReducer(currentGameState, { action: "dragEnd" });
+    let droppedGameState = gameReducer(currentGameState, { action: "dragEnd" });
     const connectedPieceIDs = getConnectedPieceIDs({
-      pieces: currentGameState.pieces,
-      gridSize: currentGameState.gridSize,
-      draggedPieceID,
+      pieces: droppedGameState.pieces,
+      gridSize: droppedGameState.gridSize,
+      draggedPieceID: dragState.pieceIDs[0],
     });
     return dragStart({
-      currentGameState,
+      currentGameState: droppedGameState,
       predicate: (piece) => connectedPieceIDs.includes(piece.id),
-      pointerID: currentGameState.dragState.pointerID,
-      pointer,
+      pointerID: dragState.pointerID,
+      pointer: dragState.pointer,
       pointerOffset: undefined,
       isShifting: false,
     });

@@ -22,22 +22,37 @@ function DragGroup({ dispatchGameState, gameState }) {
       />
     ));
 
-  const dragGroup = React.useRef(null);
   React.useEffect(
     () => {
-      dragGroup.current.setPointerCapture(dragState.pointerID);
-      if (!dragGroup.current.hasPointerCapture(dragState.pointerID)) {
-        console.warn("Failed to capture pointer");
-        dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+      if (isShifting || dragState.destination.where != "board" || dragState.dragHasMoved) {
+        return undefined;
       }
+      let timerID = setTimeout(() => {
+          dispatchGameState({ action: "dragNeighbors" });
+          timerID = undefined;
+      }, 500);
       return () => {
-        if (dragGroup.current) {
-          dragGroup.current.releasePointerCapture(dragState.pointerID);
+        if (timerID !== undefined) {
+          clearTimeout(timerID);
         }
       };
     },
-    [dragState.pointerID]
+    [dragState.dragHasMoved, isShifting],
   );
+
+  const dragGroup = React.useRef(null);
+  React.useEffect(() => {
+    dragGroup.current.setPointerCapture(dragState.pointerID);
+    if (!dragGroup.current.hasPointerCapture(dragState.pointerID)) {
+      console.warn("Failed to capture pointer");
+      dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+    }
+    return () => {
+      if (dragGroup.current) {
+        dragGroup.current.releasePointerCapture(dragState.pointerID);
+      }
+    };
+  }, [dragState.pointerID]);
 
   const onPointerMove = (event) => {
     event.preventDefault();
