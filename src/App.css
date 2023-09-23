@@ -387,6 +387,15 @@ a {
   margin: 3vmin;
 }
 
+#dragGroup {
+  display: grid;
+  touch-action: none;
+  grid-template-columns: repeat(12, var(--box-size));
+  grid-template-rows: repeat(12, var(--box-size));
+  width: fit-content;
+  height: fit-content;
+}
+
 #result {
   display: flex;
   justify-content: center;

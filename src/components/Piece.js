@@ -116,15 +116,14 @@ export default function Piece({
   }
 
   let layoutStyle = {};
+  let nrows = letters.length;
+  let ncols = letters[0].length;
   if (isOnBoard) {
-    let nrows = letters.length;
-    let ncols = letters[0].length;
     layoutStyle.gridRow = `${piece.boardTop + 1} / span ${nrows}`;
     layoutStyle.gridColumn = `${piece.boardLeft + 1} / span ${ncols}`;
   } else if (isDragging) {
-    layoutStyle.position = "absolute";
-    layoutStyle.left = `calc(${piece.groupLeft} * var(--box-size))`;
-    layoutStyle.top = `calc(${piece.groupTop} * var(--box-size))`;
+    layoutStyle.gridRow = `${piece.groupTop + 1} / span ${nrows}`;
+    layoutStyle.gridColumn = `${piece.groupLeft + 1} / span ${ncols}`;
   }
 
   return (
