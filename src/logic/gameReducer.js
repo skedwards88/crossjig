@@ -133,10 +133,12 @@ function dragStart({
   // Find the top left of the group in client coordinates, to get pointerOffset.
   if (pointerOffset === undefined) {
     const rectangles = targets.flatMap((piece) => {
-      console.log(`looking for piece-${piece.id}`);
-      let e = document.getElementById(`piece-${piece.id}`);
-      console.log(e);
-      return e ? [e.getBoundingClientRect()] : [];
+      let element = document.getElementById(`piece-${piece.id}`);
+      if (!element) {
+        console.warn(`dragStart: element for piece ${piece.id} not found in DOM`);
+        return [];
+      }
+      return [element.getBoundingClientRect()];
     });
     if (rectangles.length === 0) {
       return currentGameState;
