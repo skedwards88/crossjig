@@ -4,11 +4,9 @@ import Result from "./Result";
 import Board from "./Board";
 import Piece from "./Piece";
 
+// This component is mounted each time a drag starts.
 function DragGroup({ dispatchGameState, gameState }) {
   const dragState = gameState.dragState;
-  if (dragState === undefined) {
-    return <></>;
-  }
 
   const isShifting = dragState.isShifting;
   let draggedPieces = gameState.pieces
@@ -71,6 +69,13 @@ function DragGroup({ dispatchGameState, gameState }) {
 }
 
 function Game({ dispatchGameState, gameState, setDisplay }) {
+  // TODO: Use a different key each time a drag starts to ensure a fresh DragGroup is mounted
+  // even if there's no render between one drag ending and the next one starting.
+  const dragGroup = (
+    gameState.dragState
+    ? <DragGroup dispatchGameState={dispatchGameState} gameState={gameState} />
+    : null
+  );
   return (
     <div id="game">
       <Board
@@ -91,7 +96,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
           dispatchGameState={dispatchGameState}
         ></Pool>
       )}
-      <DragGroup dispatchGameState={dispatchGameState} gameState={gameState} />
+      {dragGroup}
     </div>
   );
 }
