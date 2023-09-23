@@ -28,7 +28,7 @@ function DragGroup({ dispatchGameState, gameState }) {
       dragGroup.current.setPointerCapture(dragState.pointerID);
       if (!dragGroup.current.hasPointerCapture(dragState.pointerID)) {
         console.warn("Failed to capture pointer");
-        // TODO: drop all dragged pieces
+        dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
       }
       return () => {
         if (dragGroup.current) {
