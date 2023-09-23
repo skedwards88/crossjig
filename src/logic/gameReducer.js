@@ -611,6 +611,7 @@ export function gameReducer(currentGameState, payload) {
         ...currentGameState.dragState,
         pointer,
         destination,
+        dragHasMoved: true,
       },
     };
   } else if (payload.action === "dragEnd") {
@@ -642,6 +643,7 @@ export function gameReducer(currentGameState, payload) {
         ...currentGameState.dragState,
         pointer,
         destination,
+        dragHasMoved: true,
       },
     };
   } else if (payload.action == "shiftEnd") {
