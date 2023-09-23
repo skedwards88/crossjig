@@ -379,6 +379,7 @@ a {
   justify-content: center;
   font-size: var(--default-font-size);
   width: fit-content;
+  height: fit-content;
   align-content: center;
 }
 
@@ -526,10 +527,6 @@ a {
   #pool {
     height: 90vh; /* fallback if svh isn't handled */
     height: 100svh;
-  }
-
-  .piece {
-    height: fit-content;
   }
 
   #controls,
