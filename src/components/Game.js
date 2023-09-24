@@ -10,17 +10,7 @@ function DragGroup({ dispatchGameState, gameState }) {
 
   const isShifting = dragState.isShifting;
   let draggedPieces = gameState.pieces
-    .filter((piece) => dragState.pieceIDs.includes(piece.id))
-    .map((piece) => (
-      <Piece
-        key={piece.id}
-        piece={piece}
-        where="drag"
-        overlapGrid={undefined}
-        gameIsSolved={false}
-        dragController={{ dispatchGameState }}
-      />
-    ));
+    .filter((piece) => dragState.pieceIDs.includes(piece.id));
 
   React.useEffect(
     () => {
@@ -66,19 +56,54 @@ function DragGroup({ dispatchGameState, gameState }) {
     dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
   };
 
+  let top = dragState.pointer.y - dragState.pointerOffset.y;
+  let left = dragState.pointer.x - dragState.pointerOffset.x;
+  if (isShifting) {
+    // Clamp to the board rectangle.
+    const board = document.getElementById("board")?.getBoundingClientRect();
+    if (board) {
+      console.log("natural left", left, "top", top);
+      const minLeft = board.left;
+      const minTop = board.top;
+      console.log("minLeft", minLeft, "minTop", minTop);
+      const boxWidth = board.width / gameState.gridSize;
+      const boxHeight = board.height / gameState.gridSize;
+      const groupHeight = Math.max(
+        ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+      );
+      const groupWidth = Math.max(
+        ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+      );
+      console.log("groupHeight", groupHeight, "groupWidth", groupWidth);
+      const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupWidth);
+      const maxTop = minTop + boxHeight * (gameState.gridSize - groupHeight);
+      left = Math.max(minLeft, Math.min(left, maxLeft));
+      top = Math.max(minTop, Math.min(top, maxTop));
+    }
+  }
+
   return (
     <div
       id="dragGroup"
       ref={dragGroup}
       style={{
         position: "absolute",
-        top: dragState.pointer.y - dragState.pointerOffset.y,
-        left: dragState.pointer.x - dragState.pointerOffset.x,
+        top,
+        left,
       }}
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
     >
-      {draggedPieces}
+      {draggedPieces.map((piece) => (
+        <Piece
+          key={piece.id}
+          piece={piece}
+          where="drag"
+          overlapGrid={undefined}
+          gameIsSolved={false}
+          dragController={{ dispatchGameState }}
+        />
+      ))}
     </div>
   );
 }
