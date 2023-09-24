@@ -35,7 +35,6 @@ export default function Board({
   );
 
   const overlapGrid = countingGrid(gridSize, boardPieces);
-  let dragController = { dispatchGameState };
   let pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -43,7 +42,7 @@ export default function Board({
       where="board"
       overlapGrid={overlapGrid}
       gameIsSolved={gameIsSolved}
-      dragController={dragController}
+      dispatchGameState={dispatchGameState}
     />
   ));
 

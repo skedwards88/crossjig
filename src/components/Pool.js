@@ -5,7 +5,6 @@ export default function Pool({ pieces, dispatchGameState }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
-  const dragController = { dispatchGameState };
   const pieceElements = poolPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -13,7 +12,7 @@ export default function Pool({ pieces, dispatchGameState }) {
       where="pool"
       overlapGrid={undefined}
       gameIsSolved={false}
-      dragController={dragController}
+      dispatchGameState={dispatchGameState}
     />
   ));
 

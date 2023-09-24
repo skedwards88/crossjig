@@ -101,7 +101,7 @@ function DragGroup({ dispatchGameState, gameState }) {
           where="drag"
           overlapGrid={undefined}
           gameIsSolved={false}
-          dragController={{ dispatchGameState }}
+          dispatchGameState={dispatchGameState}
         />
       ))}
     </div>

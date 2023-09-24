@@ -9,7 +9,7 @@ function Letter({
   overlapping,
   isDragging,
   gameIsSolved,
-  dragController: { dispatchGameState },
+  dispatchGameState,
 }) {
   const onPointerDown = (event) => {
     event.preventDefault();
@@ -77,7 +77,7 @@ export default function Piece({
   where,
   overlapGrid,
   gameIsSolved,
-  dragController,
+  dispatchGameState,
 }) {
   const isOnBoard = where == "board";
   const isDragging = where == "drag";
@@ -108,7 +108,7 @@ export default function Piece({
             }
             isDragging={isDragging}
             gameIsSolved={gameIsSolved}
-            dragController={dragController}
+            dispatchGameState={dispatchGameState}
           />
         );
       }
