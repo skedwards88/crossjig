@@ -409,15 +409,6 @@ a {
   transform: translate(var(--lift), var(--lift));
 }
 
-.shadow-piece {
-  width: fit-content;
-  height: fit-content;
-  display: grid;
-  grid-template-columns: repeat(12, var(--box-size));
-  grid-template-rows: repeat(12, var(--box-size));
-  pointer-events: none;
-}
-
 .shadow-square {
   background-color: var(--shadow-color);
 }
