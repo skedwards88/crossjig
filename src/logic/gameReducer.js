@@ -593,6 +593,10 @@ export function gameReducer(currentGameState, payload) {
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
+    if (currentGameState.dragState === undefined) {
+      console.warn("dragMove fired with no dragState");
+      return currentGameState;
+    }
     let { pointer } = payload;
     let destination = dragDestination(currentGameState, pointer);
     return {
@@ -625,6 +629,10 @@ export function gameReducer(currentGameState, payload) {
     });
   } else if (payload.action === "shiftMove") {
     // Fired on pointermove when shifting.
+    if (currentGameState.dragState === undefined) {
+      console.warn("shiftMove fired with no dragState");
+      return currentGameState;
+    }
     let { pointer } = payload;
     let destination = dragDestination(currentGameState, pointer);
     return {
