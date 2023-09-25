@@ -15,6 +15,8 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       <Board
         pieces={gameState.pieces}
         gridSize={gameState.gridSize}
+        dragPieceIDs={gameState.dragState?.pieceIDs}
+        dragDestination={gameState.dragState?.destination}
         gameIsSolved={gameState.gameIsSolved}
         dispatchGameState={dispatchGameState}
       ></Board>

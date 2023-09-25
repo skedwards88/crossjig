@@ -409,6 +409,10 @@ a {
   transform: translate(var(--lift), var(--lift));
 }
 
+.placeholder {
+  background-color: var(--shadow-color);
+}
+
 .rules {
   display: grid;
   grid-template-areas:
