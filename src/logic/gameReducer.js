@@ -135,7 +135,9 @@ function dragStart({
     const rectangles = targets.flatMap((piece) => {
       let element = document.getElementById(`piece-${piece.id}`);
       if (!element) {
-        console.warn(`dragStart: element for piece ${piece.id} not found in DOM`);
+        console.warn(
+          `dragStart: element for piece ${piece.id} not found in DOM`
+        );
         return [];
       }
       return [element.getBoundingClientRect()];
@@ -181,7 +183,9 @@ function dragStart({
 
   if (targets.some((piece) => piece.poolIndex !== undefined)) {
     // A piece was removed from the pool, so recompute poolIndex for the other pieces.
-    let remainingPoolPieces = currentGameState.pieces.filter((piece) => piece.poolIndex !== undefined);
+    let remainingPoolPieces = currentGameState.pieces.filter(
+      (piece) => piece.poolIndex !== undefined
+    );
     remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
     let poolIndices = Array(currentGameState.pieces.length).fill(-1);
     remainingPoolPieces.forEach((piece, index) => {
@@ -189,14 +193,14 @@ function dragStart({
     });
     currentGameState = {
       ...currentGameState,
-      pieces: currentGameState.pieces.map((piece) => (
+      pieces: currentGameState.pieces.map((piece) =>
         piece.poolIndex === undefined
-        ? piece
-        : {
-          ...piece,
-          poolIndex: poolIndices[piece.id],
-        }
-      )),
+          ? piece
+          : {
+              ...piece,
+              poolIndex: poolIndices[piece.id],
+            }
+      ),
     };
   }
 
@@ -567,7 +571,7 @@ export function gameReducer(currentGameState, payload) {
     // Set `piece.isDragging` on all neighbors using `destination` to figure out
     // which pieces are neighbors. Implemented by dropping the current piece, then picking
     // it and all connected pieces up again.
-    let {dragState} = currentGameState;
+    let { dragState } = currentGameState;
     if (dragState === undefined) {
       console.warn("dragNeighbors fired with no dragState");
       return currentGameState;

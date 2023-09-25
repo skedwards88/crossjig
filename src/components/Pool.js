@@ -1,7 +1,7 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import {countingGrid} from "./Board";
+import { countingGrid } from "./Board";
 
 export default function Pool({ pieces, dragDestination, dispatchGameState }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
@@ -25,9 +25,11 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
       0,
       draggedPieces.map((piece) => (
         <DragShadow
-          grid={countingGrid(piece.letters.length, piece.letters[0].length, [{...piece, groupTop: 0, groupLeft: 0}])}
+          grid={countingGrid(piece.letters.length, piece.letters[0].length, [
+            { ...piece, groupTop: 0, groupLeft: 0 },
+          ])}
         />
-      )),
+      ))
     );
   }
 

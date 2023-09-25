@@ -25,7 +25,6 @@ export function countingGrid(height, width, pieces) {
   return grid;
 }
 
-
 export default function Board({
   pieces,
   gridSize,

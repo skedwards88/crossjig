@@ -5,27 +5,29 @@ import React from "react";
 export default function DragGroup({ dispatchGameState, gameState }) {
   const dragState = gameState.dragState;
   const isShifting = dragState.isShifting;
-  const draggedPieces = gameState.pieces
-    .filter((piece) => dragState.pieceIDs.includes(piece.id));
-
-  React.useEffect(
-    () => {
-      if (isShifting || dragState.destination.where != "board" || dragState.dragHasMoved) {
-        return undefined;
-      }
-      let timerID = setTimeout(() => {
-          dispatchGameState({ action: "dragNeighbors" });
-          timerID = undefined;
-      }, 500);
-      return () => {
-        if (timerID !== undefined) {
-          clearTimeout(timerID);
-          timerID = undefined;
-        }
-      };
-    },
-    [dragState.dragHasMoved, isShifting],
+  const draggedPieces = gameState.pieces.filter((piece) =>
+    dragState.pieceIDs.includes(piece.id)
   );
+
+  React.useEffect(() => {
+    if (
+      isShifting ||
+      dragState.destination.where != "board" ||
+      dragState.dragHasMoved
+    ) {
+      return undefined;
+    }
+    let timerID = setTimeout(() => {
+      dispatchGameState({ action: "dragNeighbors" });
+      timerID = undefined;
+    }, 500);
+    return () => {
+      if (timerID !== undefined) {
+        clearTimeout(timerID);
+        timerID = undefined;
+      }
+    };
+  }, [dragState.dragHasMoved, isShifting]);
 
   const dragGroup = React.useRef(null);
   React.useEffect(() => {
@@ -67,7 +69,9 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
       );
       const groupWidth = Math.max(
-        ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+        ...draggedPieces.map(
+          (piece) => piece.groupLeft + piece.letters[0].length
+        )
       );
       const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupWidth);
       const maxTop = minTop + boxHeight * (gameState.gridSize - groupHeight);
