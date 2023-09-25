@@ -2,10 +2,10 @@ import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 
-function countingGrid(gridSize, pieces) {
-  let grid = Array(gridSize)
+export function countingGrid(height, width, pieces) {
+  let grid = Array(height)
     .fill(undefined)
-    .map(() => Array(gridSize).fill(0));
+    .map(() => Array(width).fill(0));
 
   for (let piece of pieces) {
     const letters = piece.letters;
@@ -38,7 +38,7 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const overlapGrid = countingGrid(gridSize, boardPieces);
+  const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
   let pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -55,7 +55,7 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
     );
-    const grid = countingGrid(gridSize, draggedPieces);
+    const grid = countingGrid(gridSize, gridSize, draggedPieces);
     dragShadow = (
       <DragShadow
         grid={grid}
