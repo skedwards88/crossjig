@@ -29,6 +29,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
       ) : (
         <Pool
           pieces={gameState.pieces}
+          dragDestination={gameState.dragState?.destination}
           dispatchGameState={dispatchGameState}
         ></Pool>
       )}
