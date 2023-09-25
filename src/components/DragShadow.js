@@ -28,14 +28,17 @@ export default function DragShadow({ grid, top, left }) {
     }
   }
 
+  const styles = {
+    "--numRows": grid.length,
+    "--numCols": grid[0].length,
+  };
+  if (top !== undefined) {
+    styles.gridRow = top + 1; // CSS grid coordinates are 1-based
+    styles.gridColumn = left + 1;
+  }
+
   return (
-    <div
-      className="piece shadow-piece" 
-      style={{
-        gridRow: top + 1, // CSS grid coordinates are 1-based
-        gridColumn: left + 1,
-      }}
-    >
+    <div className="piece shadow-piece" style={styles}>
       {squares}
     </div>
   );
