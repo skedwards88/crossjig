@@ -3,7 +3,6 @@ import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 
 function countingGrid(gridSize, pieces) {
-  console.log("countingGrid", pieces);
   let grid = Array(gridSize)
     .fill(undefined)
     .map(() => Array(gridSize).fill(0));

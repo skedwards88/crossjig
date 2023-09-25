@@ -59,10 +59,8 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     // Clamp to the board rectangle.
     const board = document.getElementById("board")?.getBoundingClientRect();
     if (board) {
-      console.log("natural left", left, "top", top);
       const minLeft = board.left;
       const minTop = board.top;
-      console.log("minLeft", minLeft, "minTop", minTop);
       const boxWidth = board.width / gameState.gridSize;
       const boxHeight = board.height / gameState.gridSize;
       const groupHeight = Math.max(
@@ -71,7 +69,6 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       const groupWidth = Math.max(
         ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
       );
-      console.log("groupHeight", groupHeight, "groupWidth", groupWidth);
       const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupWidth);
       const maxTop = minTop + boxHeight * (gameState.gridSize - groupHeight);
       left = Math.max(minLeft, Math.min(left, maxLeft));
