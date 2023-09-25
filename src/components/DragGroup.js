@@ -24,7 +24,6 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     return () => {
       if (timerID !== undefined) {
         clearTimeout(timerID);
-        timerID = undefined;
       }
     };
   }, [dragState.dragHasMoved, isShifting]);
