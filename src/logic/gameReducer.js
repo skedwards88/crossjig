@@ -188,10 +188,9 @@ function dragEnd(currentGameState) {
     return currentGameState;
   }
 
-  let poolIndex;
+  const dest = currentGameState.dragState.destination;
+  const draggedPieceIDs = currentGameState.dragState.pieceIDs;
   let mapper;
-  let dest = currentGameState.dragState.destination;
-  let draggedPieceIDs = currentGameState.dragState.pieceIDs;
   if (dest.where === "board") {
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
@@ -204,7 +203,7 @@ function dragEnd(currentGameState) {
           }
         : piece;
   } else {
-    poolIndex = dest.index;
+    let poolIndex = dest.index;
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
         ? {
