@@ -72,6 +72,7 @@ export default function Board({
         event.preventDefault();
         dispatchGameState({
           action: "shiftStart",
+          pointerID: event.pointerId,
           pointer: { x: event.clientX, y: event.clientY },
         });
       }}

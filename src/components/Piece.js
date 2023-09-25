@@ -17,19 +17,16 @@ function Letter({
     const pointer = { x: event.clientX, y: event.clientY };
     const letterElement = event.currentTarget;
     const pieceElement = letterElement.parentElement;
-    letterElement.setPointerCapture(event.pointerId);
-    if (letterElement.hasPointerCapture(event.pointerId)) {
-      dispatchGameState({
-        action: "dragStart",
-        pieceID,
-        pointerID: event.pointerId,
-        pointer,
-        pointerOffset: {
-          x: pointer.x - pieceElement.offsetLeft,
-          y: pointer.y - pieceElement.offsetTop,
-        },
-      });
-    }
+    dispatchGameState({
+      action: "dragStart",
+      pieceID,
+      pointerID: event.pointerId,
+      pointer,
+      pointerOffset: {
+        x: pointer.x - pieceElement.offsetLeft,
+        y: pointer.y - pieceElement.offsetTop,
+      },
+    });
   };
 
   let className = "letter";
