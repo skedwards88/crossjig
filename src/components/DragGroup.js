@@ -4,9 +4,8 @@ import React from "react";
 // This component is mounted each time a drag starts.
 export default function DragGroup({ dispatchGameState, gameState }) {
   const dragState = gameState.dragState;
-
   const isShifting = dragState.isShifting;
-  let draggedPieces = gameState.pieces
+  const draggedPieces = gameState.pieces
     .filter((piece) => dragState.pieceIDs.includes(piece.id));
 
   React.useEffect(
@@ -21,6 +20,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       return () => {
         if (timerID !== undefined) {
           clearTimeout(timerID);
+          timerID = undefined;
         }
       };
     },
