@@ -1,5 +1,6 @@
 import React from "react";
 import Piece from "./Piece";
+import DragShadow from "./DragShadow";
 
 function countingGrid(gridSize, pieces) {
   console.log("countingGrid", pieces);
@@ -25,17 +26,6 @@ function countingGrid(gridSize, pieces) {
   return grid;
 }
 
-function PlaceholderBox({ rowIndex, colIndex }) {
-  return (
-    <div
-      className="placeholder"
-      style={{
-        gridRow: rowIndex + 1, // CSS grid coordinates are 1-based
-        gridColumn: colIndex + 1,
-      }}
-    />
-  );
-}
 
 export default function Board({
   pieces,
@@ -61,25 +51,19 @@ export default function Board({
     />
   ));
 
-  let placeholders = [];
+  let dragShadow;
   if (dragDestination?.where === "board") {
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
     );
     const grid = countingGrid(gridSize, draggedPieces);
-    for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
-      for (let colIndex = 0; colIndex < grid[0].length; colIndex++) {
-        if (grid[rowIndex][colIndex] > 0) {
-          placeholders.push(
-            <PlaceholderBox
-              key={`placeholder-${rowIndex}-${colIndex}`}
-              rowIndex={dragDestination.top + rowIndex}
-              colIndex={dragDestination.left + colIndex}
-            />
-          );
-        }
-      }
-    }
+    dragShadow = (
+      <DragShadow
+        grid={grid}
+        top={dragDestination.top}
+        left={dragDestination.left}
+      />
+    );
   }
 
   return (
@@ -94,7 +78,7 @@ export default function Board({
       }}
     >
       {pieceElements}
-      {placeholders}
+      {dragShadow}
     </div>
   );
 }
