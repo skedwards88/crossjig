@@ -172,6 +172,7 @@ function dragStart({
       isShifting,
       dragHasMoved: false,
       pointerID,
+      pointerStart: pointer,
       pointer,
       pointerOffset,
       destination:
@@ -205,6 +206,13 @@ function dragStart({
   }
 
   return updateCompletionState(currentGameState);
+}
+
+const NOT_FAR = 5.0; // pixels
+
+// We let the pointer wander up to NOT_FAR pixels before setting dragHasMoved.
+function hasMoved(start, pointer) {
+  return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
 }
 
 function dragEnd(currentGameState) {
@@ -597,7 +605,8 @@ export function gameReducer(currentGameState, payload) {
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
-    if (currentGameState.dragState === undefined) {
+    let prevDrag = currentGameState.dragState;
+    if (prevDrag === undefined) {
       console.warn("dragMove fired with no dragState");
       return currentGameState;
     }
@@ -606,10 +615,11 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       dragState: {
-        ...currentGameState.dragState,
+        ...prevDrag,
         pointer,
         destination,
-        dragHasMoved: true,
+        dragHasMoved:
+          prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
       },
     };
   } else if (payload.action === "dragEnd") {
@@ -633,7 +643,8 @@ export function gameReducer(currentGameState, payload) {
     });
   } else if (payload.action === "shiftMove") {
     // Fired on pointermove when shifting.
-    if (currentGameState.dragState === undefined) {
+    let prevDrag = currentGameState.dragState;
+    if (prevDrag === undefined) {
       console.warn("shiftMove fired with no dragState");
       return currentGameState;
     }
@@ -642,10 +653,11 @@ export function gameReducer(currentGameState, payload) {
     return {
       ...currentGameState,
       dragState: {
-        ...currentGameState.dragState,
+        ...prevDrag,
         pointer,
         destination,
-        dragHasMoved: true,
+        dragHasMoved:
+          prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
       },
     };
   } else if (payload.action === "shiftEnd") {
