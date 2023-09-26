@@ -322,6 +322,7 @@ a {
 .letter {
   display: flex;
   pointer-events: auto;
+  user-select: none;
   touch-action: none;
   align-items: center;
   justify-content: center;
