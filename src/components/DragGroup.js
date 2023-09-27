@@ -21,7 +21,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     }
     ok &&= dragGroup.current.hasPointerCapture(dragState.pointerID);
     if (!ok) {
-      dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+      dispatchGameState({ action: "dragEnd" });
     }
     return () => {
       if (ok && dragGroup.current) {
@@ -79,13 +79,13 @@ export default function DragGroup({ dispatchGameState, gameState }) {
   const onPointerMove = (event) => {
     event.preventDefault();
     dispatchGameState({
-      action: !isShifting ? "dragMove" : "shiftMove",
+      action: "dragMove",
       pointer: { x: event.clientX, y: event.clientY },
     });
   };
   const onLostPointerCapture = (event) => {
     onPointerMove(event);
-    dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+    dispatchGameState({ action: "dragEnd" });
   };
 
   return (

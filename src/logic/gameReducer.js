@@ -635,27 +635,6 @@ export function gameReducer(currentGameState, payload) {
       pointerOffset: undefined,
       isShifting: true,
     });
-  } else if (payload.action === "shiftMove") {
-    // Fired on pointermove when shifting.
-    let prevDrag = currentGameState.dragState;
-    if (prevDrag === undefined) {
-      return currentGameState;
-    }
-    let { pointer } = payload;
-    let destination = dragDestination(currentGameState, pointer);
-    return {
-      ...currentGameState,
-      dragState: {
-        ...prevDrag,
-        pointer,
-        destination,
-        dragHasMoved:
-          prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
-      },
-    };
-  } else if (payload.action === "shiftEnd") {
-    // Fired on lostpointercapture when shifting. Same behavior as for `dragEnd`.
-    return dragEnd(currentGameState);
   } /*else if (
     payload.action === "dropOnPool" ||
     payload.action === "dragOverPool"
