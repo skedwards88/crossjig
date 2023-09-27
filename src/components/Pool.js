@@ -8,14 +8,16 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
   const pieceElements = poolPieces.map((piece) => (
-    <Piece
-      key={piece.id}
-      piece={piece}
-      where="pool"
-      overlapGrid={undefined}
-      gameIsSolved={false}
-      dispatchGameState={dispatchGameState}
-    />
+    <div className="pool-slot" key={piece.id}>
+      <Piece
+        key={piece.id}
+        piece={piece}
+        where="pool"
+        overlapGrid={undefined}
+        gameIsSolved={false}
+        dispatchGameState={dispatchGameState}
+      />
+    </div>
   ));
 
   if (dragDestination?.where === "pool") {
@@ -24,12 +26,14 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
       dragDestination.index,
       0,
       draggedPieces.map((piece) => (
-        <DragShadow
-          key={`shadow-piece-${piece.id}`}
-          grid={countingGrid(piece.letters.length, piece.letters[0].length, [
-            { ...piece, groupTop: 0, groupLeft: 0 },
-          ])}
-        />
+        <div className="pool-slot shadow" key={piece.id}>
+          <DragShadow
+            key={`shadow-piece-${piece.id}`}
+            grid={countingGrid(piece.letters.length, piece.letters[0].length, [
+              { ...piece, groupTop: 0, groupLeft: 0 },
+            ])}
+          />
+        </div>
       ))
     );
   }
@@ -49,7 +53,7 @@ export function dragDestinationInPool(pointer) {
     let index = 0;
     for (let element of poolElement.children) {
       // Note: Exact match on className so we don't count shadows.
-      if (element.className === "piece") {
+      if (element.className === "pool-slot") {
         if (positionIsBeforeRectangle(pointer, element.getBoundingClientRect())) {
           break;
         }

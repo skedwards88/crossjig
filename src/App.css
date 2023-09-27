@@ -384,8 +384,13 @@ a {
   align-content: center;
 }
 
-#pool > .piece {
-  margin: 3vmin;
+.pool-slot {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  padding: 3vmin;
 }
 
 #dragGroup {
