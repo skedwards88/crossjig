@@ -256,71 +256,6 @@ function dragEnd(currentGameState) {
   });
 }
 
-function dragDestination(currentGameState, pointer) {
-  if (currentGameState.dragState === undefined) {
-    console.warn("dragDestination called with no dragState");
-    return { where: "pool", index: 0 };
-  }
-  if (!currentGameState.dragState.isShifting) {
-    let poolElement =
-      document.getElementById("pool") || document.getElementById("result");
-    let poolRect = poolElement.getBoundingClientRect();
-    if (
-      poolRect.left <= pointer.x &&
-      pointer.x <= poolRect.right &&
-      poolRect.top <= pointer.y &&
-      pointer.y <= poolRect.bottom
-    ) {
-      if (currentGameState.dragState.destination.where === "pool") {
-        return currentGameState.dragState.destination;
-      }
-      let poolPieces = currentGameState.pieces.filter(
-        (piece) => piece.poolIndex >= 0
-      );
-      return { where: "pool", index: poolPieces.length };
-    }
-  }
-
-  let boardRect = document.getElementById("board").getBoundingClientRect();
-  if (
-    currentGameState.dragState.destination.where === "board" ||
-    (boardRect.left <= pointer.x &&
-      pointer.x <= boardRect.right &&
-      boardRect.top <= pointer.y &&
-      pointer.y <= boardRect.bottom)
-  ) {
-    const draggedPieceIDs = currentGameState.dragState.pieceIDs;
-    const draggedPieces = currentGameState.pieces.filter((piece) =>
-      draggedPieceIDs.includes(piece.id)
-    );
-
-    const groupHeight = Math.max(
-      ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
-    );
-    const groupWidth = Math.max(
-      ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
-    );
-    const maxTop = currentGameState.gridSize - groupHeight;
-    const maxLeft = currentGameState.gridSize - groupWidth;
-
-    const squareWidth = (boardRect.width - 1) / currentGameState.gridSize;
-    const squareHeight = (boardRect.height - 1) / currentGameState.gridSize;
-    const pointerOffset = currentGameState.dragState.pointerOffset;
-    const unclampedLeft = Math.round(
-      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
-    );
-    const unclampedTop = Math.round(
-      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight
-    );
-    const left = Math.max(0, Math.min(maxLeft, unclampedLeft));
-    const top = Math.max(0, Math.min(maxTop, unclampedTop));
-
-    return { where: "board", top, left };
-  }
-
-  return currentGameState.dragState.destination;
-}
-
 function giveHint(currentGameState) {
   const pieces = cloneDeep(currentGameState.pieces);
   const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
@@ -604,14 +539,13 @@ export function gameReducer(currentGameState, payload) {
     if (prevDrag === undefined) {
       return currentGameState;
     }
-    let { pointer } = payload;
-    let destination = dragDestination(currentGameState, pointer);
+    let { pointer, destination } = payload;
     return {
       ...currentGameState,
       dragState: {
         ...prevDrag,
         pointer,
-        destination,
+        destination: destination ?? prevDrag.destination,
         dragHasMoved:
           prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
       },

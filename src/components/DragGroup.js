@@ -78,9 +78,11 @@ export default function DragGroup({ dispatchGameState, gameState }) {
 
   const onPointerMove = (event) => {
     event.preventDefault();
+    const pointer = { x: event.clientX, y: event.clientY };
     dispatchGameState({
       action: "dragMove",
-      pointer: { x: event.clientX, y: event.clientY },
+      pointer,
+      destination: dragDestination(gameState, pointer),
     });
   };
   const onLostPointerCapture = (event) => {
@@ -112,4 +114,65 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       ))}
     </div>
   );
+}
+
+function dragDestination(gameState, pointer) {
+  if (!gameState.dragState.isShifting) {
+    let poolElement =
+      document.getElementById("pool") || document.getElementById("result");
+    let poolRect = poolElement.getBoundingClientRect();
+    if (
+      poolRect.left <= pointer.x &&
+      pointer.x <= poolRect.right &&
+      poolRect.top <= pointer.y &&
+      pointer.y <= poolRect.bottom
+    ) {
+      if (gameState.dragState.destination.where === "pool") {
+        return gameState.dragState.destination;
+      }
+      let poolPieces = gameState.pieces.filter(
+        (piece) => piece.poolIndex >= 0
+      );
+      return { where: "pool", index: poolPieces.length };
+    }
+  }
+
+  let boardRect = document.getElementById("board").getBoundingClientRect();
+  if (
+    gameState.dragState.destination.where === "board" ||
+    (boardRect.left <= pointer.x &&
+      pointer.x <= boardRect.right &&
+      boardRect.top <= pointer.y &&
+      pointer.y <= boardRect.bottom)
+  ) {
+    const draggedPieceIDs = gameState.dragState.pieceIDs;
+    const draggedPieces = gameState.pieces.filter((piece) =>
+      draggedPieceIDs.includes(piece.id)
+    );
+
+    const groupHeight = Math.max(
+      ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+    );
+    const groupWidth = Math.max(
+      ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+    );
+    const maxTop = gameState.gridSize - groupHeight;
+    const maxLeft = gameState.gridSize - groupWidth;
+
+    const squareWidth = (boardRect.width - 1) / gameState.gridSize;
+    const squareHeight = (boardRect.height - 1) / gameState.gridSize;
+    const pointerOffset = gameState.dragState.pointerOffset;
+    const unclampedLeft = Math.round(
+      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
+    );
+    const unclampedTop = Math.round(
+      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight
+    );
+    const left = Math.max(0, Math.min(maxLeft, unclampedLeft));
+    const top = Math.max(0, Math.min(maxTop, unclampedTop));
+
+    return { where: "board", top, left };
+  }
+
+  return undefined;
 }
