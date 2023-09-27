@@ -580,12 +580,7 @@ export function gameReducer(currentGameState, payload) {
     // which pieces are neighbors. Implemented by dropping the current piece, then picking
     // it and all connected pieces up again.
     let { dragState } = currentGameState;
-    if (dragState === undefined) {
-      console.warn("dragNeighbors fired with no dragState");
-      return currentGameState;
-    }
-    if (dragState.pieceIDs.length !== 1) {
-      console.warn("dragNeighbors fired with multiple pieces");
+    if (dragState === undefined || dragState.pieceIDs.length !== 1) {
       return currentGameState;
     }
 
@@ -607,7 +602,6 @@ export function gameReducer(currentGameState, payload) {
     // Fired on pointermove and on lostpointercapture.
     let prevDrag = currentGameState.dragState;
     if (prevDrag === undefined) {
-      console.warn("dragMove fired with no dragState");
       return currentGameState;
     }
     let { pointer } = payload;
@@ -645,7 +639,6 @@ export function gameReducer(currentGameState, payload) {
     // Fired on pointermove when shifting.
     let prevDrag = currentGameState.dragState;
     if (prevDrag === undefined) {
-      console.warn("shiftMove fired with no dragState");
       return currentGameState;
     }
     let { pointer } = payload;
