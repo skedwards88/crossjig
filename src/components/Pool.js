@@ -36,3 +36,43 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
 
   return <div id="pool">{pieceElements}</div>;
 }
+
+export function dragDestinationInPool(pointer) {
+  let poolElement = document.getElementById("pool") || document.getElementById("result");
+  let poolRect = poolElement.getBoundingClientRect();
+  if (
+    poolRect.left <= pointer.x &&
+    pointer.x <= poolRect.right &&
+    poolRect.top <= pointer.y &&
+    pointer.y <= poolRect.bottom
+  ) {
+    let index = 0;
+    for (let element of poolElement.children) {
+      // Note: Exact match on className so we don't count shadows.
+      if (element.className === "piece") {
+        if (positionIsBeforeRectangle(pointer, element.getBoundingClientRect())) {
+          break;
+        }
+        index++;
+      }
+    }
+    return { where: "pool", index };
+  }
+  return undefined;
+}
+
+function positionIsBeforeRectangle(point, rect) {
+  if (rect.bottom < point.y) {
+    return false;
+  } else if (point.y < rect.top) {
+    return true;
+  } else if (rect.right < point.x) {
+    return false;
+  } else if (point.x < rect.left) {
+    return true;
+  } else {
+    // The point is inside the rectangle.
+    // We'll say it's before if it's left of the center.
+    return point.x < (rect.right + rect.left) / 2;
+  }
+}
