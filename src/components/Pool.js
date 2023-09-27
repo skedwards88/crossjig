@@ -25,6 +25,7 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
       0,
       draggedPieces.map((piece) => (
         <DragShadow
+          key={`shadow-piece-${piece.id}`}
           grid={countingGrid(piece.letters.length, piece.letters[0].length, [
             { ...piece, groupTop: 0, groupLeft: 0 },
           ])}
