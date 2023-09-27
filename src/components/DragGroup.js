@@ -9,6 +9,28 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     dragState.pieceIDs.includes(piece.id)
   );
 
+  // Capture the pointer.
+  const dragGroup = React.useRef(null);
+  React.useEffect(() => {
+    let ok = true;
+    try {
+      dragGroup.current.setPointerCapture(dragState.pointerID);
+    } catch (exc) {
+      console.warn("Failed to capture pointer:", exc);
+      ok = false;
+    }
+    ok &&= dragGroup.current.hasPointerCapture(dragState.pointerID);
+    if (!ok) {
+      dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+    }
+    return () => {
+      if (ok && dragGroup.current) {
+        dragGroup.current.releasePointerCapture(dragState.pointerID);
+      }
+    };
+  }, [dragGroup, dragState.pointerID]);
+
+  // Multi-select timer.
   React.useEffect(() => {
     if (
       isShifting ||
@@ -26,34 +48,9 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         clearTimeout(timerID);
       }
     };
-  }, [dragState.dragHasMoved, isShifting]);
+  }, [isShifting, dragState.destination.where, dragState.dragHasMoved]);
 
-  const dragGroup = React.useRef(null);
-  React.useEffect(() => {
-    dragGroup.current.setPointerCapture(dragState.pointerID);
-    if (!dragGroup.current.hasPointerCapture(dragState.pointerID)) {
-      console.warn("Failed to capture pointer");
-      dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
-    }
-    return () => {
-      if (dragGroup.current) {
-        dragGroup.current.releasePointerCapture(dragState.pointerID);
-      }
-    };
-  }, [dragState.pointerID]);
-
-  const onPointerMove = (event) => {
-    event.preventDefault();
-    dispatchGameState({
-      action: !isShifting ? "dragMove" : "shiftMove",
-      pointer: { x: event.clientX, y: event.clientY },
-    });
-  };
-  const onLostPointerCapture = (event) => {
-    onPointerMove(event);
-    dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
-  };
-
+  // Compute location.
   let top = dragState.pointer.y - dragState.pointerOffset.y;
   let left = dragState.pointer.x - dragState.pointerOffset.x;
   if (isShifting) {
@@ -78,6 +75,18 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       top = Math.max(minTop, Math.min(top, maxTop));
     }
   }
+
+  const onPointerMove = (event) => {
+    event.preventDefault();
+    dispatchGameState({
+      action: !isShifting ? "dragMove" : "shiftMove",
+      pointer: { x: event.clientX, y: event.clientY },
+    });
+  };
+  const onLostPointerCapture = (event) => {
+    onPointerMove(event);
+    dispatchGameState({ action: !isShifting ? "dragEnd" : "shiftEnd" });
+  };
 
   return (
     <div
