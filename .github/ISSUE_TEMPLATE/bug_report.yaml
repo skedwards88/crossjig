@@ -10,7 +10,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: What version of the app are you using? You can find this info by clicking the heart button in the app.
+      description: What version of the app are you using? You can find this info by clicking the info button in the app and looking at the version number below the "Play" button.
     validations:
       required: true
   - type: textarea
