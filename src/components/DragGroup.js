@@ -55,6 +55,12 @@ export default function DragGroup({ dispatchGameState, gameState }) {
   // Compute location.
   let top = dragState.pointer.y - dragState.pointerOffset.y;
   let left = dragState.pointer.x - dragState.pointerOffset.x;
+  const groupRows = Math.max(
+    ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+  );
+  const groupColumns = Math.max(
+    ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+  );
   if (isShifting) {
     // Clamp to the board rectangle.
     const board = document.getElementById("board")?.getBoundingClientRect();
@@ -63,16 +69,8 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       const minTop = board.top;
       const boxWidth = board.width / gameState.gridSize;
       const boxHeight = board.height / gameState.gridSize;
-      const groupHeight = Math.max(
-        ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
-      );
-      const groupWidth = Math.max(
-        ...draggedPieces.map(
-          (piece) => piece.groupLeft + piece.letters[0].length
-        )
-      );
-      const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupWidth);
-      const maxTop = minTop + boxHeight * (gameState.gridSize - groupHeight);
+      const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupColumns);
+      const maxTop = minTop + boxHeight * (gameState.gridSize - groupRows);
       left = Math.max(minLeft, Math.min(left, maxLeft));
       top = Math.max(minTop, Math.min(top, maxTop));
     }
@@ -100,6 +98,8 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         position: "absolute",
         top,
         left,
+        "--group-rows": groupRows,
+        "--group-columns": groupColumns,
       }}
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}

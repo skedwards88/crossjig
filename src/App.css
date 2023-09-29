@@ -396,8 +396,8 @@ a {
 #dragGroup {
   display: grid;
   touch-action: none;
-  grid-template-columns: repeat(12, var(--box-size));
-  grid-template-rows: repeat(12, var(--box-size));
+  grid-template-columns: repeat(var(--group-columns), var(--box-size));
+  grid-template-rows: repeat(var(--group-rows), var(--box-size));
   width: fit-content;
   height: fit-content;
 }
