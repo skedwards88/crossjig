@@ -92,7 +92,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
 
   return (
     <div
-      id="dragGroup"
+      id="drag-group"
       ref={dragGroup}
       style={{
         position: "absolute",

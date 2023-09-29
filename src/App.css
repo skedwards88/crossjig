@@ -393,7 +393,7 @@ a {
   padding: 3vmin;
 }
 
-#dragGroup {
+#drag-group {
   display: grid;
   touch-action: none;
   grid-template-columns: repeat(var(--group-columns), var(--box-size));
