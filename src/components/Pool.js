@@ -42,7 +42,8 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
 }
 
 export function dragDestinationInPool(pointer) {
-  let poolElement = document.getElementById("pool") || document.getElementById("result");
+  let poolElement =
+    document.getElementById("pool") || document.getElementById("result");
   let poolRect = poolElement.getBoundingClientRect();
   if (
     poolRect.left <= pointer.x &&
@@ -54,7 +55,8 @@ export function dragDestinationInPool(pointer) {
     for (let element of poolElement.children) {
       // Note: Exact match on className so we don't count shadows.
       if (element.className === "pool-slot") {
-        if (positionIsBeforeRectangle(pointer, element.getBoundingClientRect())) {
+        const slotRect = element.getBoundingClientRect();
+        if (positionIsBeforeRectangle(pointer, slotRect)) {
           break;
         }
         index++;
