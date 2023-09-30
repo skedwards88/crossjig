@@ -86,7 +86,11 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     });
   };
   const onLostPointerCapture = (event) => {
-    onPointerMove(event);
+    // On iOS Safari, apparently the coordinates are (0, 0) when the pointer is lost,
+    // not the pointer-up location.
+    if (event.clientX != 0 || event.clientY != 0) {
+      onPointerMove(event);
+    }
     dispatchGameState({ action: "dragEnd" });
   };
 
