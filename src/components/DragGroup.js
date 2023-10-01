@@ -27,7 +27,11 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     }
     return () => {
       if (ok && dragGroup.current) {
-        dragGroup.current.releasePointerCapture(dragState.pointerID);
+        try {
+          dragGroup.current.releasePointerCapture(dragState.pointerID);
+        } catch (exc) {
+          // The pointer is invalid. Normal on touch screens. Ignore it.
+        }
       }
     };
   }, [dragGroup, dragState.pointerID]);
