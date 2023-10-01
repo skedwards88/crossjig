@@ -1,6 +1,11 @@
 /* General */
 html {
-  height: 100vh;
+  --box-size: min(8vw, 5.5vh);
+  --default-font-size: calc(var(--box-size) * 0.9);
+  --dark-color: rgb(55 54 71);
+  --light-color: rgb(239 239 239);
+
+  background-color: var(--dark-color);
 }
 
 body {
@@ -8,18 +13,14 @@ body {
 }
 
 .App {
-  --box-size: min(8vw, 5.5vh);
-  --default-font-size: calc(var(--box-size) * 0.9);
-  --dark-color: rgb(55 54 71);
-  --light-color: rgb(239 239 239);
-
   background-color: var(--dark-color);
   color: var(--light-color);
   font-family: sans-serif;
   font-size: var(--default-font-size);
   display: grid;
-  min-height: 100vh;
-  min-width: 100vw;
+  height: 90vh; /* fallback if svh isn't handled */
+  height: 100svh;
+  width: 100vw;
   overflow: scroll;
 }
 
@@ -171,7 +172,7 @@ input[type="range"]:focus::-ms-fill-upper {
   justify-content: space-evenly;
   align-items: center;
   grid-area: controls;
-  width: 100%;
+  width: 100vw;
   height: calc(var(--box-size) * 1.2);
   border-bottom: 2px solid var(--light-color);
 }
@@ -355,7 +356,8 @@ a {
 #pool {
   grid-area: pool;
   width: 100%;
-  height: calc(98vh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
+  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2)); 
+  height: calc(98svh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   display: flex;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -523,7 +525,8 @@ a {
   }
 
   #pool {
-    height: 100vh;
+    height: 90vh; /* fallback if svh isn't handled */
+    height: 100svh;
   }
 
   .poolPiece {
@@ -552,7 +555,7 @@ a {
 
 /* Large screen */
 @media (min-height: 800px) and (min-width: 800px) {
-  .App {
+  html {
     --box-size: min(4vh, 7vw, 1cm);
   }
 
