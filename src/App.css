@@ -356,7 +356,8 @@ a {
 #pool {
   grid-area: pool;
   width: 100%;
-  height: calc(98vh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
+  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2)); 
+  height: calc(98svh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   display: flex;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -524,7 +525,8 @@ a {
   }
 
   #pool {
-    height: 100vh;
+    height: 90vh; /* fallback if svh isn't handled */
+    height: 100svh;
   }
 
   .poolPiece {
@@ -553,7 +555,7 @@ a {
 
 /* Large screen */
 @media (min-height: 800px) and (min-width: 800px) {
-  .App {
+  html {
     --box-size: min(4vh, 7vw, 1cm);
   }
 
