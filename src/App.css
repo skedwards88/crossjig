@@ -368,7 +368,7 @@ a {
   overflow-y: scroll;
   flex-direction: row;
   flex-wrap: wrap;
-  align-content: safe center;
+  align-items: center;
   justify-content: center;
 }
 
