@@ -403,17 +403,17 @@ a {
   height: fit-content;
 }
 
+#drag-group .letter {
+  background-color: var(--drag-color);
+  --lift: calc(var(--box-size) * -0.08);
+  transform: translate(var(--lift), var(--lift));
+}
+
 #result {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.dragging {
-  --lift: calc(var(--box-size) * -0.08);
-  background-color: var(--drag-color);
-  transform: translate(var(--lift), var(--lift));
 }
 
 .shadow-square {

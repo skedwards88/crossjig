@@ -7,7 +7,6 @@ function Letter({
   pieceColIndex,
   border,
   overlapping,
-  isDragging,
   gameIsSolved,
   dispatchGameState,
 }) {
@@ -32,9 +31,6 @@ function Letter({
   let className = "letter";
   if (gameIsSolved) {
     className += " filled";
-  }
-  if (isDragging) {
-    className += " dragging";
   }
   if (border.top) {
     className += " borderTop";
@@ -103,7 +99,6 @@ export default function Piece({
                 piece.boardLeft + colIndex
               ] > 1
             }
-            isDragging={isDragging}
             gameIsSolved={gameIsSolved}
             dispatchGameState={dispatchGameState}
           />
