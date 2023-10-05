@@ -119,6 +119,7 @@ export function gameInit({
     gameIsSolved: false,
     gameIsSolvedReason: "",
     hintTally: 0,
+    dragCount: 0,
     dragState: undefined,
   };
 }

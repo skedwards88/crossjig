@@ -5,10 +5,14 @@ import Board from "./Board";
 import DragGroup from "./DragGroup";
 
 function Game({ dispatchGameState, gameState, setDisplay }) {
-  // TODO: Use a different key each time a drag starts to ensure a fresh DragGroup is mounted
-  // even if there's no render between one drag ending and the next one starting.
+  // dragCount ensures a different key each time, so a fresh DragGroup is mounted even if there's
+  // no render between one drag ending and the next one starting.
   const dragGroup = gameState.dragState ? (
-    <DragGroup dispatchGameState={dispatchGameState} gameState={gameState} />
+    <DragGroup
+      key={gameState.dragCount}
+      dispatchGameState={dispatchGameState}
+      gameState={gameState}
+    />
   ) : null;
   return (
     <div id="game">

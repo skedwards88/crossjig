@@ -167,6 +167,7 @@ function dragStart({
           groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
       }))
     ),
+    dragCount: currentGameState.dragCount + 1,
     dragState: {
       pieceIDs: targets.map((piece) => piece.id),
       isShifting,
