@@ -42,9 +42,9 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
 }
 
 export function dragDestinationInPool(pointer) {
-  let poolElement =
+  const poolElement =
     document.getElementById("pool") || document.getElementById("result");
-  let poolRect = poolElement.getBoundingClientRect();
+  const poolRect = poolElement.getBoundingClientRect();
   if (
     poolRect.left <= pointer.x &&
     pointer.x <= poolRect.right &&

@@ -108,8 +108,8 @@ export default function Piece({
   }
 
   let layoutStyle = {};
-  let nrows = letters.length;
-  let ncols = letters[0].length;
+  const nrows = letters.length;
+  const ncols = letters[0].length;
   if (isOnBoard) {
     layoutStyle.gridRow = `${piece.boardTop + 1} / span ${nrows}`;
     layoutStyle.gridColumn = `${piece.boardLeft + 1} / span ${ncols}`;

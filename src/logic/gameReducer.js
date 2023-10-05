@@ -103,7 +103,7 @@ function dragStart({
   let nontargets = [];
   let groupBoardTop = currentGameState.gridSize;
   let groupBoardLeft = currentGameState.gridSize;
-  let poolPieces = currentGameState.pieces.filter(
+  const poolPieces = currentGameState.pieces.filter(
     (piece) => piece.poolIndex >= 0
   );
   let poolIndex = poolPieces.length;
@@ -133,7 +133,7 @@ function dragStart({
   // Find the top left of the group in client coordinates, to get pointerOffset.
   if (pointerOffset === undefined) {
     const rectangles = targets.flatMap((piece) => {
-      let element = document.getElementById(`piece-${piece.id}`);
+      const element = document.getElementById(`piece-${piece.id}`);
       if (!element) {
         console.warn(
           `dragStart: element for piece ${piece.id} not found in DOM`
@@ -514,12 +514,12 @@ export function gameReducer(currentGameState, payload) {
     // Set `piece.isDragging` on all neighbors using `destination` to figure out
     // which pieces are neighbors. Implemented by dropping the current piece, then picking
     // it and all connected pieces up again.
-    let { dragState } = currentGameState;
+    const { dragState } = currentGameState;
     if (dragState === undefined || dragState.pieceIDs.length !== 1) {
       return currentGameState;
     }
 
-    let droppedGameState = gameReducer(currentGameState, { action: "dragEnd" });
+    const droppedGameState = gameReducer(currentGameState, { action: "dragEnd" });
     const connectedPieceIDs = getConnectedPieceIDs({
       pieces: droppedGameState.pieces,
       gridSize: droppedGameState.gridSize,
@@ -535,11 +535,11 @@ export function gameReducer(currentGameState, payload) {
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
-    let prevDrag = currentGameState.dragState;
+    const prevDrag = currentGameState.dragState;
     if (prevDrag === undefined) {
       return currentGameState;
     }
-    let { pointer, destination } = payload;
+    const { pointer, destination } = payload;
     return {
       ...currentGameState,
       dragState: {
@@ -560,7 +560,7 @@ export function gameReducer(currentGameState, payload) {
     //
     // Initializes `dragState`. Starts a drag on all pieces that are on the board.
     // Sets `destination` to where they currently are.
-    let { pointerID, pointer } = payload;
+    const { pointerID, pointer } = payload;
     return dragStart({
       currentGameState,
       predicate: (piece) => piece.boardTop !== undefined,

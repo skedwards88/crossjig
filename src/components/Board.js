@@ -13,8 +13,7 @@ export function countingGrid(height, width, pieces) {
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = piece.boardLeft ?? piece.groupLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        let letter = letters[rowIndex][colIndex];
-        if (letter) {
+        if (letters[rowIndex][colIndex]) {
           grid[top][left]++;
         }
         left++;
@@ -38,7 +37,7 @@ export default function Board({
   );
 
   const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
-  let pieceElements = boardPieces.map((piece) => (
+  const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
       piece={piece}
@@ -83,7 +82,7 @@ export default function Board({
 }
 
 export function dragDestinationOnBoard(gameState, pointer) {
-  let boardRect = document.getElementById("board").getBoundingClientRect();
+  const boardRect = document.getElementById("board").getBoundingClientRect();
   if (
     gameState.dragState.destination.where === "board" ||
     (boardRect.left <= pointer.x &&
