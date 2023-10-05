@@ -361,7 +361,7 @@ a {
 #pool {
   grid-area: pool;
   width: 100%;
-  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2)); 
+  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   height: calc(98svh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   display: flex;
   overflow-x: hidden;
