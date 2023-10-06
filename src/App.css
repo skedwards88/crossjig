@@ -322,6 +322,10 @@ a {
 }
 
 .letter {
+  box-sizing: border-box;
+  width: calc(var(--box-size) + 1px);
+  height: calc(var(--box-size) + 1px);
+
   display: flex;
   pointer-events: auto;
   touch-action: none;
@@ -418,6 +422,22 @@ a {
 
 .shadow-square {
   background-color: var(--shadow-color);
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: calc(var(--box-size) + 1px);
+  height: calc(var(--box-size) + 1px);
+}
+
+.shadow-square.shadow-to-left {
+  left: 1px;
+  width: var(--box-size);
+}
+
+.shadow-square.shadow-to-top {
+  top: 1px;
+  height: var(--box-size);
 }
 
 .rules {
