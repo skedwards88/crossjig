@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Note: The repository owner will make the final decision about whether to add words to the dictionary. Words that are deemed uncommon will not be included. 
+        Note: The repository owner will make the final decision about whether to add words to the dictionary. Words that are deemed uncommon will not be included.
   - type: textarea
     id: request
     attributes:
