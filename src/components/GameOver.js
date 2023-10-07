@@ -29,7 +29,10 @@ export default function GameOver({ dispatchGameState, gameState, setDisplay }) {
       >
         New game
       </button>
-      <Share text={"Check out this word puzzle!"} seed={`${gameState.seed}_${gameState.numLetters}`}></Share>
+      <Share
+        text={"Check out this word puzzle!"}
+        seed={`${gameState.seed}_${gameState.numLetters}`}
+      ></Share>
     </div>
   );
 }
