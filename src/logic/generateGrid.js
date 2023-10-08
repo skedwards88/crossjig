@@ -54,6 +54,20 @@ class GridBuilder {
     this.grid = this.grid.map((_, index) => this.grid.map((row) => row[index]));
   }
 
+  addWordToRow(rowIndex, words, pseudoRandomGenerator) {
+    // Get each regex pattern that could make a new word in the row, along with the starting index for the pattern
+    let patterns = getPatternsForRow(this.grid, rowIndex, words.minWordLength);
+    patterns = shuffleArray(patterns, pseudoRandomGenerator);
+    for (let [pattern, startPosition] of patterns) {
+      let matchingWord = words.removeWordThatMatches(pattern);
+      if (matchingWord) {
+        this.write(rowIndex, startPosition, matchingWord);
+        return true;
+      }
+    }
+    return false;
+  }
+
   addWordToAnyRow(words, pseudoRandomGenerator) {
     // to keep the puzzle spread out and to be more likely to find a match,
     // prefer to add a word to a row that has fewer letters
@@ -64,19 +78,8 @@ class GridBuilder {
       .map((countAndIndex) => countAndIndex[1]); // just care about the indexes
 
     for (const rowIndex of rowIndexesByCounts) {
-      // Get each regex pattern that could make a new word in the row, along with the starting index for the pattern
-      let patterns = getPatternsForRow(
-        this.grid,
-        rowIndex,
-        words.minWordLength
-      );
-      patterns = shuffleArray(patterns, pseudoRandomGenerator);
-      for (let [pattern, startPosition] of patterns) {
-        let matchingWord = words.removeWordThatMatches(pattern);
-        if (matchingWord) {
-          this.write(rowIndex, startPosition, matchingWord);
-          return;
-        }
+      if (this.addWordToRow(rowIndex, words, pseudoRandomGenerator)) {
+        break;
       }
     }
   }
@@ -99,13 +102,10 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     )
   );
 
-  let builder;
-  while (!builder || builder.letterCount < minLetters) {
-    builder = new GridBuilder(gridSize);
+  while (true) {
+    let builder = new GridBuilder(gridSize);
 
-    //
     // Initialize the grid with a random word at a random position
-    //
     let startingWord = words.removeWordThatMatches(".+");
     const startingRowIndex = Math.floor(pseudoRandomGenerator() * gridSize);
     const startingColIndex = Math.floor(
@@ -113,9 +113,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     );
     builder.write(startingRowIndex, startingColIndex, startingWord);
 
-    //
     // Use this inner loop with the "count" safeguard to short circuit if it looks like the puzzle hit a dead end
-    //
     for (
       let count = 0;
       builder.letterCount < minLetters && count < 20;
@@ -124,6 +122,9 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
       builder.transpose();
       builder.addWordToAnyRow(words, pseudoRandomGenerator);
     }
+
+    if (builder.letterCount >= minLetters) {
+      return builder.grid;
+    }
   }
-  return builder.grid;
 }
