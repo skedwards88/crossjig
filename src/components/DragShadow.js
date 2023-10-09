@@ -32,6 +32,7 @@ export default function DragShadow({ grid, top, left }) {
     "--numRows": grid.length,
     "--numCols": grid[0].length,
   };
+  // For the drag shadow on the board, need to specify the position of shadow on the board
   if (top !== undefined) {
     styles.gridRow = top + 1; // CSS grid coordinates are 1-based
     styles.gridColumn = left + 1;
