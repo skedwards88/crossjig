@@ -39,6 +39,10 @@ export default function DragGroup({ dispatchGameState, gameState }) {
 
   // Multi-select timer.
   React.useEffect(() => {
+    // If the whole board is shifting,
+    // or if the drag isn't on the board,
+    // or if the drag position has moved since the start of the drag,
+    // don't start a multi-select.
     if (
       isShifting ||
       dragState.destination.where != "board" ||
