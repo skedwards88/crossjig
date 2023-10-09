@@ -11,7 +11,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     dragState.pieceIDs.includes(piece.id)
   );
 
-  // Capture the pointer.
+  // Capture the pointer. If the pointer could not be captured successfully, end the drag.
   const dragGroup = React.useRef(null);
   React.useEffect(() => {
     let ok = true;
