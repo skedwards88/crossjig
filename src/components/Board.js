@@ -2,6 +2,7 @@ import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 
+// Returns a grid with the number of letters at each location in the grid
 export function countingGrid(height, width, pieces) {
   let grid = Array(height)
     .fill(undefined)
