@@ -25,6 +25,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     if (!ok) {
       dispatchGameState({ action: "dragEnd" });
     }
+    // Cleanup function to release the pointer.
     return () => {
       if (ok && dragGroup.current) {
         try {
