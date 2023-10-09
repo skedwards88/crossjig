@@ -134,7 +134,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
 function dragDestination(gameState, pointer) {
   let destination = undefined;
   if (!gameState.dragState.isShifting) {
-    destination ??= dragDestinationInPool(pointer);
+    destination = dragDestinationInPool(pointer);
   }
   destination ??= dragDestinationOnBoard(gameState, pointer);
   return destination;
