@@ -14,28 +14,29 @@ export default function DragGroup({ dispatchGameState, gameState }) {
   // Capture the pointer. If the pointer could not be captured successfully, end the drag.
   const dragGroup = React.useRef(null);
   React.useEffect(() => {
+    const element = dragGroup.current;
     let ok = true;
     try {
-      dragGroup.current.setPointerCapture(dragState.pointerID);
+      element.setPointerCapture(dragState.pointerID);
     } catch (exc) {
       console.warn("Failed to capture pointer:", exc);
       ok = false;
     }
-    ok &&= dragGroup.current.hasPointerCapture(dragState.pointerID);
+    ok &&= element.hasPointerCapture(dragState.pointerID);
     if (!ok) {
       dispatchGameState({ action: "dragEnd" });
     }
     // Cleanup function to release the pointer.
     return () => {
-      if (ok && dragGroup.current) {
+      if (ok) {
         try {
-          dragGroup.current.releasePointerCapture(dragState.pointerID);
+          element.releasePointerCapture(dragState.pointerID);
         } catch (exc) {
           // The pointer is invalid. Normal on touch screens. Ignore it.
         }
       }
     };
-  }, [dragState.pointerID]);
+  }, [dragState.pointerID, dispatchGameState]);
 
   // Multi-select timer.
   React.useEffect(() => {
@@ -59,7 +60,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         clearTimeout(timerID);
       }
     };
-  }, [isShifting, dragState.destination.where, dragState.dragHasMoved]);
+  }, [isShifting, dragState.destination.where, dragState.dragHasMoved, dispatchGameState]);
 
   // Compute location.
   let top = dragState.pointer.y - dragState.pointerOffset.y;
