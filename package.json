@@ -23,7 +23,6 @@
     "@skedwards88/word_lists": "latest",
     "@skedwards88/word_logic": "2.0.4",
     "lodash.clonedeep": "^4.5.0",
-    "mobile-drag-drop": "^2.3.0-rc.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "seedrandom": "3.0.5"
