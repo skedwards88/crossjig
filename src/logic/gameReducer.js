@@ -88,7 +88,7 @@ function getConnectedPieceIDs({ pieces, gridSize, draggedPieceID }) {
 
 function dragStart({
   currentGameState,
-  predicate,
+  isPartOfCurrentDrag,
   pointerID,
   pointer,
   pointerOffset,
@@ -108,7 +108,7 @@ function dragStart({
   );
   let poolIndex = poolPieces.length;
   for (const piece of currentGameState.pieces) {
-    if (predicate(piece)) {
+    if (isPartOfCurrentDrag(piece)) {
       targets.push(piece);
       if (groupBoardTop !== undefined) {
         if (piece.boardTop !== undefined) {
@@ -497,7 +497,7 @@ export function gameReducer(currentGameState, payload) {
     const { pieceID, pointerID, pointer, pointerOffset } = payload;
     return dragStart({
       currentGameState,
-      predicate: (piece) => piece.id === pieceID,
+      isPartOfCurrentDrag: (piece) => piece.id === pieceID,
       pointerID,
       pointer,
       pointerOffset,
@@ -522,7 +522,7 @@ export function gameReducer(currentGameState, payload) {
     });
     return dragStart({
       currentGameState: droppedGameState,
-      predicate: (piece) => connectedPieceIDs.includes(piece.id),
+      isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
       pointerID: dragState.pointerID,
       pointer: dragState.pointer,
       pointerOffset: undefined,
@@ -558,7 +558,7 @@ export function gameReducer(currentGameState, payload) {
     const { pointerID, pointer } = payload;
     return dragStart({
       currentGameState,
-      predicate: (piece) => piece.boardTop !== undefined,
+      isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,
       pointerID,
       pointer,
       pointerOffset: undefined,
