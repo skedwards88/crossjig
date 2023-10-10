@@ -35,7 +35,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         }
       }
     };
-  }, [dragGroup, dragState.pointerID]);
+  }, [dragState.pointerID]);
 
   // Multi-select timer.
   React.useEffect(() => {
