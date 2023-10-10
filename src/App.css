@@ -310,11 +310,12 @@ a {
   grid-area: board;
   display: grid;
   touch-action: none;
-  justify-content: center;
+  justify-content: start;
+  align-content: start;
   grid-template-columns: repeat(12, var(--box-size));
   grid-template-rows: repeat(12, var(--box-size));
-  width: fit-content;
-  height: fit-content;
+  width: calc(12 * var(--box-size) + 1px);
+  height: calc(12 * var(--box-size) + 1px);
   justify-self: center;
   color: var(--light-color);
   border: 1px solid var(--light-color);
