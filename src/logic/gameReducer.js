@@ -520,9 +520,7 @@ export function gameReducer(currentGameState, payload) {
       return currentGameState;
     }
 
-    const droppedGameState = gameReducer(currentGameState, {
-      action: "dragEnd",
-    });
+    const droppedGameState = dragEnd(currentGameState);
     const connectedPieceIDs = getConnectedPieceIDs({
       pieces: droppedGameState.pieces,
       gridSize: droppedGameState.gridSize,
