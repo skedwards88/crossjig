@@ -486,17 +486,11 @@ export function gameReducer(currentGameState, payload) {
 
     const newPieces = giveHint(currentGameState);
 
-    const completionData = getCompletionData({
-      ...currentGameState,
-      pieces: newPieces,
-    });
-
-    return {
+    return updateCompletionState({
       ...currentGameState,
       pieces: newPieces,
       hintTally: currentGameState.hintTally + 1,
-      ...completionData,
-    };
+    });
   } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
