@@ -209,10 +209,9 @@ function dragStart({
   return updateCompletionState(currentGameState);
 }
 
-const NOT_FAR = 5.0; // pixels
-
-// We let the pointer wander up to NOT_FAR pixels before setting dragHasMoved.
+// We let the pointer wander a few pixels before setting dragHasMoved.
 function hasMoved(start, pointer) {
+  const NOT_FAR = 5.0; // pixels
   return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
 }
 
