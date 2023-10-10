@@ -106,8 +106,8 @@ export function dragDestinationOnBoard(gameState, pointer) {
     const maxTop = gameState.gridSize - groupHeight;
     const maxLeft = gameState.gridSize - groupWidth;
 
-    const squareWidth = (boardRect.width - 1) / gameState.gridSize;
-    const squareHeight = (boardRect.height - 1) / gameState.gridSize;
+    const squareWidth = boardRect.width / gameState.gridSize;
+    const squareHeight = boardRect.height / gameState.gridSize;
     const pointerOffset = gameState.dragState.pointerOffset;
     const unclampedLeft = Math.round(
       (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
