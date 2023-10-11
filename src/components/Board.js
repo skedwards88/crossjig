@@ -1,39 +1,25 @@
 import React from "react";
-import { polyfill } from "mobile-drag-drop";
+import Piece from "./Piece";
+import DragShadow from "./DragShadow";
 
-polyfill({
-  dragImageCenterOnTouch: true,
-});
+// Returns a grid with the number of letters at each location in the grid
+export function countingGrid(height, width, pieces) {
+  let grid = Array(height)
+    .fill(undefined)
+    .map(() => Array(width).fill(0));
 
-function generateGridFromBoardPieces(boardPieces, gridSize) {
-  let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill("")))
-  );
-
-  for (let index = 0; index < boardPieces.length; index++) {
-    const letters = boardPieces[index].letters;
-    const id = boardPieces[index].id;
-    let top = boardPieces[index].boardTop;
+  for (let piece of pieces) {
+    const letters = piece.letters;
+    let top = piece.boardTop ?? piece.groupTop;
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = boardPieces[index].boardLeft;
+      let left = piece.boardLeft ?? piece.groupLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         if (letters[rowIndex][colIndex]) {
-          const overlapping = Boolean(grid[top][left].letter);
-          grid[top][left] = {
-            letter: letters[rowIndex][colIndex],
-            relativeTop: rowIndex,
-            relativeLeft: colIndex,
-            pieceID: id,
-            borderTop: !letters[rowIndex - 1]?.[colIndex],
-            borderBottom: !letters[rowIndex + 1]?.[colIndex],
-            borderLeft: !letters[rowIndex][colIndex - 1],
-            borderRight: !letters[rowIndex][colIndex + 1],
-            overlapping: overlapping,
-          };
+          grid[top][left]++;
         }
-        left += 1;
+        left++;
       }
-      top += 1;
+      top++;
     }
   }
   return grid;
@@ -41,137 +27,99 @@ function generateGridFromBoardPieces(boardPieces, gridSize) {
 
 export default function Board({
   pieces,
-  handleBoardDragEnter,
-  handleBoardDrop,
   gridSize,
-  dragToken,
+  dragPieceIDs,
+  dragDestination,
   gameIsSolved,
   dispatchGameState,
-  draggedPieceIDs,
 }) {
-  const timerID = React.useRef();
-  function handleTouchStart(pieceID) {
-    timerID.current = setTimeout(() => {
-      // If the press exceeds the timeout, it is long
-      // At this point, initiate the multi-select
-      if (pieceID != undefined) {
-        dispatchGameState({ action: "multiSelect", pieceID });
-      }
-    }, 500);
-  }
-
-  // ios cancels the drag event after a certain amount of time
-  // even with event.preventDefault() and touch-action:none and modifying the viewport meta tag
-  // so track when that happens so I can skip calling the dispatcher when it does
-  // (I don't like how hacky this is)
-  const [wasCanceledPrematurely, setWasCanceledPrematurely] = React.useState(false);
-
-  function handleTouchEnd(event) {
-    event.preventDefault();
-
-    if (timerID.current) {
-      clearTimeout(timerID.current);
-    }
-
-    dispatchGameState({ action: "endMultiSelect" });
-  }
-
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const grid = generateGridFromBoardPieces(boardPieces, gridSize);
+  const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
+  const pieceElements = boardPieces.map((piece) => (
+    <Piece
+      key={piece.id}
+      piece={piece}
+      where="board"
+      overlapGrid={overlapGrid}
+      gameIsSolved={gameIsSolved}
+      dispatchGameState={dispatchGameState}
+    />
+  ));
 
-  let boardElements = [];
-  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
-    for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
-      const isLetter = Boolean(grid[rowIndex][colIndex]?.letter);
-      const isDragging = draggedPieceIDs.includes(
-        grid[rowIndex][colIndex]?.pieceID
-      );
-      const element = (
-        <div
-          className={
-            isLetter
-              ? `boardLetter ${gameIsSolved ? " filled" : ""}${
-                  isDragging ? " dragging" : ""
-                }${grid[rowIndex][colIndex].borderTop ? " borderTop" : ""}${
-                  grid[rowIndex][colIndex].borderBottom ? " borderBottom" : ""
-                }${grid[rowIndex][colIndex].borderLeft ? " borderLeft" : ""}${
-                  grid[rowIndex][colIndex].borderRight ? " borderRight" : ""
-                }${grid[rowIndex][colIndex].overlapping ? " overlapping" : ""}`
-              : "boardLetter"
-          }
-          draggable
-          key={`${rowIndex}-${colIndex}`}
-          onDrop={(event) => {
-            event.preventDefault();
-            handleBoardDrop({
-              event: event,
-              rowIndex: rowIndex,
-              colIndex: colIndex,
-            });
-          }}
-          onDragEnd={(event) => {
-            // according to the HTML spec, the drop event fires before the dragEnd event
-            event.preventDefault();
-            // only call the dispatcher if ios didn't force end the drag prematurely
-            // otherwise just reset the state
-            if (!wasCanceledPrematurely) {
-              dispatchGameState({ action: "dragEnd" });
-            } else {
-              setWasCanceledPrematurely(false)
-            }
-          }}
-          onDragOver={(event) => {
-            event.preventDefault();
-          }}
-          onDragEnter={(event) => {
-            event.preventDefault();
-            handleBoardDragEnter({
-              event: event,
-              rowIndex: rowIndex,
-              colIndex: colIndex,
-            });
-          }}
-          onDragStart={(event) => {
-            dragToken({
-              event: event,
-              dragArea: "board",
-              pieceID: grid[rowIndex][colIndex]?.pieceID,
-              relativeTop: grid[rowIndex][colIndex]?.relativeTop,
-              relativeLeft: grid[rowIndex][colIndex]?.relativeLeft,
-              boardTop: rowIndex,
-              boardLeft: colIndex,
-            });
-          }}
-          onPointerDown={() =>
-            handleTouchStart(grid[rowIndex][colIndex]?.pieceID)
-          }
-          onPointerUp={handleTouchEnd}
-          onPointerCancel={(event)=> {
-            // ios cancels the pointer event which then cancels the drag event,
-            // so we need to catch that and stop the dispatcher from being called in the drag end handler.
-            event.stopPropagation();
-            event.preventDefault();
-            // stopPropagation and preventDefault don't actually stop this
-            // (but I left them in place in hopes that ios will follow standards in the future),
-            // so track whether the drag was canceled prematurely via the state
-            setWasCanceledPrematurely(true);
-          }}
-          onPointerMove={(event) => {
-            event.preventDefault()}
-          }
-          onContextMenu={(event) => {
-            event.preventDefault();
-          }}
-        >
-          {grid[rowIndex][colIndex]?.letter}
-        </div>
-      );
-      boardElements.push(element);
-    }
+    // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
+    let dragShadow;
+  if (dragDestination?.where === "board") {
+    const draggedPieces = pieces.filter((piece) =>
+      dragPieceIDs.includes(piece.id)
+    );
+    const grid = countingGrid(gridSize, gridSize, draggedPieces);
+    dragShadow = (
+      <DragShadow
+        grid={grid}
+        top={dragDestination.top}
+        left={dragDestination.left}
+      />
+    );
   }
 
-  return <div id="board">{boardElements}</div>;
+  return (
+    <div
+      id="board"
+      onPointerDown={(event) => {
+        event.preventDefault();
+        dispatchGameState({
+          action: "shiftStart",
+          pointerID: event.pointerId,
+          pointer: { x: event.clientX, y: event.clientY },
+        });
+      }}
+    >
+      {pieceElements}
+      {dragShadow}
+    </div>
+  );
+}
+
+export function dragDestinationOnBoard(gameState, pointer) {
+  const boardRect = document.getElementById("board").getBoundingClientRect();
+  if (
+    gameState.dragState.destination.where === "board" ||
+    (boardRect.left <= pointer.x &&
+      pointer.x <= boardRect.right &&
+      boardRect.top <= pointer.y &&
+      pointer.y <= boardRect.bottom)
+  ) {
+    const draggedPieceIDs = gameState.dragState.pieceIDs;
+    const draggedPieces = gameState.pieces.filter((piece) =>
+      draggedPieceIDs.includes(piece.id)
+    );
+
+    const groupHeight = Math.max(
+      ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+    );
+    const groupWidth = Math.max(
+      ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+    );
+    const maxTop = gameState.gridSize - groupHeight;
+    const maxLeft = gameState.gridSize - groupWidth;
+
+    const squareWidth = boardRect.width / gameState.gridSize;
+    const squareHeight = boardRect.height / gameState.gridSize;
+    const pointerOffset = gameState.dragState.pointerOffset;
+    const unclampedLeft = Math.round(
+      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
+    );
+    const unclampedTop = Math.round(
+      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight
+    );
+    const left = Math.max(0, Math.min(maxLeft, unclampedLeft));
+    const top = Math.max(0, Math.min(maxTop, unclampedTop));
+
+    return { where: "board", top, left };
+  }
+
+  return undefined;
 }

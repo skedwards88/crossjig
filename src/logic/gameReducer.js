@@ -86,6 +86,176 @@ function getConnectedPieceIDs({ pieces, gridSize, draggedPieceID }) {
   return Array.from(touchingIDs);
 }
 
+function dragStart({
+  currentGameState,
+  isPartOfCurrentDrag,
+  pointerID,
+  pointer,
+  pointerOffset,
+  isShifting,
+}) {
+  if (currentGameState.dragState !== undefined) {
+    return currentGameState;
+  }
+
+  // Find which pieces are selected, which are not, and the top left of the group (in board squares).
+  let targets = [];
+  let nontargets = [];
+  let groupBoardTop = currentGameState.gridSize;
+  let groupBoardLeft = currentGameState.gridSize;
+  const poolPieces = currentGameState.pieces.filter(
+    (piece) => piece.poolIndex >= 0
+  );
+  let poolIndex = poolPieces.length;
+  for (const piece of currentGameState.pieces) {
+    if (isPartOfCurrentDrag(piece)) {
+      targets.push(piece);
+      if (groupBoardTop !== undefined) {
+        if (piece.boardTop !== undefined) {
+          groupBoardTop = Math.min(groupBoardTop, piece.boardTop);
+          groupBoardLeft = Math.min(groupBoardLeft, piece.boardLeft);
+        } else {
+          groupBoardTop = undefined;
+          groupBoardLeft = undefined;
+          if (piece.poolIndex !== undefined) {
+            poolIndex = Math.min(poolIndex, piece.poolIndex);
+          }
+        }
+      }
+    } else {
+      nontargets.push(piece);
+    }
+  }
+  if (targets.length === 0) {
+    return currentGameState;
+  }
+
+  // Find the top left of the group in client coordinates, to get pointerOffset.
+  if (pointerOffset === undefined) {
+    const rectangles = targets.flatMap((piece) => {
+      const element = document.getElementById(`piece-${piece.id}`);
+      if (!element) {
+        console.warn(
+          `dragStart: element for piece ${piece.id} not found in DOM`
+        );
+        return [];
+      }
+      return [element.getBoundingClientRect()];
+    });
+    if (rectangles.length === 0) {
+      return currentGameState;
+    }
+    const groupTop = Math.min(...rectangles.map((rect) => rect.top));
+    const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
+    pointerOffset = {
+      x: pointer.x - groupLeft,
+      y: pointer.y - groupTop,
+    };
+  }
+
+  currentGameState = {
+    ...currentGameState,
+    pieces: nontargets.concat(
+      targets.map((piece) => ({
+        ...piece,
+        boardTop: undefined,
+        boardLeft: undefined,
+        poolIndex: undefined,
+        groupTop:
+          groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
+        groupLeft:
+          groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
+      }))
+    ),
+    dragCount: currentGameState.dragCount + 1,
+    dragState: {
+      pieceIDs: targets.map((piece) => piece.id),
+      isShifting,
+      dragHasMoved: false,
+      pointerID,
+      pointerStart: pointer,
+      pointer,
+      pointerOffset,
+      destination:
+        groupBoardTop !== undefined
+          ? { where: "board", top: groupBoardTop, left: groupBoardLeft }
+          : { where: "pool", index: poolIndex },
+    },
+  };
+
+  if (targets.some((piece) => piece.poolIndex !== undefined)) {
+    // A piece was removed from the pool, so recompute poolIndex for the other pieces.
+    let remainingPoolPieces = currentGameState.pieces.filter(
+      (piece) => piece.poolIndex !== undefined
+    );
+    remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
+    let poolIndices = Array(currentGameState.pieces.length).fill(-1);
+    remainingPoolPieces.forEach((piece, index) => {
+      poolIndices[piece.id] = index;
+    });
+    currentGameState = {
+      ...currentGameState,
+      pieces: currentGameState.pieces.map((piece) =>
+        piece.poolIndex === undefined
+          ? piece
+          : {
+              ...piece,
+              poolIndex: poolIndices[piece.id],
+            }
+      ),
+    };
+  }
+
+  return updateCompletionState(currentGameState);
+}
+
+// We let the pointer wander a few pixels before setting dragHasMoved.
+function hasMoved(start, pointer) {
+  const NOT_FAR = 5.0; // pixels
+  return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
+}
+
+function dragEnd(currentGameState) {
+  if (currentGameState.dragState === undefined) {
+    console.warn("dragEnd called with no dragState");
+    return currentGameState;
+  }
+
+  const dest = currentGameState.dragState.destination;
+  const draggedPieceIDs = currentGameState.dragState.pieceIDs;
+  let mapper;
+  if (dest.where === "board") {
+    mapper = (piece) =>
+      draggedPieceIDs.includes(piece.id)
+        ? {
+            ...piece,
+            boardTop: dest.top + piece.groupTop,
+            boardLeft: dest.left + piece.groupLeft,
+            groupTop: undefined,
+            groupLeft: undefined,
+          }
+        : piece;
+  } else {
+    let poolIndex = dest.index;
+    mapper = (piece) =>
+      draggedPieceIDs.includes(piece.id)
+        ? {
+            ...piece,
+            poolIndex: poolIndex++,
+            groupTop: undefined,
+            groupLeft: undefined,
+          }
+        : piece.poolIndex !== undefined && piece.poolIndex >= dest.index
+        ? { ...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length }
+        : piece;
+  }
+  return updateCompletionState({
+    ...currentGameState,
+    pieces: currentGameState.pieces.map(mapper),
+    dragState: undefined,
+  });
+}
+
 function giveHint(currentGameState) {
   const pieces = cloneDeep(currentGameState.pieces);
   const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
@@ -266,9 +436,9 @@ function getNewDailyStats(currentGameState) {
 }
 
 function getCompletionData(currentGameState) {
-  const allPiecesAreUsed =
-    currentGameState.pieces.filter((piece) => piece.poolIndex >= 0).length ===
-    0;
+  const allPiecesAreUsed = currentGameState.pieces.every(
+    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
+  );
 
   if (!allPiecesAreUsed) {
     return {
@@ -299,38 +469,15 @@ function getCompletionData(currentGameState) {
   };
 }
 
-function shiftPieces({
-  pieces,
-  pieceIDsToShift,
-  rowShift,
-  colShift,
-  gridSize,
-}) {
-  let shiftedPieces = cloneDeep(pieces);
-
-  for (const pieceID of pieceIDsToShift) {
-    const piece = shiftedPieces[pieceID];
-    // get the current board row/col that corresponds to the top left of the piece
-    // if undefined, use 0
-    const pieceBoardTop = piece.boardTop || 0;
-    const pieceBoardLeft = piece.boardLeft || 0;
-    // return early with the unchanged pieces if any piece would go off board
-    if (
-      pieceBoardTop + rowShift < 0 ||
-      pieceBoardLeft + colShift < 0 ||
-      pieceBoardTop + piece.letters.length + rowShift > gridSize ||
-      pieceBoardLeft + piece.letters[0].length + colShift > gridSize
-    ) {
-      return pieces;
-    }
-    piece.boardTop = pieceBoardTop + rowShift;
-    piece.boardLeft = pieceBoardLeft + colShift;
-  }
-  return shiftedPieces;
+function updateCompletionState(gameState) {
+  return {
+    ...gameState,
+    ...getCompletionData(gameState),
+  };
 }
 
 export function gameReducer(currentGameState, payload) {
-  console.log(payload.action);
+  console.log(payload);
   if (payload.action === "newGame") {
     return gameInit({ ...payload, seed: undefined, useSaved: false });
   } else if (payload.action === "getHint") {
@@ -338,319 +485,84 @@ export function gameReducer(currentGameState, payload) {
 
     const newPieces = giveHint(currentGameState);
 
-    const completionData = getCompletionData({
-      ...currentGameState,
-      pieces: newPieces,
-    });
-
-    return {
+    return updateCompletionState({
       ...currentGameState,
       pieces: newPieces,
       hintTally: currentGameState.hintTally + 1,
-      ...completionData,
-    };
-  } else if (payload.action === "multiSelect") {
-    // if the drag is already started, don't multiselect unless the drag has not moved (return early)
-    if (
-      currentGameState.dragData?.isDragging &&
-      currentGameState.dragData?.dragHasMoved
-    ) {
+    });
+  } else if (payload.action === "dragStart") {
+    // Fired on pointerdown on a piece anywhere.
+    // Captures initial `dragState`. `destination` is initialized to where the piece already is.
+    const { pieceID, pointerID, pointer, pointerOffset } = payload;
+    return dragStart({
+      currentGameState,
+      isPartOfCurrentDrag: (piece) => piece.id === pieceID,
+      pointerID,
+      pointer,
+      pointerOffset,
+      isShifting: false,
+    });
+  } else if (payload.action === "dragNeighbors") {
+    // Fired when the timer fires, if `!dragHasMoved`.
+    //
+    // Set `piece.isDragging` on all neighbors using `destination` to figure out
+    // which pieces are neighbors. Implemented by dropping the current piece, then picking
+    // it and all connected pieces up again.
+    const { dragState } = currentGameState;
+    if (dragState === undefined || dragState.pieceIDs.length !== 1) {
       return currentGameState;
     }
 
+    const droppedGameState = dragEnd(currentGameState);
     const connectedPieceIDs = getConnectedPieceIDs({
-      pieces: currentGameState.pieces,
-      gridSize: currentGameState.gridSize,
-      draggedPieceID: payload.pieceID,
+      pieces: droppedGameState.pieces,
+      gridSize: droppedGameState.gridSize,
+      draggedPieceID: dragState.pieceIDs[0],
     });
-
+    return dragStart({
+      currentGameState: droppedGameState,
+      isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
+      pointerID: dragState.pointerID,
+      pointer: dragState.pointer,
+      pointerOffset: undefined,
+      isShifting: false,
+    });
+  } else if (payload.action === "dragMove") {
+    // Fired on pointermove and on lostpointercapture.
+    const prevDrag = currentGameState.dragState;
+    if (prevDrag === undefined) {
+      return currentGameState;
+    }
+    const { pointer, destination } = payload;
     return {
       ...currentGameState,
-      dragData: {
-        ...currentGameState.dragData,
-        connectedPieceIDs,
+      dragState: {
+        ...prevDrag,
+        pointer,
+        destination: destination ?? prevDrag.destination,
+        dragHasMoved:
+          prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
       },
-    };
-  } else if (payload.action === "endMultiSelect") {
-    // if we are in the middle of a drag, don't clear unless the drag has not moved (return early)
-    if (
-      currentGameState.dragData?.isDragging &&
-      currentGameState.dragData?.dragHasMoved
-    ) {
-      return currentGameState;
-    }
-    return {
-      ...currentGameState,
-      dragData: {},
-    };
-  } else if (payload.action === "startDrag") {
-    // store drag data in the game state
-    // since drag event data is only available to
-    // the drag start and drop events (not drag enter)
-    return {
-      ...currentGameState,
-      dragData: {
-        ...currentGameState.dragData,
-        isDragging: true,
-        dragHasMoved: false,
-        pieceID: payload.pieceID,
-        dragArea: payload.dragArea,
-        relativeTop: payload.relativeTop,
-        relativeLeft: payload.relativeLeft,
-        boardLeft: payload.boardLeft,
-        boardTop: payload.boardTop,
-      },
-    };
-  } else if (
-    payload.action === "dropOnPool" ||
-    payload.action === "dragOverPool"
-  ) {
-    const dragData = currentGameState.dragData;
-
-    // if dragging a blank space, return early
-    if (dragData.pieceID === undefined) {
-      return currentGameState;
-    }
-
-    // if dragging multiple pieces, return early
-    if (dragData.connectedPieceIDs) {
-      return currentGameState;
-    }
-
-    let newPieces = cloneDeep(currentGameState.pieces);
-    const allPoolIndexes = newPieces
-      .filter((i) => i.poolIndex >= 0)
-      .map((i) => i.poolIndex);
-    const maxPoolIndex = allPoolIndexes.reduce(
-      (currentMax, comparison) =>
-        currentMax > comparison ? currentMax : comparison,
-      0
-    );
-
-    // if dragging pool to pool and dropping on another piece,
-    // swap the positions of those pieces
-    if (dragData.dragArea === "pool" && payload.targetPieceID != undefined) {
-      const oldPoolIndex = newPieces[dragData.pieceID].poolIndex;
-      const newPoolIndex = newPieces[payload.targetPieceID].poolIndex;
-      newPieces[dragData.pieceID].poolIndex = newPoolIndex;
-      newPieces[payload.targetPieceID].poolIndex = oldPoolIndex;
-    }
-    // // if dragging pool to pool and dropping at end,
-    // // move the piece to the end and downshift everything that was after
-    else if (dragData.dragArea === "pool" && payload.targetPieceID === undefined) {
-      for (let index = 0; index < newPieces.length; index++) {
-        const piece = newPieces[index];
-        if (piece.poolIndex > newPieces[dragData.pieceID].poolIndex) {
-          piece.poolIndex = piece.poolIndex - 1;
-        }
-      }
-      newPieces[dragData.pieceID].poolIndex = maxPoolIndex;
-    }
-    // if dragging board to pool and dropping at end,
-    // just add the piece to the end
-    else if (dragData.dragArea === "board" && payload.targetPieceID === undefined) {
-      newPieces[dragData.pieceID].poolIndex = allPoolIndexes.length
-        ? maxPoolIndex + 1
-        : 0;
-    }
-    // if dragging board to pool and dropping on another piece,
-    // insert the piece and upshift everything after
-    else if (dragData.dragArea === "board" && payload.targetPieceID != undefined) {
-      const newPoolIndex = newPieces[payload.targetPieceID].poolIndex;
-      for (let index = 0; index < newPieces.length; index++) {
-        const piece = newPieces[index];
-        if (piece.poolIndex >= newPoolIndex) {
-          piece.poolIndex = piece.poolIndex + 1;
-        }
-      }
-      newPieces[dragData.pieceID].poolIndex = newPoolIndex;
-    }
-
-    newPieces[dragData.pieceID].boardTop = undefined;
-    newPieces[dragData.pieceID].boardLeft = undefined;
-
-    // still update the completion data in case the game was complete and now is not due to dragging from board to pool
-    const completionData = getCompletionData({
-      ...currentGameState,
-      pieces: newPieces,
-    });
-
-    return {
-      ...currentGameState,
-      pieces: newPieces,
-      dragData:
-        payload.action === "dropOnPool"
-          ? {}
-          : { ...dragData, dragHasMoved: true },
-      ...completionData,
-    };
-  }
-
-  // if dragging from pool to board
-  else if (
-    currentGameState.dragData.dragArea === "pool" &&
-    currentGameState.dragData.pieceID !== undefined &&
-    (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
-  ) {
-    let newPieces = cloneDeep(currentGameState.pieces);
-
-    const dragData = currentGameState.dragData;
-
-    // will drop the piece on the board at the drop row/col, but will adjust to make sure the entire piece is on the board
-    const dropRowIndex = payload.dropRowIndex;
-    const maxRowIndex =
-      currentGameState.gridSize - newPieces[dragData.pieceID].letters.length;
-    const rowIndex = Math.max(Math.min(dropRowIndex, maxRowIndex), 0);
-
-    const dropColIndex = payload.dropColIndex;
-    const maxColIndex =
-      currentGameState.gridSize - newPieces[dragData.pieceID].letters[0].length;
-    const colIndex = Math.max(Math.min(dropColIndex, maxColIndex), 0);
-
-    newPieces[dragData.pieceID].boardTop = rowIndex;
-    newPieces[dragData.pieceID].boardLeft = colIndex;
-
-    if (payload.action === "dropOnBoard") {
-      newPieces[dragData.pieceID].poolIndex = undefined;
-    }
-
-    const completionData = getCompletionData({
-      ...currentGameState,
-      pieces: newPieces,
-    });
-
-    return {
-      ...currentGameState,
-      pieces: newPieces,
-      dragData:
-        payload.action === "dropOnBoard"
-          ? {}
-          : {
-              ...dragData,
-              boardTop: payload.dropRowIndex,
-              boardLeft: payload.dropColIndex,
-              dragHasMoved: true,
-            },
-      ...completionData,
-    };
-  }
-  // if dragging a blank spot on the board
-  else if (
-    currentGameState.dragData.pieceID === undefined &&
-    (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
-  ) {
-    let pieceIDsToShift = currentGameState.pieces
-      .filter((piece) => piece.boardTop >= 0 && piece.boardLeft >= 0)
-      .map((piece) => piece.id);
-
-    if (!pieceIDsToShift.length) {
-      // return early if the board is empty
-      return currentGameState;
-    }
-
-    const dragData = currentGameState.dragData;
-    const oldRowIndex = dragData.boardTop || 0;
-    const newRowIndex = payload.dropRowIndex;
-    const rowShift = newRowIndex - oldRowIndex;
-    const oldColIndex = dragData.boardLeft || 0;
-    const newColIndex = payload.dropColIndex;
-    const colShift = newColIndex - oldColIndex;
-
-    const shiftedPieces = shiftPieces({
-      pieces: cloneDeep(currentGameState.pieces),
-      pieceIDsToShift,
-      rowShift,
-      colShift,
-      gridSize: currentGameState.gridSize,
-    });
-
-    return {
-      ...currentGameState,
-      pieces: shiftedPieces,
-      dragData:
-        payload.action === "dropOnBoard"
-          ? {}
-          : {
-              ...dragData,
-              dragHasMoved: true,
-              boardTop: payload.dropRowIndex,
-              boardLeft: payload.dropColIndex,
-            },
-    };
-  }
-
-  // dragging/dropping a piece over the board
-  else if (
-    currentGameState.dragData.pieceID !== undefined &&
-    (payload.action === "dragOverBoard" || payload.action === "dropOnBoard")
-  ) {
-    const dragData = currentGameState.dragData;
-
-    const rowShift = payload.dropRowIndex - (dragData.boardTop || 0);
-    const colShift = payload.dropColIndex - (dragData.boardLeft || 0);
-
-    const shiftedPieces = shiftPieces({
-      pieces: cloneDeep(currentGameState.pieces),
-      pieceIDsToShift: currentGameState.dragData.connectedPieceIDs || [
-        dragData.pieceID,
-      ],
-      rowShift,
-      colShift,
-      gridSize: currentGameState.gridSize,
-    });
-
-    if (payload.action === "dropOnBoard") {
-      shiftedPieces[dragData.pieceID].poolIndex = undefined;
-    }
-
-    const completionData = getCompletionData({
-      ...currentGameState,
-      pieces: shiftedPieces,
-    });
-
-    return {
-      ...currentGameState,
-      pieces: shiftedPieces,
-      dragData:
-        payload.action === "dropOnBoard"
-          ? {}
-          : {
-              ...dragData,
-              boardTop: payload.dropRowIndex,
-              boardLeft: payload.dropColIndex,
-              dragHasMoved: true,
-            },
-      ...completionData,
     };
   } else if (payload.action === "dragEnd") {
-    // according to the HTML spec, the drop event fires before the dragEnd event,
-    // so we can assume that we can safely clear any drag data now
-    // (This is here to handle the case where the user drops the pieces somewhere
-    // that is not a drop target, meaning the drop event didn't fire.)
-    // In this case, we need to clear the drag data.
-    // We also want to make sure that the dragged piece isn't registered both as on the board and on the pool
-
-    const draggedPieceID = currentGameState.dragData?.pieceID;
-    if (
-      draggedPieceID != undefined &&
-      currentGameState.pieces[draggedPieceID].poolIndex != undefined &&
-      currentGameState.pieces[draggedPieceID].boardTop != undefined &&
-      currentGameState.pieces[draggedPieceID].boardLeft != undefined
-    ) {
-      let newPieces = cloneDeep(currentGameState.pieces);
-      newPieces[draggedPieceID].poolIndex = undefined;
-
-      return {
-        ...currentGameState,
-        dragData: {},
-        pieces: newPieces,
-      };
-    } else {
-      return {
-        ...currentGameState,
-        dragData: {},
-      };
-    }
+    // Fired on lostpointercapture, after `dragMove`.
+    //
+    // Drop all dragged pieces to `destination` and clear `dragState`.
+    return dragEnd(currentGameState);
+  } else if (payload.action === "shiftStart") {
+    // Fired on pointerdown in an empty square on the board.
+    //
+    // Initializes `dragState`. Starts a drag on all pieces that are on the board.
+    // Sets `destination` to where they currently are.
+    const { pointerID, pointer } = payload;
+    return dragStart({
+      currentGameState,
+      isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,
+      pointerID,
+      pointer,
+      pointerOffset: undefined,
+      isShifting: true,
+    });
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;
     const wonYesterday = isYesterday(lastDateWon);

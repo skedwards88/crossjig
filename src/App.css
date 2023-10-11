@@ -3,6 +3,8 @@ html {
   --box-size: min(8vw, 5.5vh);
   --default-font-size: calc(var(--box-size) * 0.9);
   --dark-color: rgb(55 54 71);
+  --shadow-color: rgba(20 19 25 / 50%);
+  --drag-color: rgba(77 76 99);
   --light-color: rgb(239 239 239);
 
   background-color: var(--dark-color);
@@ -167,7 +169,8 @@ input[type="range"]:focus::-ms-fill-upper {
   align-items: baseline;
 }
 
-#controls, #exitDaily {
+#controls,
+#exitDaily {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -218,12 +221,9 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 
 #calendarButton {
-  background-image: url("./images/daily.svg"), radial-gradient(
-    circle,
-    rgba(239, 239, 239, 0.6) 30%,
-    rgba(55, 54, 71)
-    );
-    width: calc(var(--default-font-size) * 2);
+  background-image: url("./images/daily.svg"),
+    radial-gradient(circle, rgba(239, 239, 239, 0.6) 30%, rgba(55, 54, 71));
+  width: calc(var(--default-font-size) * 2);
 }
 
 #calendarButtonSolved {
@@ -297,10 +297,12 @@ a {
 #game {
   display: grid;
   grid-area: game;
-  grid-template-areas: 
+  grid-template-areas:
     "board"
     "pool";
   grid-template-rows: auto 1fr;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #board {
@@ -319,21 +321,24 @@ a {
   margin: 3vmin 0 0;
 }
 
-.boardLetter {
+.letter {
   display: flex;
+  pointer-events: auto;
   touch-action: none;
   align-items: center;
   justify-content: center;
   font-size: var(--default-font-size);
+  background-color: var(--dark-color);
+  color: var(--light-color);
 }
 
-.boardLetter.filled {
- background-color: var(--light-color);
- color: var(--dark-color);
- transition: background-color 3s;
+.letter.filled {
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  transition: background-color 3s;
 }
 
-.boardLetter.overlapping {
+.letter.overlapping {
   color: rgb(226 88 88);
 }
 
@@ -356,7 +361,7 @@ a {
 #pool {
   grid-area: pool;
   width: 100%;
-  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2)); 
+  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   height: calc(98svh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
   display: flex;
   overflow-x: hidden;
@@ -367,24 +372,41 @@ a {
   justify-content: center;
 }
 
-.poolPiece {
+.piece {
   display: grid;
   touch-action: none;
+  pointer-events: none;
   grid-template-columns: repeat(var(--numCols), var(--box-size));
   grid-template-rows: repeat(var(--numRows), var(--box-size));
   justify-content: center;
   font-size: var(--default-font-size);
   width: fit-content;
-  padding: 3vmin;
+  height: fit-content;
   align-content: center;
 }
 
-.poolLetter {
+.pool-slot {
+  align-self: stretch;
   display: flex;
-  touch-action: none;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  font-size: var(--default-font-size);
+  width: fit-content;
+  padding: 3vmin;
+}
+
+#drag-group {
+  display: grid;
+  touch-action: none;
+  grid-template-columns: repeat(var(--group-columns), var(--box-size));
+  grid-template-rows: repeat(var(--group-rows), var(--box-size));
+  width: fit-content;
+  height: fit-content;
+}
+
+#drag-group .letter {
+  background-color: var(--drag-color);
+  --lift: calc(var(--box-size) * -0.08);
+  transform: translate(var(--lift), var(--lift));
 }
 
 #result {
@@ -394,8 +416,8 @@ a {
   text-align: center;
 }
 
-.dragging {
-  opacity: 0.5;
+.shadow-square {
+  background-color: var(--shadow-color);
 }
 
 .rules {
@@ -479,12 +501,12 @@ a {
   margin: 10px 0;
 }
 
-.statsBar>.statsDay {
+.statsBar > .statsDay {
   align-self: center;
   width: calc(var(--default-font-size) * 1);
   padding: 0 2vw;
 }
-.statsBar>.statsWon {
+.statsBar > .statsWon {
   background-color: var(--light-color);
   height: calc(var(--default-font-size) * 1.2);
 }
@@ -493,7 +515,7 @@ a {
   text-align: center;
   margin: 1vh 0;
 }
-.statsNumber>.number {
+.statsNumber > .number {
   font-size: calc(var(--default-font-size) * 1.5);
 }
 
@@ -513,8 +535,7 @@ a {
   #game {
     display: grid;
     grid-area: game;
-    grid-template-areas: 
-      "board pool";
+    grid-template-areas: "board pool";
     grid-template-columns: auto 1fr;
     align-self: center;
   }
@@ -529,11 +550,8 @@ a {
     height: 100svh;
   }
 
-  .poolPiece {
-    height: fit-content;
-  }
-
-  #controls, #exitDaily {
+  #controls,
+  #exitDaily {
     flex-direction: column;
     border: solid var(--light-color);
     border-width: 0 2px 0 0;

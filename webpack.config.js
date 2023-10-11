@@ -16,6 +16,7 @@ module.exports = (env, argv) => {
   });
 
   const copyPlugin = new CopyPlugin({
+    // prettier-ignore
     patterns: [
       { from: "./src/images/favicon.svg", to: "./assets/favicon.svg" },
       { from: "./src/images/favicon.ico", to: "./assets/favicon.ico" },
