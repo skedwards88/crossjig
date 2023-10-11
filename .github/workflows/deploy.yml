@@ -7,6 +7,11 @@ on:
       - "README.md"
       - "TODO.md"
       - ".github/ISSUE_TEMPLATE/*"
+      - ".eslintrc.json"
+      - ".gitignore"
+      - ".prettierignore"
+      - ".prettierrc.json"
+      - ".stylelintrc.json"
   workflow_dispatch:
 
 permissions:
