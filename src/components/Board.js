@@ -49,8 +49,8 @@ export default function Board({
     />
   ));
 
-    // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
-    let dragShadow;
+  // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
+  let dragShadow;
   if (dragDestination?.where === "board") {
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
