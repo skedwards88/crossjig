@@ -3,7 +3,7 @@ html {
   --box-size: min(8vw, 5.5vh);
   --default-font-size: calc(var(--box-size) * 0.9);
   --dark-color: rgb(55 54 71);
-  --shadow-color: rgba(20 19 25 / 50%);
+  --shadow-color: rgb(20 19 25);
   --drag-color: rgba(77 76 99);
   --light-color: rgb(239 239 239);
 
@@ -421,15 +421,15 @@ a {
   text-align: center;
 }
 
+.drag-shadow {
+  opacity: 0.5;
+}
+
 .shadow-square {
   background-color: var(--shadow-color);
   box-sizing: border-box;
-  width: var(--box-size);
-  height: var(--box-size);
-  /* make shadows fall on the right and bottom borders, rather than top and left */
-  position: relative;
-  left: 1px;
-  top: 1px;
+  width: calc(var(--box-size) + 1px);
+  height: calc(var(--box-size) + 1px);
 }
 
 .rules {

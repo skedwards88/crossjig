@@ -39,7 +39,7 @@ export default function DragShadow({ grid, top, left }) {
   }
 
   return (
-    <div className="piece shadow-piece" style={styles}>
+    <div className="piece drag-shadow" style={styles}>
       {squares}
     </div>
   );
