@@ -1,16 +1,9 @@
 import React from "react";
 
-function DragShadowSquare({ rowIndex, colIndex, hasShadowToTop, hasShadowToLeft }) {
-  let className = "shadow-square";
-  if (hasShadowToTop) {
-    className += " shadow-to-top";
-  }
-  if (hasShadowToLeft) {
-    className += " shadow-to-left";
-  }
+function DragShadowSquare({ rowIndex, colIndex }) {
   return (
     <div
-      className={className}
+      className="shadow-square"
       style={{
         gridRow: rowIndex + 1, // CSS grid coordinates are 1-based
         gridColumn: colIndex + 1,
@@ -29,8 +22,6 @@ export default function DragShadow({ grid, top, left }) {
             key={`${rowIndex}-${colIndex}`}
             rowIndex={rowIndex}
             colIndex={colIndex}
-            hasShadowToTop={rowIndex > 0 && grid[rowIndex - 1][colIndex] > 0}
-            hasShadowToLeft={colIndex > 0 && grid[rowIndex][colIndex - 1] > 0}
           />
         );
       }

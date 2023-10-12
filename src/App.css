@@ -424,21 +424,12 @@ a {
 .shadow-square {
   background-color: var(--shadow-color);
   box-sizing: border-box;
-  position: relative;
-  left: 0;
-  top: 0;
-  width: calc(var(--box-size) + 1px);
-  height: calc(var(--box-size) + 1px);
-}
-
-.shadow-square.shadow-to-left {
-  left: 1px;
   width: var(--box-size);
-}
-
-.shadow-square.shadow-to-top {
-  top: 1px;
   height: var(--box-size);
+  /* make shadows fall on the right and bottom borders, rather than top and left */
+  position: relative;
+  left: 1px;
+  top: 1px;
 }
 
 .rules {
