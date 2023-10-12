@@ -206,7 +206,13 @@ function dragStart({
     };
   }
 
-  return updateCompletionState(currentGameState);
+  // Clear `gameIsSolved`, but don't recompute the whole completion state. This prevents
+  // the `gameIsSolvedReason` from disappearing on each drag when all the pieces are
+  // on the board but the puzzle isn't solved yet.
+  return {
+    ...currentGameState,
+    gameIsSolved: false,
+  };
 }
 
 // We let the pointer wander a few pixels before setting dragHasMoved.
