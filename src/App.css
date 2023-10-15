@@ -409,6 +409,20 @@ a {
   transform: translate(var(--lift), var(--lift));
 }
 
+.letter,
+#board:not(:empty) {
+  cursor: grab;
+}
+
+#drag-group {
+  cursor: grabbing;
+}
+
+/* Separate rule for graceful degradation -- Firefox doesn't support :has() yet. */
+body:has(#drag-group) {
+  cursor: grabbing;
+}
+
 #result {
   display: flex;
   justify-content: center;
