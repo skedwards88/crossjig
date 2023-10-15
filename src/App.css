@@ -581,7 +581,7 @@ a {
 
   #game {
     --box-size: min(
-      calc(48vh / var(--grid-columns)),
+      calc(48vh / var(--grid-rows)),
       calc(84vw / var(--grid-columns)),
       1cm
     );
