@@ -347,6 +347,12 @@ a {
   color: rgb(226 88 88);
 }
 
+.letter-border {
+  box-sizing: border-box;
+  width: calc(var(--box-size) + 1px);
+  height: calc(var(--box-size) + 1px);
+}
+
 .borderTop {
   border-top: 1px solid var(--light-color);
 }
@@ -410,6 +416,10 @@ a {
 
 #drag-group .letter {
   background-color: var(--drag-color);
+}
+
+#drag-group .letter,
+#drag-group .letter-border {
   --lift: calc(var(--box-size) * -0.08);
   transform: translate(var(--lift), var(--lift));
 }
