@@ -29,8 +29,8 @@ export default function DragShadow({ grid, top, left }) {
   }
 
   const styles = {
-    "--numRows": grid.length,
-    "--numCols": grid[0].length,
+    "--grid-rows": grid.length,
+    "--grid-columns": grid[0].length,
   };
   // For the drag shadow on the board, need to specify the position of shadow on the board
   if (top !== undefined) {

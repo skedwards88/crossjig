@@ -15,7 +15,13 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
     />
   ) : null;
   return (
-    <div id="game">
+    <div
+      id="game"
+      style={{
+        "--grid-rows": gameState.gridSize,
+        "--grid-columns": gameState.gridSize,
+      }}
+    >
       <Board
         pieces={gameState.pieces}
         gridSize={gameState.gridSize}

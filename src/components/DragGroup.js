@@ -112,8 +112,8 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         position: "absolute",
         top,
         left,
-        "--group-rows": groupRows,
-        "--group-columns": groupColumns,
+        "--grid-rows": groupRows,
+        "--grid-columns": groupColumns,
       }}
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
