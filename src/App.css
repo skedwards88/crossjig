@@ -1,7 +1,7 @@
 /* General */
 html {
-  --box-size: min(8vw, 5.5vh);
-  --default-font-size: calc(var(--box-size) * 0.9);
+  --default-box-size: min(8vw, 5.5vh);
+  --default-font-size: calc(var(--default-box-size) * 0.9);
   --dark-color: rgb(55 54 71);
   --shadow-color: rgb(20 19 25);
   --drag-color: rgba(77 76 99);
@@ -176,7 +176,7 @@ input[type="range"]:focus::-ms-fill-upper {
   align-items: center;
   grid-area: controls;
   width: 100vw;
-  height: calc(var(--box-size) * 1.2);
+  height: calc(var(--default-box-size) * 1.2);
   border-bottom: 2px solid var(--light-color);
 }
 
@@ -296,6 +296,10 @@ a {
 
 #game {
   display: grid;
+  --box-size: min(
+    calc((66vh - 1px) / var(--grid-rows)),
+    calc((96vw - 1px) / var(--grid-columns))
+  );
   grid-area: game;
   grid-template-areas:
     "board"
@@ -305,17 +309,20 @@ a {
   -webkit-user-select: none;
 }
 
+#board,
+#drag-group,
+.piece {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), var(--box-size)) 1px;
+  grid-template-rows: repeat(var(--grid-rows), var(--box-size)) 1px;
+  width: calc(var(--grid-columns) * var(--box-size) + 1px);
+  height: calc(var(--grid-rows) * var(--box-size) + 1px);
+}
+
 #board {
   overflow: hidden;
   grid-area: board;
-  display: grid;
   touch-action: none;
-  justify-content: start;
-  align-content: start;
-  grid-template-columns: repeat(12, var(--box-size));
-  grid-template-rows: repeat(12, var(--box-size));
-  width: calc(12 * var(--box-size) + 1px);
-  height: calc(12 * var(--box-size) + 1px);
   justify-self: center;
   color: var(--light-color);
   border: 1px solid var(--light-color);
@@ -332,7 +339,7 @@ a {
   touch-action: none;
   align-items: center;
   justify-content: center;
-  font-size: var(--default-font-size);
+  font-size: calc(0.9 * var(--box-size));
   background-color: var(--dark-color);
   color: var(--light-color);
 }
@@ -372,8 +379,12 @@ a {
 #pool {
   grid-area: pool;
   width: 100%;
-  height: calc(88vh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
-  height: calc(98svh - (var(--box-size) * 12) - (var(--box-size) * 1.2));
+  height: calc(
+    88vh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
+  );
+  height: calc(
+    98svh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
+  );
   display: flex;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -384,15 +395,9 @@ a {
 }
 
 .piece {
-  display: grid;
   touch-action: none;
   pointer-events: none;
-  grid-template-columns: repeat(var(--numCols), var(--box-size));
-  grid-template-rows: repeat(var(--numRows), var(--box-size));
   justify-content: center;
-  font-size: var(--default-font-size);
-  width: fit-content;
-  height: fit-content;
   align-content: center;
 }
 
@@ -406,12 +411,7 @@ a {
 }
 
 #drag-group {
-  display: grid;
   touch-action: none;
-  grid-template-columns: repeat(var(--group-columns), var(--box-size));
-  grid-template-rows: repeat(var(--group-rows), var(--box-size));
-  width: fit-content;
-  height: fit-content;
 }
 
 #drag-group .letter {
@@ -422,6 +422,20 @@ a {
 #drag-group .letter-border {
   --lift: calc(var(--box-size) * -0.08);
   transform: translate(var(--lift), var(--lift));
+}
+
+.letter,
+#board:not(:empty) {
+  cursor: grab;
+}
+
+#drag-group {
+  cursor: grabbing;
+}
+
+/* Separate rule for graceful degradation -- Firefox doesn't support :has() yet. */
+body:has(#drag-group) {
+  cursor: grabbing;
 }
 
 #result {
@@ -579,7 +593,7 @@ a {
     border-width: 0 2px 0 0;
     align-items: center;
     height: 100%;
-    width: calc(var(--box-size) * 1.5);
+    width: calc(var(--default-box-size) * 1.5);
   }
 
   #exitDailyButton {
@@ -596,7 +610,15 @@ a {
 /* Large screen */
 @media (min-height: 800px) and (min-width: 800px) {
   html {
-    --box-size: min(4vh, 7vw, 1cm);
+    --default-box-size: min(4vh, 7vw, 1cm);
+  }
+
+  #game {
+    --box-size: min(
+      calc((48vh - 1px) / var(--grid-rows)),
+      calc((84vw - 1px) / var(--grid-columns)),
+      1cm
+    );
   }
 
   #controls {

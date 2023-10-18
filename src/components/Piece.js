@@ -140,8 +140,8 @@ export default function Piece({
       id={`piece-${piece.id}`}
       className="piece"
       style={{
-        "--numRows": `${letters.length}`,
-        "--numCols": `${letters[0].length}`,
+        "--grid-rows": `${letters.length}`,
+        "--grid-columns": `${letters[0].length}`,
         ...layoutStyle,
       }}
     >
