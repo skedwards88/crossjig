@@ -52,7 +52,7 @@ function Letter({
   );
 }
 
-function LetterBorder({rowIndex, colIndex, border}) {
+function LetterBorder({ rowIndex, colIndex, border }) {
   let className = "letter-border";
   if (border.top) {
     className += " borderTop";
@@ -66,12 +66,15 @@ function LetterBorder({rowIndex, colIndex, border}) {
   if (border.right) {
     className += " borderRight";
   }
-  return <div
-    className={className}
+  return (
+    <div
+      className={className}
       style={{
         gridRow: rowIndex + 1, // CSS grid coordinates are 1-based
         gridColumn: colIndex + 1,
-      }} />;
+      }}
+    />
+  );
 }
 
 export default function Piece({
