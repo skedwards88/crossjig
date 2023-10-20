@@ -5,6 +5,7 @@ import {
   commonWordsLen5,
   commonWordsLen6,
   commonWordsLen7,
+  commonWordsLen8plus,
 } from "@skedwards88/word_lists";
 
 export const trie = getTrie(
@@ -14,6 +15,7 @@ export const trie = getTrie(
     ...commonWordsLen5,
     ...commonWordsLen6,
     ...commonWordsLen7,
+    ...commonWordsLen8plus,
   ],
   []
 );
