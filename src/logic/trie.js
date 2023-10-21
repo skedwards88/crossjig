@@ -1,5 +1,6 @@
 import { getTrie } from "@skedwards88/word_logic";
 import {
+  commonWordsLen2,
   commonWordsLen3,
   commonWordsLen4,
   commonWordsLen5,
@@ -10,6 +11,7 @@ import {
 
 export const trie = getTrie(
   [
+    ...commonWordsLen2,
     ...commonWordsLen3,
     ...commonWordsLen4,
     ...commonWordsLen5,
