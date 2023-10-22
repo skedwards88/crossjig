@@ -5,7 +5,6 @@ function Letter({
   letter,
   pieceRowIndex,
   pieceColIndex,
-  border,
   overlapping,
   gameIsSolved,
   dispatchGameState,
@@ -32,18 +31,6 @@ function Letter({
   if (gameIsSolved) {
     className += " filled";
   }
-  if (border.top) {
-    className += " borderTop";
-  }
-  if (border.bottom) {
-    className += " borderBottom";
-  }
-  if (border.left) {
-    className += " borderLeft";
-  }
-  if (border.right) {
-    className += " borderRight";
-  }
   if (overlapping) {
     className += " overlapping";
   }
@@ -65,6 +52,31 @@ function Letter({
   );
 }
 
+function LetterBorder({ rowIndex, colIndex, border }) {
+  let className = "letter-border";
+  if (border.top) {
+    className += " borderTop";
+  }
+  if (border.bottom) {
+    className += " borderBottom";
+  }
+  if (border.left) {
+    className += " borderLeft";
+  }
+  if (border.right) {
+    className += " borderRight";
+  }
+  return (
+    <div
+      className={className}
+      style={{
+        gridRow: rowIndex + 1, // CSS grid coordinates are 1-based
+        gridColumn: colIndex + 1,
+      }}
+    />
+  );
+}
+
 export default function Piece({
   piece,
   where,
@@ -76,6 +88,7 @@ export default function Piece({
   const isDragging = where == "drag";
   const letters = piece.letters;
   let letterElements = [];
+  let borderElements = [];
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
       const letter = letters[rowIndex][colIndex];
@@ -87,12 +100,6 @@ export default function Piece({
             letter={letter}
             pieceRowIndex={rowIndex}
             pieceColIndex={colIndex}
-            border={{
-              top: !letters[rowIndex - 1]?.[colIndex],
-              bottom: !letters[rowIndex + 1]?.[colIndex],
-              left: !letters[rowIndex][colIndex - 1],
-              right: !letters[rowIndex][colIndex + 1],
-            }}
             overlapping={
               isOnBoard &&
               overlapGrid[piece.boardTop + rowIndex][
@@ -101,6 +108,19 @@ export default function Piece({
             }
             gameIsSolved={gameIsSolved}
             dispatchGameState={dispatchGameState}
+          />
+        );
+        borderElements.push(
+          <LetterBorder
+            key={`border-${piece.id}-${rowIndex}-${colIndex}`}
+            rowIndex={rowIndex}
+            colIndex={colIndex}
+            border={{
+              top: !letters[rowIndex - 1]?.[colIndex],
+              bottom: !letters[rowIndex + 1]?.[colIndex],
+              left: !letters[rowIndex][colIndex - 1],
+              right: !letters[rowIndex][colIndex + 1],
+            }}
           />
         );
       }
@@ -129,6 +149,7 @@ export default function Piece({
       }}
     >
       {letterElements}
+      {borderElements}
     </div>
   );
 }

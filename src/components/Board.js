@@ -49,8 +49,8 @@ export default function Board({
     />
   ));
 
-    // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
-    let dragShadow;
+  // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
+  let dragShadow;
   if (dragDestination?.where === "board") {
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
@@ -106,8 +106,10 @@ export function dragDestinationOnBoard(gameState, pointer) {
     const maxTop = gameState.gridSize - groupHeight;
     const maxLeft = gameState.gridSize - groupWidth;
 
-    const squareWidth = boardRect.width / gameState.gridSize;
-    const squareHeight = boardRect.height / gameState.gridSize;
+    // Subtract 1 before dividing because the board is n squares wide, but has n+1 1px borders.
+    // (It's admittedly silly to care about this, since the impact is only 1/n of a pixel!)
+    const squareWidth = (boardRect.width - 1) / gameState.gridSize;
+    const squareHeight = (boardRect.height - 1) / gameState.gridSize;
     const pointerOffset = gameState.dragState.pointerOffset;
     const unclampedLeft = Math.round(
       (pointer.x - pointerOffset.x - boardRect.left) / squareWidth

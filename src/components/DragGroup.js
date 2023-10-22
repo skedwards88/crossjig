@@ -60,7 +60,12 @@ export default function DragGroup({ dispatchGameState, gameState }) {
         clearTimeout(timerID);
       }
     };
-  }, [isShifting, dragState.destination.where, dragState.dragHasMoved, dispatchGameState]);
+  }, [
+    isShifting,
+    dragState.destination.where,
+    dragState.dragHasMoved,
+    dispatchGameState,
+  ]);
 
   // Compute location.
   let top = dragState.pointer.y - dragState.pointerOffset.y;
