@@ -103,7 +103,7 @@ export default function App() {
     case "daily":
       // force reinitialize the daily state if the day has changed
       if (dailyGameState.seed != getDailySeed()) {
-        dailyGameState = gameInit({ isDaily: true, useSaved: false });
+        dailyDispatchGameState({action: "newGame", isDaily: true, useSaved: false});
       }
       return (
         <div className="App" id="crossjig">
