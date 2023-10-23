@@ -44,6 +44,28 @@ export default function App() {
     gameInit
   );
 
+  const [, setLastOpened] = React.useState(Date.now());
+
+  function handleVisibilityChange() {
+    // If the visibility of the app changes to become visible,
+    // update the state to force the app to re-render.
+    // This is to help the daily challenge refresh if the app has
+    // been open in the background since an earlier challenge.
+    if (!document.hidden) {
+      setLastOpened(Date.now());
+    }
+  }
+
+  React.useEffect(() => {
+    // When the component is mounted, attach the visibility change event listener
+    // (and remove the event listener when the component is unmounted).
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   React.useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) =>
       handleBeforeInstallPrompt(
