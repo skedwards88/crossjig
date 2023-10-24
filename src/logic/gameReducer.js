@@ -483,7 +483,6 @@ function updateCompletionState(gameState) {
 }
 
 export function gameReducer(currentGameState, payload) {
-  console.log(payload);
   if (payload.action === "newGame") {
     return gameInit({ ...payload, seed: undefined, useSaved: false });
   } else if (payload.action === "getHint") {

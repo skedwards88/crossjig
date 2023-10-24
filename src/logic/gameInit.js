@@ -54,7 +54,8 @@ export function gameInit({
 
   if (
     savedState &&
-    savedState.seed === seed &&
+    savedState.seed &&
+    ((isDaily && savedState.seed === seed) || !isDaily) &&
     savedState.pieces &&
     savedState.gridSize &&
     savedState.numLetters &&
