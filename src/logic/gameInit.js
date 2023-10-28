@@ -32,6 +32,14 @@ function getNumLettersForDay() {
   return wordLengths[today];
 }
 
+function getGridSizeForLetters(numLetters) {
+  if (numLetters > 50) {
+    return 12;
+  } else if (numLetters > 30) {
+    return 10;
+  } else return 8;
+}
+
 export function gameInit({
   numLetters,
   useSaved = true,
@@ -68,11 +76,23 @@ export function gameInit({
     return savedState;
   }
 
-  const gridSize = 12;
   const minLetters = isDaily ? getNumLettersForDay() : numLetters || 30;
+  let gridSize = getGridSizeForLetters(minLetters);
 
-  const { pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
+  let { pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
     generatePuzzle({ gridSize: gridSize, minLetters: minLetters, seed: seed });
+
+  // Pad the puzzle with a square on each side and recenter the solution
+  maxShiftRight++;
+  maxShiftDown++;
+  maxShiftLeft++;
+  maxShiftUp++;
+  gridSize = gridSize + 2;
+  pieces = pieces.map((piece) => ({
+    ...piece,
+    solutionTop: piece.solutionTop + 1,
+    solutionLeft: piece.solutionLeft + 1,
+  }));
 
   // If there are already stats, use those
   let stats;
