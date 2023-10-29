@@ -5,7 +5,9 @@ html {
   --dark-color: rgb(55 54 71);
   --shadow-color: rgb(20 19 25);
   --drag-color: rgba(77 76 99);
-  --light-color: rgb(239 239 239);
+  --light-color: rgb(197, 197, 197);
+  --lit-letter-color: white;
+  --glow-color: rgba(255, 255, 255, 30%);
 
   background-color: var(--dark-color);
 }
@@ -345,8 +347,8 @@ a {
 }
 
 .letter.lit {
-  color: white;
-  text-shadow: rgba(192, 255, 234, 90%) 1px 0 calc(0.3 * var(--box-size));
+  color: var(--lit-letter-color);
+  text-shadow: var(--glow-color) 0 0 calc(0.1 * var(--box-size));
 }
 
 .letter.filled {
