@@ -1,12 +1,48 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
+import {isAllowedWord} from "../logic/trie";
+
+function transpose(grid) {
+  return grid[0].map((_, index) => grid.map((row) => row[index]));
+}
+
+function markLitLetters(height, width, grid) {
+  for (let row = 0; row < height; row++) {
+    let start = undefined;
+    let word = "";
+    let disqualified = false;
+    for (let col = 0; col < width; col++) {
+      const square = grid[row][col];
+      if (square) {
+        if (start == undefined) {
+          start = col;
+        }
+        word += grid[row][col].letter;
+        if (grid[row][col].count > 1) {
+          disqualified = true;
+        }
+        if (start !== undefined && !grid[row][col + 1]) {
+          if (!disqualified && isAllowedWord(word)) {
+            for (let lightCol = start; lightCol <= col; lightCol++) {
+              grid[row][lightCol].lit = true;
+            }
+          }
+          start = undefined;
+          word = "";
+          disqualified = false;
+        }
+      }
+    }
+  }
+}
 
 // Returns a grid with the number of letters at each location in the grid
+// TODO - move this to logic
 export function countingGrid(height, width, pieces) {
   let grid = Array(height)
     .fill(undefined)
-    .map(() => Array(width).fill(0));
+    .map(() => Array(width).fill(undefined));
 
   for (let piece of pieces) {
     const letters = piece.letters;
@@ -14,14 +50,22 @@ export function countingGrid(height, width, pieces) {
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = piece.boardLeft ?? piece.groupLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        if (letters[rowIndex][colIndex]) {
-          grid[top][left]++;
+        const letter = letters[rowIndex][colIndex];
+        if (letter) {
+          grid[top][left] ??= {count: 0, letter: "", lit: false};
+          grid[top][left].count++;
+          grid[top][left].letter = letter;
         }
         left++;
       }
       top++;
     }
   }
+
+  markLitLetters(height, width, grid);
+  grid = transpose(grid);
+  markLitLetters(width, height, grid);
+  grid = transpose(grid);
   return grid;
 }
 

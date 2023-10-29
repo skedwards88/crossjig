@@ -344,9 +344,15 @@ a {
   color: var(--light-color);
 }
 
+.letter.lit {
+  color: white;
+  text-shadow: rgba(192, 255, 234, 90%) 1px 0 calc(0.3 * var(--box-size));
+}
+
 .letter.filled {
   background-color: var(--light-color);
   color: var(--dark-color);
+  text-shadow: unset;
   transition: background-color 3s;
 }
 
