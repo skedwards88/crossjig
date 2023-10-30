@@ -217,7 +217,7 @@ function dragStart({
 
 // We let the pointer wander a few pixels before setting dragHasMoved.
 function hasMoved(start, pointer) {
-  const NOT_FAR = 5.0; // pixels
+  const NOT_FAR = 9.0; // pixels
   return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
 }
 
