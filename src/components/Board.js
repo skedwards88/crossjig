@@ -14,15 +14,15 @@ function markLitLetters(height, width, grid) {
     let disqualified = false;
     for (let col = 0; col < width; col++) {
       const square = grid[row][col];
-      if (square) {
+      if (square.letter) {
         if (start == undefined) {
           start = col;
         }
-        word += grid[row][col].letter;
-        if (grid[row][col].count > 1) {
+        word += square.letter;
+        if (square.count > 1) {
           disqualified = true;
         }
-        if (start !== undefined && !grid[row][col + 1]) {
+        if (start !== undefined && !grid[row][col + 1]?.count) {
           if (!disqualified && isAllowedWord(word)) {
             for (let lightCol = start; lightCol <= col; lightCol++) {
               grid[row][lightCol].lit = true;
@@ -42,7 +42,7 @@ function markLitLetters(height, width, grid) {
 export function countingGrid(height, width, pieces) {
   let grid = Array(height)
     .fill(undefined)
-    .map(() => Array(width).fill(undefined));
+    .map(() => Array.from({length: width}, () => ({count: 0, letter: "", lit: false})));
 
   for (let piece of pieces) {
     const letters = piece.letters;
@@ -52,7 +52,6 @@ export function countingGrid(height, width, pieces) {
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         const letter = letters[rowIndex][colIndex];
         if (letter) {
-          grid[top][left] ??= {count: 0, letter: "", lit: false};
           grid[top][left].count++;
           grid[top][left].letter = letter;
         }
