@@ -91,7 +91,6 @@ function dragStart({
   isPartOfCurrentDrag,
   pointerID,
   pointer,
-  pointerOffset,
   isShifting,
 }) {
   if (currentGameState.dragState !== undefined) {
@@ -131,27 +130,25 @@ function dragStart({
   }
 
   // Find the top left of the group in client coordinates, to get pointerOffset.
-  if (pointerOffset === undefined) {
-    const rectangles = targets.flatMap((piece) => {
-      const element = document.getElementById(`piece-${piece.id}`);
-      if (!element) {
-        console.warn(
-          `dragStart: element for piece ${piece.id} not found in DOM`
-        );
-        return [];
-      }
-      return [element.getBoundingClientRect()];
-    });
-    if (rectangles.length === 0) {
-      return currentGameState;
+  const rectangles = targets.flatMap((piece) => {
+    const element = document.getElementById(`piece-${piece.id}`);
+    if (!element) {
+      console.warn(
+        `dragStart: element for piece ${piece.id} not found in DOM`
+      );
+      return [];
     }
-    const groupTop = Math.min(...rectangles.map((rect) => rect.top));
-    const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
-    pointerOffset = {
-      x: pointer.x - groupLeft,
-      y: pointer.y - groupTop,
-    };
+    return [element.getBoundingClientRect()];
+  });
+  if (rectangles.length === 0) {
+    return currentGameState;
   }
+  const groupTop = Math.min(...rectangles.map((rect) => rect.top));
+  const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
+  const pointerOffset = {
+    x: pointer.x - groupLeft,
+    y: pointer.y - groupTop,
+  };
 
   currentGameState = {
     ...currentGameState,
@@ -498,13 +495,12 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
-    const { pieceID, pointerID, pointer, pointerOffset } = payload;
+    const { pieceID, pointerID, pointer } = payload;
     return dragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.id === pieceID,
       pointerID,
       pointer,
-      pointerOffset,
       isShifting: false,
     });
   } else if (payload.action === "dragNeighbors") {
@@ -529,7 +525,6 @@ export function gameReducer(currentGameState, payload) {
       isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
       pointerID: dragState.pointerID,
       pointer: dragState.pointer,
-      pointerOffset: undefined,
       isShifting: false,
     });
   } else if (payload.action === "dragMove") {
@@ -565,7 +560,6 @@ export function gameReducer(currentGameState, payload) {
       isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,
       pointerID,
       pointer,
-      pointerOffset: undefined,
       isShifting: true,
     });
   } else if (payload.action === "clearStreakIfNeeded") {

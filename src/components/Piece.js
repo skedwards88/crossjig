@@ -14,16 +14,11 @@ function Letter({
     event.stopPropagation();
     const pointer = { x: event.clientX, y: event.clientY };
     const letterElement = event.currentTarget;
-    const pieceRect = letterElement.parentElement.getBoundingClientRect();
     dispatchGameState({
       action: "dragStart",
       pieceID,
       pointerID: event.pointerId,
       pointer,
-      pointerOffset: {
-        x: pointer.x - pieceRect.left,
-        y: pointer.y - pieceRect.top,
-      },
     });
   };
 
