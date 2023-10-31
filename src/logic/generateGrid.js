@@ -10,7 +10,7 @@ import {
 class WordFinder {
   constructor(wordList) {
     this.wordList = wordList;
-    this.minWordLength = 4;
+    this.minWordLength = 5;
   }
 
   removeWordThatMatches(pattern) {

@@ -50,7 +50,7 @@ export default function getPatternsForRow(grid, rowIndex, minLength) {
           (
             !includesLetter ||
             // less than minLength
-            currentPosition - startPosition < minLength ||
+            currentPosition + 1 - startPosition < minLength ||
             // the next element is a letter
             row[currentPosition + 1]?.match("^[A-Z]$")
           )
