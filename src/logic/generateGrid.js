@@ -14,8 +14,8 @@ class WordFinder {
   }
 
   removeWordThatMatches(pattern) {
-    // Given a patten and a list of words, finds a word that matches the pattern
-    // and returns the word and the list with the word deleted
+    // Given a patten and a list of words, finds a word that matches the pattern.
+    // Remove it from the word list and return it.
     // If no match was found, returns undefined
     const patternRegExp = new RegExp(`^${pattern}$`);
     const wordIndex = this.wordList.findIndex((word) =>
