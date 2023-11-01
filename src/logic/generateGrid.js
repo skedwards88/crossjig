@@ -1,4 +1,5 @@
 import getPatternsForRow from "./getRegexForRow.js";
+import { maybeTheme } from "./themes.js";
 import { shuffleArray } from "@skedwards88/word_logic";
 import {
   commonWordsLen4,
@@ -24,7 +25,7 @@ class WordFinder {
 
     if (wordIndex > -1) {
       const word = this.wordList[wordIndex];
-      this.wordList[wordIndex] = this.wordList.pop();
+      this.wordList.splice(wordIndex, 1);
       return word;
     } else {
       return undefined;
@@ -85,19 +86,33 @@ class GridBuilder {
   }
 }
 
+// Return an array containing the same elements as `array`, sorted by the score assigned to each
+// value by `score_fn(value)`, perturbed by random numbers from `pseudoRandomGenerator()`.
+//
+// Values with the highest scores appear at the front of the resulting array.
+//
+// If `score_fn` assigns all values the same score, this is the same as shuffling the array.
+function shuffleBy(array, score_fn, pseudoRandomGenerator) {
+  return array.map(value => [score_fn(value) + pseudoRandomGenerator(), value])
+    .sort((a, b) => b[0] - a[0])
+    .map(pair => pair[1]);
+}
+
 export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
   // Generates an interconnected grid of words
   // that fits within the specified gridSize.
   // The total number of letters used will be minLetters or slightly higher.
 
+  let theme = maybeTheme(pseudoRandomGenerator);
   let words = new WordFinder(
-    shuffleArray(
+    shuffleBy(
       [
         ...commonWordsLen4,
         ...commonWordsLen5,
         ...commonWordsLen6,
         ...commonWordsLen7,
       ],
+      theme,
       pseudoRandomGenerator
     )
   );
