@@ -195,7 +195,7 @@ function randomTheme(pseudoRandomGenerator) {
 // Return a scoring function for words.
 export function maybeTheme(pseudoRandomGenerator) {
   if (pseudoRandomGenerator() < THEME_PROBABILITY) {
-    return randomTheme();
+    return randomTheme(pseudoRandomGenerator);
   } else {
     console.log("no theme");
     return word => 0;
