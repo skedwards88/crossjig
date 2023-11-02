@@ -83,7 +83,7 @@ const THEMES = {
       const VOWELS = "AEIOU";
 
       let preferredVowel = choice(VOWELS, pseudoRandomGenerator);
-      let amplitude = pseudoRandomGenerator();
+      let amplitude = 3 * pseudoRandomGenerator();
       let finickiness = pseudoRandomGenerator();
       console.log({preferredVowel, amplitude, finickiness});
       return word => amplitude * erf(sum(
@@ -100,8 +100,8 @@ const THEMES = {
 
       // preferred consonant
       let letter = choice(CONSONANTS, pseudoRandomGenerator);
-      let amplitude = pseudoRandomGenerator();
-      let saturation = 1/4 + pseudoRandomGenerator();
+      let amplitude = 3 * pseudoRandomGenerator();
+      let saturation = 1/4 + 2/3 * pseudoRandomGenerator();
       console.log({letter, amplitude, saturation});
       return word => amplitude * erf(saturation * (word.split(letter).length - 1));
     },
@@ -115,7 +115,7 @@ const THEMES = {
     generate(pseudoRandomGenerator) {
       let preferredCluster = choice(this.CLUSTERS, pseudoRandomGenerator);
       let amplitude = 1/2 + pseudoRandomGenerator();
-      let saturation = 1/2 + pseudoRandomGenerator();
+      let saturation = 1/2 + 1/2 * pseudoRandomGenerator();
       console.log({preferredCluster, amplitude, saturation});
       return word => amplitude * erf(saturation * Number(word.includes(preferredCluster)));
     },
