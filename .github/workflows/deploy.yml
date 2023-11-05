@@ -66,7 +66,7 @@ jobs:
             git commit -m "Update @skedwards88/word_lists"
           fi
 
-      - name: Push the version bump and potential word_list update
+      - name: Push the version bump and potential word list update
         run: |
           git push
 
