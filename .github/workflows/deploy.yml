@@ -68,7 +68,7 @@ jobs:
 
       - name: Push the version bump and potential word_list update
         run: |
-          git push origin main
+          git push
 
       - name: Build
         run: npm run build
