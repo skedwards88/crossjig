@@ -59,10 +59,10 @@ jobs:
       # This keeps package-lock.json up to date with the deployed game
       - name: Commit the word list update if there are changes to commit
         run: |-
-          if git diff --exit-code > /dev/null; then
+          if git diff --exit-code > /dev/null -- package-lock.json; then
             echo "No changes to commit"
           else
-            git add -A
+            git add package-lock.json
             git commit -m "Update @skedwards88/word_lists"
           fi
 
