@@ -44,10 +44,6 @@ jobs:
       - name: Bump version
         run: npm version patch
 
-      - name: Push
-        run: |
-          git push origin main
-
       - name: Install requirements
         run: npm install
 
@@ -59,6 +55,20 @@ jobs:
 
       - name: Print packages
         run: npm list --depth=0
+
+      # This keeps package-lock.json up to date with the deployed game
+      - name: Commit the word list update if there are changes to commit
+        run: |-
+          if git diff --exit-code > /dev/null -- package-lock.json; then
+            echo "No changes to commit"
+          else
+            git add package-lock.json
+            git commit -m "Update @skedwards88/word_lists"
+          fi
+
+      - name: Push the version bump and potential word list update
+        run: |
+          git push
 
       - name: Build
         run: npm run build
