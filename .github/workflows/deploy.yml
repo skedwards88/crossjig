@@ -45,7 +45,7 @@ jobs:
         run: npm version patch
 
       - name: Install requirements
-        run: npm install
+        run: npm ci
 
       - name: Print packages
         run: npm list --depth=0
