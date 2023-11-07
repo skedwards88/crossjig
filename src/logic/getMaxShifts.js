@@ -1,5 +1,7 @@
+import { transposeGrid } from "@skedwards88/word_logic";
+
 export function getMaxShifts(grid) {
-  const transposedGrid = grid.map((_, index) => grid.map((row) => row[index]));
+  const transposedGrid = transposeGrid(grid);
 
   let maxShiftUp = 0;
   for (let index = 0; index < grid.length; index++) {

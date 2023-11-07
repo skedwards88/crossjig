@@ -1,5 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import { getMaxShifts } from "./getMaxShifts";
+import { transposeGrid } from "@skedwards88/word_logic";
 
 export function centerGrid(grid) {
   let shiftedGrid = cloneDeep(grid);
@@ -29,9 +30,7 @@ export function centerGrid(grid) {
   ];
 
   // transpose
-  shiftedGrid = shiftedGrid.map((_, index) =>
-    shiftedGrid.map((row) => row[index])
-  );
+  shiftedGrid = transposeGrid(shiftedGrid);
 
   // trim the empty rows, then pad with empty rows to center
   const cutLeftRight = shiftedGrid.slice(
@@ -45,9 +44,7 @@ export function centerGrid(grid) {
   ];
 
   // un transpose
-  shiftedGrid = shiftedGrid.map((_, index) =>
-    shiftedGrid.map((row) => row[index])
-  );
+  shiftedGrid = transposeGrid(shiftedGrid);
 
   return shiftedGrid;
 }
