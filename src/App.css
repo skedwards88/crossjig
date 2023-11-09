@@ -2,12 +2,12 @@
 html {
   --default-box-size: min(8vw, 5.5vh);
   --default-font-size: calc(var(--default-box-size) * 0.9);
-  --dark-color: rgb(55 54 71);
-  --shadow-color: rgb(20 19 25);
-  --drag-color: rgba(77 76 99);
-  --light-color: rgb(197, 197, 197);
+  --dark-color: rgb(37, 36, 48);
+  --shadow-color: rgb(20, 19, 25);
+  --drag-color: rgb(67, 66, 89);
+  --light-color: rgb(204, 204, 204);
   --lit-letter-color: white;
-  --glow-color: rgba(255, 255, 255, 30%);
+  --glow-color: rgba(255, 255, 255, 50%);
 
   background-color: var(--dark-color);
 }
