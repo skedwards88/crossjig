@@ -1,72 +1,7 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import {isAllowedWord} from "../logic/trie";
-
-function transpose(grid) {
-  return grid[0].map((_, index) => grid.map((row) => row[index]));
-}
-
-function markLitLetters(height, width, grid) {
-  for (let row = 0; row < height; row++) {
-    let start = undefined;
-    let word = "";
-    let disqualified = false;
-    for (let col = 0; col < width; col++) {
-      const square = grid[row][col];
-      if (square.letter) {
-        if (start == undefined) {
-          start = col;
-        }
-        word += square.letter;
-        if (square.count > 1) {
-          disqualified = true;
-        }
-        if (start !== undefined && !grid[row][col + 1]?.count) {
-          if (!disqualified && isAllowedWord(word)) {
-            for (let lightCol = start; lightCol <= col; lightCol++) {
-              grid[row][lightCol].lit = true;
-            }
-          }
-          start = undefined;
-          word = "";
-          disqualified = false;
-        }
-      }
-    }
-  }
-}
-
-// Returns a grid with the number of letters at each location in the grid
-// TODO - move this to logic
-export function countingGrid(height, width, pieces) {
-  let grid = Array(height)
-    .fill(undefined)
-    .map(() => Array.from({length: width}, () => ({count: 0, letter: "", lit: false})));
-
-  for (let piece of pieces) {
-    const letters = piece.letters;
-    let top = piece.boardTop ?? piece.groupTop;
-    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = piece.boardLeft ?? piece.groupLeft;
-      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        const letter = letters[rowIndex][colIndex];
-        if (letter) {
-          grid[top][left].count++;
-          grid[top][left].letter = letter;
-        }
-        left++;
-      }
-      top++;
-    }
-  }
-
-  markLitLetters(height, width, grid);
-  grid = transpose(grid);
-  markLitLetters(width, height, grid);
-  grid = transpose(grid);
-  return grid;
-}
+import getCountingGrid from "../logic/getCountingGrid";
 
 export default function Board({
   pieces,
@@ -80,7 +15,7 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
+  const overlapGrid = getCountingGrid({height: gridSize, width: gridSize, pieces: boardPieces, withLitLetters: true});
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -98,7 +33,7 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
     );
-    const grid = countingGrid(gridSize, gridSize, draggedPieces);
+    const grid = getCountingGrid({height: gridSize, width: gridSize, pieces: draggedPieces});
     dragShadow = (
       <DragShadow
         grid={grid}

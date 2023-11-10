@@ -1,7 +1,7 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import { countingGrid } from "./Board";
+import getCountingGrid from "../logic/getCountingGrid";
 
 export default function Pool({ pieces, dragDestination, dispatchGameState }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
@@ -29,9 +29,11 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
         <div className="pool-slot shadow" key={piece.id}>
           <DragShadow
             key={`shadow-piece-${piece.id}`}
-            grid={countingGrid(piece.letters.length, piece.letters[0].length, [
-              { ...piece, groupTop: 0, groupLeft: 0 },
-            ])}
+            grid={getCountingGrid({
+              height: piece.letters.length,
+              width: piece.letters[0].length,
+              pieces: [{ ...piece, groupTop: 0, groupLeft: 0 }],
+            })}
           />
         </div>
       ))
