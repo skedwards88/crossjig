@@ -1,7 +1,7 @@
 import { isAllowedWord } from "./trie";
 import { transposeGrid } from "@skedwards88/word_logic";
 
-// Set .lit=true for cells in grid where the letters form a valid word when reading Across.
+// Set `.lit=true` for cells in `grid` where the letters form a valid word when reading Across.
 // (To light up Down words too, this must be called again after transposing the grid.)
 function markLitLetters(height, width, grid) {
   for (let row = 0; row < height; row++) {
@@ -19,7 +19,7 @@ function markLitLetters(height, width, grid) {
           disqualified = true;
         }
         if (start !== undefined && !grid[row][col + 1]?.count) {
-          if (!disqualified && isAllowedWord(word)) {
+          if (!disqualified && word.length > 1 && isAllowedWord(word)) {
             for (let lightCol = start; lightCol <= col; lightCol++) {
               grid[row][lightCol].lit = true;
             }
