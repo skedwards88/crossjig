@@ -1,8 +1,5 @@
 import {isAllowedWord} from "./trie";
-
-function transpose(grid) {
-  return grid[0].map((_, index) => grid.map((row) => row[index]));
-}
+import { transposeGrid } from "@skedwards88/word_logic";
 
 // Set .lit=true for cells in grid where the letters form a valid word when reading Across.
 // (To light up Down words too, this must be called again after transposing the grid.)
@@ -62,9 +59,9 @@ export default function getCountingGrid({height, width, pieces, withLitLetters =
 
   if (withLitLetters) {
     markLitLetters(height, width, grid);
-    grid = transpose(grid);
+    grid = transposeGrid(grid);
     markLitLetters(width, height, grid);
-    grid = transpose(grid);
+    grid = transposeGrid(grid);
   }
   return grid;
 }
