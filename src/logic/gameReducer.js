@@ -92,6 +92,7 @@ function dragStart({
   pointerID,
   pointer,
   isShifting,
+  previousDragState,
 }) {
   if (currentGameState.dragState !== undefined) {
     return currentGameState;
@@ -129,26 +130,43 @@ function dragStart({
     return currentGameState;
   }
 
-  // Find the top left of the group in client coordinates, to get pointerOffset.
-  const rectangles = targets.flatMap((piece) => {
-    const element = document.getElementById(`piece-${piece.id}`);
-    if (!element) {
-      console.warn(
-        `dragStart: element for piece ${piece.id} not found in DOM`
-      );
-      return [];
+  let pointerOffset;
+  if (previousDragState && previousDragState.pieceIDs.length == 1) {
+    // Use previous pointerOffset, adjusted for the different group of pieces we have now.
+    const previousPiece = currentGameState.pieces.filter(
+      (piece) => piece.id == previousDragState.pieceIDs[0]
+    )[0];
+    const extraSquaresLeft = previousPiece.boardLeft - groupBoardLeft;
+    const extraSquaresTop = previousPiece.boardTop - groupBoardTop;
+    const boardRect = document.getElementById("board").getBoundingClientRect();
+    const squareWidth = (boardRect.width - 1) / currentGameState.gridSize;
+    const squareHeight = (boardRect.height - 1) / currentGameState.gridSize;
+    pointerOffset = {
+      x: previousDragState.pointerOffset.x + squareWidth * extraSquaresLeft,
+      y: previousDragState.pointerOffset.y + squareHeight * extraSquaresTop,
+    };
+  } else {
+    // Find the top left of the group in client coordinates, to get pointerOffset.
+    const rectangles = targets.flatMap((piece) => {
+      const element = document.getElementById(`piece-${piece.id}`);
+      if (!element) {
+        console.warn(
+          `dragStart: element for piece ${piece.id} not found in DOM`
+        );
+        return [];
+      }
+      return [element.getBoundingClientRect()];
+    });
+    if (rectangles.length === 0) {
+      return currentGameState;
     }
-    return [element.getBoundingClientRect()];
-  });
-  if (rectangles.length === 0) {
-    return currentGameState;
+    const groupTop = Math.min(...rectangles.map((rect) => rect.top));
+    const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
+    pointerOffset = {
+      x: pointer.x - groupLeft,
+      y: pointer.y - groupTop,
+    };
   }
-  const groupTop = Math.min(...rectangles.map((rect) => rect.top));
-  const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
-  const pointerOffset = {
-    x: pointer.x - groupLeft,
-    y: pointer.y - groupTop,
-  };
 
   currentGameState = {
     ...currentGameState,
@@ -526,6 +544,7 @@ export function gameReducer(currentGameState, payload) {
       pointerID: dragState.pointerID,
       pointer: dragState.pointer,
       isShifting: false,
+      previousDragState: dragState,
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
