@@ -15,7 +15,12 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const overlapGrid = getCountingGrid({height: gridSize, width: gridSize, pieces: boardPieces, withLitLetters: true});
+  const overlapGrid = getCountingGrid({
+    height: gridSize,
+    width: gridSize,
+    pieces: boardPieces,
+    withLitLetters: true,
+  });
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -33,7 +38,11 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
     );
-    const grid = getCountingGrid({height: gridSize, width: gridSize, pieces: draggedPieces});
+    const grid = getCountingGrid({
+      height: gridSize,
+      width: gridSize,
+      pieces: draggedPieces,
+    });
     dragShadow = (
       <DragShadow
         grid={grid}

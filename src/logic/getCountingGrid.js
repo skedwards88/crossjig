@@ -1,4 +1,4 @@
-import {isAllowedWord} from "./trie";
+import { isAllowedWord } from "./trie";
 import { transposeGrid } from "@skedwards88/word_logic";
 
 // Set .lit=true for cells in grid where the letters form a valid word when reading Across.
