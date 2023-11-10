@@ -113,19 +113,21 @@ export default function Piece({
             dispatchGameState={dispatchGameState}
           />
         );
-        borderElements.push(
-          <LetterBorder
-            key={`border-${piece.id}-${rowIndex}-${colIndex}`}
-            rowIndex={rowIndex}
-            colIndex={colIndex}
-            border={{
-              top: !letters[rowIndex - 1]?.[colIndex],
-              bottom: !letters[rowIndex + 1]?.[colIndex],
-              left: !letters[rowIndex][colIndex - 1],
-              right: !letters[rowIndex][colIndex + 1],
-            }}
-          />
-        );
+        if (!gameIsSolved) {
+          borderElements.push(
+            <LetterBorder
+              key={`border-${piece.id}-${rowIndex}-${colIndex}`}
+              rowIndex={rowIndex}
+              colIndex={colIndex}
+              border={{
+                top: !letters[rowIndex - 1]?.[colIndex],
+                bottom: !letters[rowIndex + 1]?.[colIndex],
+                left: !letters[rowIndex][colIndex - 1],
+                right: !letters[rowIndex][colIndex + 1],
+              }}
+            />
+          );
+        }
       }
     }
   }

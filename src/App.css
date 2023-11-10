@@ -5,7 +5,8 @@ html {
   --dark-color: rgb(37, 36, 48);
   --shadow-color: rgb(20, 19, 25);
   --drag-color: rgb(67, 66, 89);
-  --light-color: rgb(204, 204, 204);
+  --unlit-letter-color: rgb(204, 204, 204);
+  --light-color: rgb(239, 239, 239);
   --lit-letter-color: white;
   --glow-color: rgba(255, 255, 255, 50%);
 
@@ -343,7 +344,7 @@ a {
   justify-content: center;
   font-size: calc(0.9 * var(--box-size));
   background-color: var(--dark-color);
-  color: var(--light-color);
+  color: var(--unlit-letter-color);
 }
 
 .letter.lit {
@@ -369,19 +370,19 @@ a {
 }
 
 .borderTop {
-  border-top: 1px solid var(--light-color);
+  border-top: 1px solid var(--unlit-letter-color);
 }
 
 .borderLeft {
-  border-left: 1px solid var(--light-color);
+  border-left: 1px solid var(--unlit-letter-color);
 }
 
 .borderRight {
-  border-right: 1px solid var(--light-color);
+  border-right: 1px solid var(--unlit-letter-color);
 }
 
 .borderBottom {
-  border-bottom: 1px solid var(--light-color);
+  border-bottom: 1px solid var(--unlit-letter-color);
 }
 
 #pool {
