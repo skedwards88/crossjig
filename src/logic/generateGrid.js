@@ -1,5 +1,5 @@
 import getPatternsForRow from "./getRegexForRow.js";
-import { shuffleArray } from "@skedwards88/word_logic";
+import { shuffleArray, transposeGrid } from "@skedwards88/word_logic";
 import {
   commonWordsLen4,
   commonWordsLen5,
@@ -77,7 +77,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     //
     while (letterCount < minLetters && count < 20) {
       // transpose the grid to start searching in the opposite orientation
-      grid = grid.map((_, index) => grid.map((row) => row[index]));
+      grid = transposeGrid(grid);
       orientationIsRows = !orientationIsRows;
 
       // to keep the puzzle spread out and to be more likely to find a match,

@@ -1,5 +1,6 @@
 import { crosswordValidQ } from "@skedwards88/word_logic";
 import { trie } from "../logic/trie";
+import { getWordsFromPieces } from "./getWordsFromPieces";
 
 function piecesOverlapQ(boardPieces, gridSize) {
   let overlappingPiecesQ = false;
@@ -48,7 +49,13 @@ export function gameSolvedQ(pieces, gridSize) {
     };
   }
 
-  const { gameIsSolved, reason } = crosswordValidQ({ grid: grid, trie: trie });
+  const originalWords = getWordsFromPieces({ pieces, gridSize });
+
+  const { gameIsSolved, reason } = crosswordValidQ({
+    grid: grid,
+    trie: trie,
+    exceptedWords: originalWords,
+  });
 
   return {
     gameIsSolved: gameIsSolved,

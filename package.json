@@ -1,6 +1,6 @@
 {
   "name": "crossjig",
-  "version": "2.0.24",
+  "version": "2.0.30",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "",
   "dependencies": {
     "@skedwards88/word_lists": "latest",
-    "@skedwards88/word_logic": "2.0.4",
+    "@skedwards88/word_logic": "2.0.7",
     "lodash.clonedeep": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
