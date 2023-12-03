@@ -132,7 +132,8 @@ function dragStart({
 
   let pointerOffset;
   if (previousDragState && previousDragState.pieceIDs.length == 1) {
-    // Use previous pointerOffset, adjusted for the different group of pieces we have now.
+    // If we were previously just dragging one piece and have now potentially expanded to drag multiple pieces,
+    // use previous pointerOffset, adjusted for the different group of pieces we have now.
     const previousPiece = currentGameState.pieces.filter(
       (piece) => piece.id == previousDragState.pieceIDs[0]
     )[0];

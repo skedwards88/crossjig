@@ -13,7 +13,6 @@ function Letter({
     event.preventDefault();
     event.stopPropagation();
     const pointer = { x: event.clientX, y: event.clientY };
-    const letterElement = event.currentTarget;
     dispatchGameState({
       action: "dragStart",
       pieceID,
