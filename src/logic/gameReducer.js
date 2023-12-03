@@ -91,8 +91,8 @@ function dragStart({
   isPartOfCurrentDrag,
   pointerID,
   pointer,
-  pointerOffset,
   isShifting,
+  previousDragState,
 }) {
   if (currentGameState.dragState !== undefined) {
     return currentGameState;
@@ -130,8 +130,24 @@ function dragStart({
     return currentGameState;
   }
 
-  // Find the top left of the group in client coordinates, to get pointerOffset.
-  if (pointerOffset === undefined) {
+  let pointerOffset;
+  if (previousDragState && previousDragState.pieceIDs.length == 1) {
+    // If we were previously just dragging one piece and have now potentially expanded to drag multiple pieces,
+    // use previous pointerOffset, adjusted for the different group of pieces we have now.
+    const previousPiece = currentGameState.pieces.filter(
+      (piece) => piece.id == previousDragState.pieceIDs[0]
+    )[0];
+    const extraSquaresLeft = previousPiece.boardLeft - groupBoardLeft;
+    const extraSquaresTop = previousPiece.boardTop - groupBoardTop;
+    const boardRect = document.getElementById("board").getBoundingClientRect();
+    const squareWidth = (boardRect.width - 1) / currentGameState.gridSize;
+    const squareHeight = (boardRect.height - 1) / currentGameState.gridSize;
+    pointerOffset = {
+      x: previousDragState.pointerOffset.x + squareWidth * extraSquaresLeft,
+      y: previousDragState.pointerOffset.y + squareHeight * extraSquaresTop,
+    };
+  } else {
+    // Find the top left of the group in client coordinates, to get pointerOffset.
     const rectangles = targets.flatMap((piece) => {
       const element = document.getElementById(`piece-${piece.id}`);
       if (!element) {
@@ -217,7 +233,7 @@ function dragStart({
 
 // We let the pointer wander a few pixels before setting dragHasMoved.
 function hasMoved(start, pointer) {
-  const NOT_FAR = 5.0; // pixels
+  const NOT_FAR = 9.0; // pixels
   return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
 }
 
@@ -498,13 +514,12 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
-    const { pieceID, pointerID, pointer, pointerOffset } = payload;
+    const { pieceID, pointerID, pointer } = payload;
     return dragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.id === pieceID,
       pointerID,
       pointer,
-      pointerOffset,
       isShifting: false,
     });
   } else if (payload.action === "dragNeighbors") {
@@ -529,8 +544,8 @@ export function gameReducer(currentGameState, payload) {
       isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
       pointerID: dragState.pointerID,
       pointer: dragState.pointer,
-      pointerOffset: undefined,
       isShifting: false,
+      previousDragState: dragState,
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
@@ -565,7 +580,6 @@ export function gameReducer(currentGameState, payload) {
       isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,
       pointerID,
       pointer,
-      pointerOffset: undefined,
       isShifting: true,
     });
   } else if (payload.action === "clearStreakIfNeeded") {
