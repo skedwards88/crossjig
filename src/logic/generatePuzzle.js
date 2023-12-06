@@ -4,16 +4,21 @@ import { centerGrid } from "./centerGrid";
 import { getMaxShifts } from "./getMaxShifts";
 import { makePieces } from "./makePieces";
 import { shuffleArray } from "@skedwards88/word_logic";
+import { getConnectivityScore } from "./getConnectivityScore";
 
-export function generatePuzzle({ gridSize, minLetters, seed }) {
+export function generatePuzzle({ gridSize, minLetters, minConnectivity = 20, seed }) {
   let count = 0;
   let foundPuzzleWithAcceptableSingletons = false;
+  let foundPuzzleWithAcceptableConnectivity = false;
   const maxFractionSingles = 0.1;
 
   // Create a new seedable random number generator
   let pseudoRandomGenerator = seed ? seedrandom(seed) : seedrandom();
 
-  while (!foundPuzzleWithAcceptableSingletons) {
+  while (
+    !foundPuzzleWithAcceptableSingletons ||
+    !foundPuzzleWithAcceptableConnectivity
+  ) {
     count++;
 
     // Generate an interconnected grid of words
@@ -51,13 +56,25 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
     foundPuzzleWithAcceptableSingletons =
       numSingletons / numPieces < maxFractionSingles;
 
-    if (foundPuzzleWithAcceptableSingletons || count > 100) {
+    const connectivityScore = getConnectivityScore({
+      pieces: pieceData,
+      gridSize,
+    });
+    foundPuzzleWithAcceptableConnectivity = connectivityScore >= minConnectivity;
+
+    if (
+      (foundPuzzleWithAcceptableSingletons &&
+        foundPuzzleWithAcceptableConnectivity) ||
+      count > 100
+    ) {
+      console.log(count)
       return {
         pieces: pieceData,
         maxShiftLeft: maxShiftLeft,
         maxShiftRight: maxShiftRight,
         maxShiftUp: maxShiftUp,
         maxShiftDown: maxShiftDown,
+        count,
       };
     }
   }
