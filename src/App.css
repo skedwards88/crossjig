@@ -2,10 +2,13 @@
 html {
   --default-box-size: min(8vw, 5.5vh);
   --default-font-size: calc(var(--default-box-size) * 0.9);
-  --dark-color: rgb(55 54 71);
-  --shadow-color: rgb(20 19 25);
-  --drag-color: rgba(77 76 99);
-  --light-color: rgb(239 239 239);
+  --dark-color: rgb(37, 36, 48);
+  --shadow-color: rgb(20, 19, 25);
+  --drag-color: rgb(67, 66, 89);
+  --unlit-letter-color: rgb(204, 204, 204);
+  --light-color: rgb(239, 239, 239);
+  --lit-letter-color: white;
+  --glow-color: rgba(255, 255, 255, 50%);
 
   background-color: var(--dark-color);
 }
@@ -341,12 +344,18 @@ a {
   justify-content: center;
   font-size: calc(0.9 * var(--box-size));
   background-color: var(--dark-color);
-  color: var(--light-color);
+  color: var(--unlit-letter-color);
+}
+
+.letter.lit {
+  color: var(--lit-letter-color);
+  text-shadow: var(--glow-color) 0 0 calc(0.1 * var(--box-size));
 }
 
 .letter.filled {
   background-color: var(--light-color);
   color: var(--dark-color);
+  text-shadow: unset;
   transition: background-color 3s;
 }
 
@@ -361,19 +370,19 @@ a {
 }
 
 .borderTop {
-  border-top: 1px solid var(--light-color);
+  border-top: 1px solid var(--unlit-letter-color);
 }
 
 .borderLeft {
-  border-left: 1px solid var(--light-color);
+  border-left: 1px solid var(--unlit-letter-color);
 }
 
 .borderRight {
-  border-right: 1px solid var(--light-color);
+  border-right: 1px solid var(--unlit-letter-color);
 }
 
 .borderBottom {
-  border-bottom: 1px solid var(--light-color);
+  border-bottom: 1px solid var(--unlit-letter-color);
 }
 
 #pool {

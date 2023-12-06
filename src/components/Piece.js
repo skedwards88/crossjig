@@ -5,7 +5,8 @@ function Letter({
   letter,
   pieceRowIndex,
   pieceColIndex,
-  overlapping,
+  isOverlapping,
+  isLit,
   gameIsSolved,
   dispatchGameState,
 }) {
@@ -25,8 +26,11 @@ function Letter({
   if (gameIsSolved) {
     className += " filled";
   }
-  if (overlapping) {
+  if (isOverlapping) {
     className += " overlapping";
+  }
+  if (isLit) {
+    className += " lit";
   }
 
   return (
@@ -86,6 +90,9 @@ export default function Piece({
   for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
     for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
       const letter = letters[rowIndex][colIndex];
+      const overlapInfo = isOnBoard ? overlapGrid[piece.boardTop + rowIndex][
+        piece.boardLeft + colIndex
+      ] : undefined;
       if (letter) {
         letterElements.push(
           <Letter
@@ -94,29 +101,27 @@ export default function Piece({
             letter={letter}
             pieceRowIndex={rowIndex}
             pieceColIndex={colIndex}
-            overlapping={
-              isOnBoard &&
-              overlapGrid[piece.boardTop + rowIndex][
-                piece.boardLeft + colIndex
-              ] > 1
-            }
+            isOverlapping={(overlapInfo?.count ?? 0) > 1}
+            isLit={overlapInfo?.lit ?? false}
             gameIsSolved={gameIsSolved}
             dispatchGameState={dispatchGameState}
           />
         );
-        borderElements.push(
-          <LetterBorder
-            key={`border-${piece.id}-${rowIndex}-${colIndex}`}
-            rowIndex={rowIndex}
-            colIndex={colIndex}
-            border={{
-              top: !letters[rowIndex - 1]?.[colIndex],
-              bottom: !letters[rowIndex + 1]?.[colIndex],
-              left: !letters[rowIndex][colIndex - 1],
-              right: !letters[rowIndex][colIndex + 1],
-            }}
-          />
-        );
+        if (!gameIsSolved) {
+          borderElements.push(
+            <LetterBorder
+              key={`border-${piece.id}-${rowIndex}-${colIndex}`}
+              rowIndex={rowIndex}
+              colIndex={colIndex}
+              border={{
+                top: !letters[rowIndex - 1]?.[colIndex],
+                bottom: !letters[rowIndex + 1]?.[colIndex],
+                left: !letters[rowIndex][colIndex - 1],
+                right: !letters[rowIndex][colIndex + 1],
+              }}
+            />
+          );
+        }
       }
     }
   }

@@ -1,29 +1,7 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-
-// Returns a grid with the number of letters at each location in the grid
-export function countingGrid(height, width, pieces) {
-  let grid = Array(height)
-    .fill(undefined)
-    .map(() => Array(width).fill(0));
-
-  for (let piece of pieces) {
-    const letters = piece.letters;
-    let top = piece.boardTop ?? piece.groupTop;
-    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = piece.boardLeft ?? piece.groupLeft;
-      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        if (letters[rowIndex][colIndex]) {
-          grid[top][left]++;
-        }
-        left++;
-      }
-      top++;
-    }
-  }
-  return grid;
-}
+import getCountingGrid from "../logic/getCountingGrid";
 
 export default function Board({
   pieces,
@@ -37,7 +15,12 @@ export default function Board({
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
-  const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
+  const overlapGrid = getCountingGrid({
+    height: gridSize,
+    width: gridSize,
+    pieces: boardPieces,
+    withLitLetters: true,
+  });
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -55,7 +38,11 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id)
     );
-    const grid = countingGrid(gridSize, gridSize, draggedPieces);
+    const grid = getCountingGrid({
+      height: gridSize,
+      width: gridSize,
+      pieces: draggedPieces,
+    });
     dragShadow = (
       <DragShadow
         grid={grid}

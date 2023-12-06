@@ -16,7 +16,7 @@ export default function DragShadow({ grid, top, left }) {
   let squares = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[0].length; colIndex++) {
-      if (grid[rowIndex][colIndex] > 0) {
+      if (grid[rowIndex][colIndex].count > 0) {
         squares.push(
           <DragShadowSquare
             key={`${rowIndex}-${colIndex}`}

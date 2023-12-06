@@ -1,4 +1,4 @@
-import { getTrie } from "@skedwards88/word_logic";
+import { getTrie, isKnown } from "@skedwards88/word_logic";
 import {
   commonWordsLen2,
   commonWordsLen3,
@@ -21,3 +21,8 @@ export const trie = getTrie(
   ],
   []
 );
+
+// True if the word is allowed in the player's answer
+export function isAllowedWord(word) {
+  return isKnown(word, trie).isWord;
+}
