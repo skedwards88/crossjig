@@ -342,6 +342,7 @@ a {
   font-size: calc(0.9 * var(--box-size));
   background-color: var(--dark-color);
   color: var(--light-color);
+  position: relative;
 }
 
 .letter.filled {
@@ -354,10 +355,31 @@ a {
   color: rgb(226 88 88);
 }
 
+.letter.verticalValid::before{
+  content: '';
+  position: absolute;
+  left: 18%;
+  top: 38%;
+  width: 1px;
+  height: 6px;
+  background-color: var(--light-color);
+}
+
+.letter.horizontalValid::after{
+  content: '';
+  position: absolute;
+  left: 10%;
+  top: 45%;
+  height: 1px;
+  width: 6px;
+  background-color: var(--light-color);
+}
+
 .letter-border {
   box-sizing: border-box;
   width: calc(var(--box-size) + 1px);
   height: calc(var(--box-size) + 1px);
+  z-index: 1;
 }
 
 .borderTop {

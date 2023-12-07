@@ -6,6 +6,8 @@ function Letter({
   pieceRowIndex,
   pieceColIndex,
   overlapping,
+  isHorizontallyValid,
+  isVerticallyValid,
   gameIsSolved,
   dispatchGameState,
 }) {
@@ -27,6 +29,12 @@ function Letter({
   }
   if (overlapping) {
     className += " overlapping";
+  }
+  if (isHorizontallyValid) {
+    className += " horizontalValid";
+  }
+  if (isVerticallyValid) {
+    className += " verticalValid";
   }
 
   return (
@@ -75,6 +83,8 @@ export default function Piece({
   piece,
   where,
   overlapGrid,
+  horizontalValidityGrid,
+  verticalValidityGrid,
   gameIsSolved,
   dispatchGameState,
 }) {
@@ -99,6 +109,18 @@ export default function Piece({
               overlapGrid[piece.boardTop + rowIndex][
                 piece.boardLeft + colIndex
               ] > 1
+            }
+            isHorizontallyValid={
+              isOnBoard &&
+              horizontalValidityGrid[piece.boardTop + rowIndex][
+                piece.boardLeft + colIndex
+              ]
+            }
+            isVerticallyValid={
+              isOnBoard &&
+              verticalValidityGrid[piece.boardTop + rowIndex][
+                piece.boardLeft + colIndex
+              ]
             }
             gameIsSolved={gameIsSolved}
             dispatchGameState={dispatchGameState}
