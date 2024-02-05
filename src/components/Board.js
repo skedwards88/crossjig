@@ -110,13 +110,14 @@ export default function Board({
   dragDestination,
   gameIsSolved,
   dispatchGameState,
+  indicateValidity,
 }) {
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
   const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
-  const [horizontalValidityGrid, verticalValidityGrid] = getWordValidityGrids({ pieces, gridSize });
+  const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity ? getWordValidityGrids({ pieces, gridSize }) : [undefined, undefined];
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}

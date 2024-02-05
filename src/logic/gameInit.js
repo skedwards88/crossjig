@@ -42,6 +42,7 @@ function getGridSizeForLetters(numLetters) {
 
 export function gameInit({
   numLetters,
+  indicateValidity = false,
   useSaved = true,
   isDaily = false,
   seed,
@@ -142,5 +143,6 @@ export function gameInit({
     hintTally: 0,
     dragCount: 0,
     dragState: undefined,
+    indicateValidity: indicateValidity,
   };
 }

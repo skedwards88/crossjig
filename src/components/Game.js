@@ -29,6 +29,7 @@ function Game({ dispatchGameState, gameState, setDisplay }) {
         dragDestination={gameState.dragState?.destination}
         gameIsSolved={gameState.gameIsSolved}
         dispatchGameState={dispatchGameState}
+        indicateValidity={gameState.indicateValidity}
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result

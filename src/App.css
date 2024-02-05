@@ -72,6 +72,26 @@ button:disabled {
   -webkit-overflow-scrolling: auto;
 }
 
+/* Checkbox styling */
+input[type="checkbox" i] {
+  all: unset;
+  text-decoration: none;
+  text-align: center;
+  appearance: none;
+  width: calc(var(--default-box-size) * 0.8);
+  height: calc(var(--default-box-size) * 0.8);
+  border-radius: 2px;
+  background-color: var(--light-color);
+  border: 3px solid var(--light-color);
+}
+
+input[type="checkbox" i]:checked {
+  background-image: url("./images/checkmark-black.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 /* Slider setting styling */
 input[type="range"] {
   appearance: none;

@@ -112,13 +112,13 @@ export default function Piece({
             }
             isHorizontallyValid={
               isOnBoard &&
-              horizontalValidityGrid[piece.boardTop + rowIndex][
+              horizontalValidityGrid?.[piece.boardTop + rowIndex]?.[
                 piece.boardLeft + colIndex
               ]
             }
             isVerticallyValid={
               isOnBoard &&
-              verticalValidityGrid[piece.boardTop + rowIndex][
+              verticalValidityGrid?.[piece.boardTop + rowIndex]?.[
                 piece.boardLeft + colIndex
               ]
             }
