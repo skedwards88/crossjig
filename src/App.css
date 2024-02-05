@@ -355,31 +355,33 @@ a {
   color: rgb(226 88 88);
 }
 
-.letter.verticalValid::before{
+.letter.verticalValid:not(.filled)::before {
   content: '';
   position: absolute;
-  left: 18%;
-  top: 38%;
-  width: 1px;
-  height: 6px;
+  left: calc(50% - (10% / 2));
+  top: 0%;
+  width: 10%;
+  height: 100%;
   background-color: var(--light-color);
+  opacity: 15%;
 }
 
-.letter.horizontalValid::after{
+.letter.horizontalValid:not(.filled)::after{
   content: '';
   position: absolute;
-  left: 10%;
-  top: 45%;
-  height: 1px;
-  width: 6px;
+  left: 0;
+  top: calc(50% - (10% / 2));
+  height: 10%;
+  width: 100%;
   background-color: var(--light-color);
+  opacity: 15%;
 }
 
 .letter-border {
   box-sizing: border-box;
   width: calc(var(--box-size) + 1px);
   height: calc(var(--box-size) + 1px);
-  z-index: 1;
+  position: relative;
 }
 
 .borderTop {
