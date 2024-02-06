@@ -18,3 +18,6 @@ jobs:
 
       - name: Prettier
         run: npx prettier -c src/ README.md .github/workflows
+
+      - name: Stylelint
+        run: npx stylelint '**/*.css'
