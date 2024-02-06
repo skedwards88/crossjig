@@ -142,7 +142,7 @@ export default function App() {
           </div>
           <Game
             dispatchGameState={dailyDispatchGameState}
-            gameState={dailyGameState}
+            gameState={{...dailyGameState, indicateValidity: gameState?.indicateValidity ?? false}}
             setDisplay={setDisplay}
           ></Game>
         </div>
