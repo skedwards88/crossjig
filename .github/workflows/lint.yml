@@ -19,5 +19,8 @@ jobs:
       - name: Prettier
         run: npx prettier -c src/ README.md .github/workflows
 
+      - name: ES lint
+        run: npx eslint --ignore-path .gitignore .
+
       - name: Stylelint
         run: npx stylelint '**/*.css'
