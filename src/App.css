@@ -68,10 +68,6 @@ button:disabled {
   border-radius: 5px;
 }
 
-#pool {
-  -webkit-overflow-scrolling: auto;
-}
-
 /* Checkbox styling */
 input[type="checkbox" i] {
   all: unset;
@@ -330,7 +326,6 @@ a {
     "pool";
   grid-template-rows: auto 1fr;
   user-select: none;
-  user-select: none;
 }
 
 #board,
@@ -424,6 +419,7 @@ a {
 }
 
 #pool {
+  -webkit-overflow-scrolling: auto;
   grid-area: pool;
   width: 100%;
   height:
