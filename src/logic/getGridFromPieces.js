@@ -18,7 +18,10 @@ export function getGridFromPieces({ pieces, gridSize, solution }) {
   const leftKey = solution ? "solutionLeft" : "boardLeft";
 
   for (const piece of pieces) {
-    if (!solution && (piece[topKey] == undefined || piece[leftKey] == undefined)) {
+    if (
+      !solution &&
+      (piece[topKey] == undefined || piece[leftKey] == undefined)
+    ) {
       continue;
     }
     const letters = piece.letters;

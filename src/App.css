@@ -376,7 +376,7 @@ a {
 }
 
 .letter.verticalValid:not(.filled)::before {
-  content: '';
+  content: "";
   position: absolute;
   left: calc(50% - (10% / 2));
   top: 0%;
@@ -386,8 +386,8 @@ a {
   opacity: 15%;
 }
 
-.letter.horizontalValid:not(.filled)::after{
-  content: '';
+.letter.horizontalValid:not(.filled)::after {
+  content: "";
   position: absolute;
   left: 0;
   top: calc(50% - (10% / 2));

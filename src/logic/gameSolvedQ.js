@@ -49,7 +49,11 @@ export function gameSolvedQ(pieces, gridSize) {
     };
   }
 
-  const originalWords = getWordsFromPieces({ pieces, gridSize, solution:true });
+  const originalWords = getWordsFromPieces({
+    pieces,
+    gridSize,
+    solution: true,
+  });
 
   const { gameIsSolved, reason } = crosswordValidQ({
     grid: grid,

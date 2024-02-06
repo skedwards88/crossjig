@@ -50,10 +50,11 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
             id="indicateValidity"
             type="checkbox"
             defaultChecked={gameState.indicateValidity}
-            onChange={() => dispatchGameState({action: "changeIndicateValidity"})}
+            onChange={() =>
+              dispatchGameState({ action: "changeIndicateValidity" })
+            }
           />
         </div>
-
       </div>
       <div id="setting-buttons">
         <button type="submit" aria-label="new game">

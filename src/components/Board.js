@@ -30,7 +30,7 @@ export function countingGrid(height, width, pieces) {
   return grid;
 }
 
-function getHorizontalValidityGrid({grid, originalWords}) {
+function getHorizontalValidityGrid({ grid, originalWords }) {
   // return a 2D array of bools indicating whether
   // the position corresponds to a letter on the board
   // that is part of a valid horizontal word
@@ -94,10 +94,16 @@ function getWordValidityGrids({ pieces, gridSize }) {
 
   const grid = getGridFromPieces({ pieces, gridSize, solution: false });
 
-  const horizontalValidityGrid = getHorizontalValidityGrid({grid, originalWords})
+  const horizontalValidityGrid = getHorizontalValidityGrid({
+    grid,
+    originalWords,
+  });
 
   const transposedGrid = transposeGrid(grid);
-  const horizontalTransposedValidityGrid = getHorizontalValidityGrid({grid: transposedGrid, originalWords});
+  const horizontalTransposedValidityGrid = getHorizontalValidityGrid({
+    grid: transposedGrid,
+    originalWords,
+  });
   const verticalValidityGrid = transposeGrid(horizontalTransposedValidityGrid);
 
   return [horizontalValidityGrid, verticalValidityGrid];
@@ -117,7 +123,9 @@ export default function Board({
   );
 
   const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
-  const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity ? getWordValidityGrids({ pieces, gridSize }) : [undefined, undefined];
+  const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
+    ? getWordValidityGrids({ pieces, gridSize })
+    : [undefined, undefined];
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
