@@ -4,10 +4,12 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
   function handleNewGame(event) {
     event.preventDefault();
     const newNumLetters = event.target.elements.numLetters.value;
+    const newIndicateValidity = event.target.elements.indicateValidity.checked;
 
     dispatchGameState({
       action: "newGame",
       numLetters: newNumLetters,
+      indicateValidity: newIndicateValidity,
     });
     setDisplay("game");
   }
@@ -36,6 +38,23 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
             </div>
           </div>
         </div>
+
+        <div className="setting">
+          <div className="setting-description">
+            <label htmlFor="indicateValidity">Indicate validity</label>
+            <div className="setting-info">
+              Indicate whether letters form a valid word
+            </div>
+          </div>
+          <input
+            id="indicateValidity"
+            type="checkbox"
+            defaultChecked={gameState.indicateValidity}
+            onChange={() =>
+              dispatchGameState({ action: "changeIndicateValidity" })
+            }
+          />
+        </div>
       </div>
       <div id="setting-buttons">
         <button type="submit" aria-label="new game">
@@ -46,7 +65,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
           aria-label="cancel"
           onClick={() => setDisplay("game")}
         >
-          Cancel
+          Return
         </button>
       </div>
     </form>

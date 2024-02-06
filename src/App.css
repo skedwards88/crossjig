@@ -72,6 +72,26 @@ button:disabled {
   -webkit-overflow-scrolling: auto;
 }
 
+/* Checkbox styling */
+input[type="checkbox" i] {
+  all: unset;
+  text-decoration: none;
+  text-align: center;
+  appearance: none;
+  width: calc(var(--default-box-size) * 0.8);
+  height: calc(var(--default-box-size) * 0.8);
+  border-radius: 2px;
+  background-color: var(--light-color);
+  border: 3px solid var(--light-color);
+}
+
+input[type="checkbox" i]:checked {
+  background-image: url("./images/checkmark-black.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 /* Slider setting styling */
 input[type="range"] {
   appearance: none;
@@ -342,6 +362,7 @@ a {
   font-size: calc(0.9 * var(--box-size));
   background-color: var(--dark-color);
   color: var(--light-color);
+  position: relative;
 }
 
 .letter.filled {
@@ -354,10 +375,33 @@ a {
   color: rgb(226 88 88);
 }
 
+.letter.verticalValid:not(.filled)::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - (10% / 2));
+  top: 0%;
+  width: 10%;
+  height: 100%;
+  background-color: var(--light-color);
+  opacity: 15%;
+}
+
+.letter.horizontalValid:not(.filled)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(50% - (10% / 2));
+  height: 10%;
+  width: 100%;
+  background-color: var(--light-color);
+  opacity: 15%;
+}
+
 .letter-border {
   box-sizing: border-box;
   width: calc(var(--box-size) + 1px);
   height: calc(var(--box-size) + 1px);
+  position: relative;
 }
 
 .borderTop {

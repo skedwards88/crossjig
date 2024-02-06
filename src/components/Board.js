@@ -1,6 +1,11 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
+import { getGridFromPieces } from "../logic/getGridFromPieces";
+import { isKnown } from "@skedwards88/word_logic";
+import { trie } from "../logic/trie";
+import { getWordsFromPieces } from "../logic/getWordsFromPieces";
+import { transposeGrid } from "@skedwards88/word_logic";
 
 // Returns a grid with the number of letters at each location in the grid
 export function countingGrid(height, width, pieces) {
@@ -25,6 +30,85 @@ export function countingGrid(height, width, pieces) {
   return grid;
 }
 
+function getHorizontalValidityGrid({ grid, originalWords }) {
+  // return a 2D array of bools indicating whether
+  // the position corresponds to a letter on the board
+  // that is part of a valid horizontal word
+  const height = grid.length;
+  const width = grid[0].length;
+
+  const horizontalValidityGrid = Array(height)
+    .fill(undefined)
+    .map(() => Array(width).fill(false));
+
+  for (const [rowIndex, row] of grid.entries()) {
+    let word = "";
+    let indexes = [];
+    for (const [columnIndex, letter] of row.entries()) {
+      if (letter != "") {
+        word += letter;
+        indexes.push(columnIndex);
+      } else {
+        if (word.length > 1) {
+          // If the word is one of the original words, always consider it valid (in case we updated the dictionary in the interim).
+          // Otherwise, check whether it is a word in the trie.
+          let isWord = originalWords.includes(word);
+          if (!isWord) {
+            ({ isWord } = isKnown(word, trie));
+          }
+          if (isWord) {
+            indexes.forEach(
+              (index) => (horizontalValidityGrid[rowIndex][index] = true)
+            );
+          }
+        }
+        word = "";
+        indexes = [];
+      }
+    }
+    // Also end the word if we reach the end of the row
+    if (word.length > 1) {
+      // If the word is one of the original words, always consider it valid (in case we updated the dictionary in the interim).
+      // Otherwise, check whether it is a word in the trie.
+      let isWord = originalWords.includes(word);
+      if (!isWord) {
+        ({ isWord } = isKnown(word, trie));
+      }
+      if (isWord) {
+        indexes.forEach(
+          (index) => (horizontalValidityGrid[rowIndex][index] = true)
+        );
+      }
+    }
+  }
+
+  return horizontalValidityGrid;
+}
+
+function getWordValidityGrids({ pieces, gridSize }) {
+  const originalWords = getWordsFromPieces({
+    pieces,
+    gridSize,
+    solution: true,
+  });
+
+  const grid = getGridFromPieces({ pieces, gridSize, solution: false });
+
+  const horizontalValidityGrid = getHorizontalValidityGrid({
+    grid,
+    originalWords,
+  });
+
+  const transposedGrid = transposeGrid(grid);
+  const horizontalTransposedValidityGrid = getHorizontalValidityGrid({
+    grid: transposedGrid,
+    originalWords,
+  });
+  const verticalValidityGrid = transposeGrid(horizontalTransposedValidityGrid);
+
+  return [horizontalValidityGrid, verticalValidityGrid];
+}
+
 export default function Board({
   pieces,
   gridSize,
@@ -32,12 +116,16 @@ export default function Board({
   dragDestination,
   gameIsSolved,
   dispatchGameState,
+  indicateValidity,
 }) {
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
   );
 
   const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
+  const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
+    ? getWordValidityGrids({ pieces, gridSize })
+    : [undefined, undefined];
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
@@ -46,6 +134,8 @@ export default function Board({
       overlapGrid={overlapGrid}
       gameIsSolved={gameIsSolved}
       dispatchGameState={dispatchGameState}
+      horizontalValidityGrid={horizontalValidityGrid}
+      verticalValidityGrid={verticalValidityGrid}
     />
   ));
 
