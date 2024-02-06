@@ -16,8 +16,5 @@ jobs:
       - name: Install requirements
         run: npm ci
 
-      - name: Print packages
-        run: npm list --depth=0
-
       - name: Prettier
         run: npx prettier -c src/ README.md .github/workflows
