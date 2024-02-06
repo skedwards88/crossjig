@@ -50,6 +50,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
             id="indicateValidity"
             type="checkbox"
             defaultChecked={gameState.indicateValidity}
+            onChange={() => dispatchGameState({action: "changeIndicateValidity"})}
           />
         </div>
 
@@ -63,7 +64,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
           aria-label="cancel"
           onClick={() => setDisplay("game")}
         >
-          Cancel
+          Return
         </button>
       </div>
     </form>
