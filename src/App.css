@@ -455,8 +455,14 @@ a {
   padding: 3vmin;
 }
 
+.letter,
+#board:not(:empty) {
+  cursor: grab;
+}
+
 #drag-group {
   touch-action: none;
+  cursor: grabbing;
 }
 
 #drag-group .letter {
@@ -468,15 +474,6 @@ a {
   --lift: calc(var(--box-size) * -0.08);
 
   transform: translate(var(--lift), var(--lift));
-}
-
-.letter,
-#board:not(:empty) {
-  cursor: grab;
-}
-
-#drag-group {
-  cursor: grabbing;
 }
 
 /* Separate rule for graceful degradation -- Firefox doesn't support :has() yet. */
