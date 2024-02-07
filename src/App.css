@@ -237,8 +237,7 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 
 #calendarButton {
-  background-image:
-    url("./images/daily.svg"),
+  background-image: url("./images/daily.svg"),
     radial-gradient(circle, rgb(239 239 239 / 60%) 30%, rgb(55 54 71));
   width: calc(var(--default-font-size) * 2);
 }
@@ -314,11 +313,10 @@ a {
 #game {
   display: grid;
 
-  --box-size:
-    min(
-      calc((66vh - 1px) / var(--grid-rows)),
-      calc((96vw - 1px) / var(--grid-columns))
-    );
+  --box-size: min(
+    calc((66vh - 1px) / var(--grid-rows)),
+    calc((96vw - 1px) / var(--grid-columns))
+  );
 
   grid-area: game;
   grid-template-areas:
@@ -422,14 +420,12 @@ a {
   -webkit-overflow-scrolling: auto;
   grid-area: pool;
   width: 100%;
-  height:
-    calc(
-      88vh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
-    );
-  height:
-    calc(
-      98svh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
-    );
+  height: calc(
+    88vh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
+  );
+  height: calc(
+    98svh - (var(--grid-rows) * var(--box-size) + 1px) - (var(--box-size) * 1.2)
+  );
   display: flex;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -659,12 +655,11 @@ body:has(#drag-group) {
   }
 
   #game {
-    --box-size:
-      min(
-        calc((48vh - 1px) / var(--grid-rows)),
-        calc((84vw - 1px) / var(--grid-columns)),
-        1cm
-      );
+    --box-size: min(
+      calc((48vh - 1px) / var(--grid-rows)),
+      calc((84vw - 1px) / var(--grid-columns)),
+      1cm
+    );
   }
 
   #controls {
