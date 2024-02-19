@@ -1,7 +1,7 @@
 import React from "react";
 import sendAnalytics from "../common/sendAnalytics";
 
-function handleShare({ text, fullUrl }) {
+function handleShare({text, fullUrl}) {
   navigator
     .share({
       title: "Crossjig",
@@ -17,25 +17,23 @@ function handleShare({ text, fullUrl }) {
   sendAnalytics("share");
 }
 
-function handleCopy({ text, fullUrl }) {
+function handleCopy({text, fullUrl}) {
   try {
     navigator.clipboard.writeText(`${text}\n\n${fullUrl}`);
   } catch (error) {
-    console.log(error);
+    console.log("Error copying", error);
   }
 }
 
-export default function Share({ text, seed }) {
+export default function Share({text, seed}) {
   const url = "https://crossjig.com/";
   const fullUrl = seed ? `${url}?puzzle=${seed}` : url;
 
   if (navigator.canShare) {
-    return (
-      <button onClick={() => handleShare({ text, fullUrl })}>Share</button>
-    );
+    return <button onClick={() => handleShare({text, fullUrl})}>Share</button>;
   } else {
     return (
-      <button onClick={() => handleCopy({ text, fullUrl })}>
+      <button onClick={() => handleCopy({text, fullUrl})}>
         Copy sharing link
       </button>
     );

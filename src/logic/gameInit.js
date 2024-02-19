@@ -1,5 +1,5 @@
 import sendAnalytics from "../common/sendAnalytics";
-import { generatePuzzle } from "./generatePuzzle";
+import {generatePuzzle} from "./generatePuzzle";
 
 function getRandomSeed() {
   const currentDate = new Date();
@@ -80,8 +80,8 @@ export function gameInit({
   const minLetters = isDaily ? getNumLettersForDay() : numLetters || 30;
   let gridSize = getGridSizeForLetters(minLetters);
 
-  let { pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
-    generatePuzzle({ gridSize: gridSize, minLetters: minLetters, seed: seed });
+  let {pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
+    generatePuzzle({gridSize: gridSize, minLetters: minLetters, seed: seed});
 
   // Pad the puzzle with a square on each side and recenter the solution
   maxShiftRight++;
@@ -113,13 +113,13 @@ export function gameInit({
       numHintsInStreak: 0,
       days: {
         // day: [total number of games won, total number of games won without hints]
-        0: { won: 0, noHints: 0 }, // Sunday
-        1: { won: 0, noHints: 0 },
-        2: { won: 0, noHints: 0 },
-        3: { won: 0, noHints: 0 },
-        4: { won: 0, noHints: 0 },
-        5: { won: 0, noHints: 0 },
-        6: { won: 0, noHints: 0 },
+        0: {won: 0, noHints: 0}, // Sunday
+        1: {won: 0, noHints: 0},
+        2: {won: 0, noHints: 0},
+        3: {won: 0, noHints: 0},
+        4: {won: 0, noHints: 0},
+        5: {won: 0, noHints: 0},
+        6: {won: 0, noHints: 0},
       },
     };
   }

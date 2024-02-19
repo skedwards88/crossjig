@@ -1,4 +1,4 @@
-import { getTrie } from "@skedwards88/word_logic";
+import {getTrie} from "@skedwards88/word_logic";
 import {
   commonWordsLen2,
   commonWordsLen3,
@@ -19,5 +19,5 @@ export const trie = getTrie(
     ...commonWordsLen7,
     ...commonWordsLen8plus,
   ],
-  []
+  [],
 );

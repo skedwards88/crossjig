@@ -1,5 +1,5 @@
 import getPatternsForRow from "./getRegexForRow.js";
-import { shuffleArray, transposeGrid } from "@skedwards88/word_logic";
+import {shuffleArray, transposeGrid} from "@skedwards88/word_logic";
 import {
   commonWordsLen4,
   commonWordsLen5,
@@ -27,7 +27,7 @@ function removeWordThatMatches(pattern, wordList) {
   }
 }
 
-export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
+export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
   // Generates an interconnected grid of words
   // that fits within the specified gridSize.
   // The total number of letters used will be minLetters or slightly higher.
@@ -40,7 +40,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
       ...commonWordsLen6,
       ...commonWordsLen7,
     ],
-    pseudoRandomGenerator
+    pseudoRandomGenerator,
   );
 
   let letterCount = 0;
@@ -49,8 +49,8 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
 
   while (letterCount < minLetters) {
     let count = 0;
-    grid = Array.from({ length: gridSize }, () =>
-      Array.from({ length: gridSize }, () => "")
+    grid = Array.from({length: gridSize}, () =>
+      Array.from({length: gridSize}, () => ""),
     );
     orientationIsRows = true;
 
@@ -62,7 +62,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
     letterCount = startingWord.length;
     const startingRowIndex = Math.floor(pseudoRandomGenerator() * gridSize);
     const startingColIndex = Math.floor(
-      pseudoRandomGenerator() * (gridSize - startingWord.length)
+      pseudoRandomGenerator() * (gridSize - startingWord.length),
     );
     for (
       let index = startingColIndex;
@@ -99,7 +99,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
         let patterns = getPatternsForRow(
           grid,
           rowIndexesByCounts[metaIndex],
-          minWordLength
+          minWordLength,
         );
         patterns = shuffleArray(patterns, pseudoRandomGenerator);
         for (
@@ -133,7 +133,7 @@ export function generateGrid({ gridSize, minLetters, pseudoRandomGenerator }) {
 
       letterCount = grid.reduce(
         (accumulator, row) => accumulator + row.join("").length,
-        0
+        0,
       );
     }
   }

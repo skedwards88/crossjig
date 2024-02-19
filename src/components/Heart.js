@@ -1,7 +1,7 @@
 import React from "react";
 import Share from "./Share";
 
-export default function Heart({ setDisplay }) {
+export default function Heart({setDisplay}) {
   const feedbackLink = `https://github.com/skedwards88/crossjig/issues/new`;
 
   return (

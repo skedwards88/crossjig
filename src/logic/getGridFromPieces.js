@@ -1,4 +1,4 @@
-export function getGridFromPieces({ pieces, gridSize, solution }) {
+export function getGridFromPieces({pieces, gridSize, solution}) {
   // Compiles a 2D array representing the letter locations on the board
   // If solution is true, uses the solutionTop/solutionLeft value of each piece
   // otherwise, uses the boardTop/boardLeft value
@@ -10,8 +10,8 @@ export function getGridFromPieces({ pieces, gridSize, solution }) {
     throw new Error("Grid size must be defined.");
   }
 
-  let grid = Array.from({ length: gridSize }, () =>
-    Array.from({ length: gridSize }, () => "")
+  let grid = Array.from({length: gridSize}, () =>
+    Array.from({length: gridSize}, () => ""),
   );
 
   const topKey = solution ? "solutionTop" : "boardTop";

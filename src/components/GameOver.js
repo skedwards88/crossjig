@@ -1,7 +1,7 @@
 import React from "react";
 import Share from "./Share";
 
-export default function GameOver({ dispatchGameState, gameState, setDisplay }) {
+export default function GameOver({dispatchGameState, gameState, setDisplay}) {
   if (gameState.isDaily) {
     return (
       <div id="gameOver">

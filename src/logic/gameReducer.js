@@ -1,13 +1,13 @@
 import cloneDeep from "lodash.clonedeep";
-import { gameInit } from "./gameInit";
+import {gameInit} from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
-import { gameSolvedQ } from "./gameSolvedQ";
+import {gameSolvedQ} from "./gameSolvedQ";
 
 function getPieceIDGrid(pieces, gridSize) {
   // at each space in the grid, find the IDs of the pieces at that space, if any
 
   let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill([])))
+    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill([]))),
   );
 
   for (let index = 0; index < pieces.length; index++) {
@@ -36,7 +36,7 @@ function getPieceIDGrid(pieces, gridSize) {
   return grid;
 }
 
-function getConnectedPieceIDs({ pieces, gridSize, draggedPieceID }) {
+function getConnectedPieceIDs({pieces, gridSize, draggedPieceID}) {
   // Find all pieces that touch a given piece on the board
 
   const pieceIDGrid = getPieceIDGrid(pieces, gridSize);
@@ -104,7 +104,7 @@ function dragStart({
   let groupBoardTop = currentGameState.gridSize;
   let groupBoardLeft = currentGameState.gridSize;
   const poolPieces = currentGameState.pieces.filter(
-    (piece) => piece.poolIndex >= 0
+    (piece) => piece.poolIndex >= 0,
   );
   let poolIndex = poolPieces.length;
   for (const piece of currentGameState.pieces) {
@@ -135,7 +135,7 @@ function dragStart({
     // If we were previously just dragging one piece and have now potentially expanded to drag multiple pieces,
     // use previous pointerOffset, adjusted for the different group of pieces we have now.
     const previousPiece = currentGameState.pieces.filter(
-      (piece) => piece.id == previousDragState.pieceIDs[0]
+      (piece) => piece.id == previousDragState.pieceIDs[0],
     )[0];
     const extraSquaresLeft = previousPiece.boardLeft - groupBoardLeft;
     const extraSquaresTop = previousPiece.boardTop - groupBoardTop;
@@ -152,7 +152,7 @@ function dragStart({
       const element = document.getElementById(`piece-${piece.id}`);
       if (!element) {
         console.warn(
-          `dragStart: element for piece ${piece.id} not found in DOM`
+          `dragStart: element for piece ${piece.id} not found in DOM`,
         );
         return [];
       }
@@ -181,7 +181,7 @@ function dragStart({
           groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
         groupLeft:
           groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
-      }))
+      })),
     ),
     dragCount: currentGameState.dragCount + 1,
     dragState: {
@@ -194,15 +194,15 @@ function dragStart({
       pointerOffset,
       destination:
         groupBoardTop !== undefined
-          ? { where: "board", top: groupBoardTop, left: groupBoardLeft }
-          : { where: "pool", index: poolIndex },
+          ? {where: "board", top: groupBoardTop, left: groupBoardLeft}
+          : {where: "pool", index: poolIndex},
     },
   };
 
   if (targets.some((piece) => piece.poolIndex !== undefined)) {
     // A piece was removed from the pool, so recompute poolIndex for the other pieces.
     let remainingPoolPieces = currentGameState.pieces.filter(
-      (piece) => piece.poolIndex !== undefined
+      (piece) => piece.poolIndex !== undefined,
     );
     remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
     let poolIndices = Array(currentGameState.pieces.length).fill(-1);
@@ -217,7 +217,7 @@ function dragStart({
           : {
               ...piece,
               poolIndex: poolIndices[piece.id],
-            }
+            },
       ),
     };
   }
@@ -268,7 +268,7 @@ function dragEnd(currentGameState) {
             groupLeft: undefined,
           }
         : piece.poolIndex !== undefined && piece.poolIndex >= dest.index
-        ? { ...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length }
+        ? {...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length}
         : piece;
   }
   return updateCompletionState({
@@ -280,15 +280,14 @@ function dragEnd(currentGameState) {
 
 function giveHint(currentGameState) {
   const pieces = cloneDeep(currentGameState.pieces);
-  const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
+  const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
     currentGameState;
 
   let shiftLeft;
   let shiftUp;
   // check each piece until we find one on the board within the shift range
   for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-    const { boardLeft, boardTop, solutionLeft, solutionTop } =
-      pieces[pieceIndex];
+    const {boardLeft, boardTop, solutionLeft, solutionTop} = pieces[pieceIndex];
     // if the piece is not on the board, skip to the next piece
     if (boardLeft === undefined || boardTop === undefined) {
       continue;
@@ -314,7 +313,7 @@ function giveHint(currentGameState) {
   // if we found a piece on the board that is within the shift range, realign all other pieces on the board to match if they don't already
   if (shiftLeft != undefined && shiftUp != undefined) {
     for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      const { boardLeft, boardTop, solutionLeft, solutionTop } =
+      const {boardLeft, boardTop, solutionLeft, solutionTop} =
         pieces[pieceIndex];
       // if the piece is not on the board, skip to the next piece
       if (boardLeft === undefined || boardTop === undefined) {
@@ -338,7 +337,7 @@ function giveHint(currentGameState) {
     // if didn't find any pieces on the board within the shift range,
     //   move all pieces on the board into place
     for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      const { boardLeft, boardTop, solutionLeft, solutionTop } =
+      const {boardLeft, boardTop, solutionLeft, solutionTop} =
         pieces[pieceIndex];
       // if the piece is not on the board, skip to the next piece
       if (boardLeft === undefined || boardTop === undefined) {
@@ -362,7 +361,7 @@ function giveHint(currentGameState) {
   if (!numRealigned) {
     realignedPieces = [...pieces];
     for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      const { boardLeft, boardTop, solutionLeft, solutionTop } =
+      const {boardLeft, boardTop, solutionLeft, solutionTop} =
         pieces[pieceIndex];
       // if the piece is not on the board, add it to the board and break the loop
       if (boardLeft === undefined || boardTop === undefined) {
@@ -443,7 +442,7 @@ function getNewDailyStats(currentGameState) {
 
   const newDays = {
     ...currentGameState.stats.days,
-    [dayNumber]: { won: numWeekdayWon, noHints: numWeekdayWonWithoutHints },
+    [dayNumber]: {won: numWeekdayWon, noHints: numWeekdayWonWithoutHints},
   };
 
   return {
@@ -459,7 +458,7 @@ function getNewDailyStats(currentGameState) {
 
 function getCompletionData(currentGameState) {
   const allPiecesAreUsed = currentGameState.pieces.every(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
+    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
   );
 
   if (!allPiecesAreUsed) {
@@ -470,9 +469,9 @@ function getCompletionData(currentGameState) {
     };
   }
 
-  const { gameIsSolved, reason: gameIsSolvedReason } = gameSolvedQ(
+  const {gameIsSolved, reason: gameIsSolvedReason} = gameSolvedQ(
     currentGameState.pieces,
-    currentGameState.gridSize
+    currentGameState.gridSize,
   );
 
   let newStats;
@@ -487,7 +486,7 @@ function getCompletionData(currentGameState) {
     allPiecesAreUsed: true,
     gameIsSolved: gameIsSolved,
     gameIsSolvedReason: gameIsSolvedReason,
-    ...(newStats && { stats: newStats }),
+    ...(newStats && {stats: newStats}),
   };
 }
 
@@ -500,7 +499,7 @@ function updateCompletionState(gameState) {
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({ ...payload, seed: undefined, useSaved: false });
+    return gameInit({...payload, seed: undefined, useSaved: false});
   } else if (payload.action === "changeIndicateValidity") {
     return {
       ...currentGameState,
@@ -519,7 +518,7 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
-    const { pieceID, pointerID, pointer } = payload;
+    const {pieceID, pointerID, pointer} = payload;
     return dragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.id === pieceID,
@@ -533,7 +532,7 @@ export function gameReducer(currentGameState, payload) {
     // Set `piece.isDragging` on all neighbors using `destination` to figure out
     // which pieces are neighbors. Implemented by dropping the current piece, then picking
     // it and all connected pieces up again.
-    const { dragState } = currentGameState;
+    const {dragState} = currentGameState;
     if (dragState === undefined || dragState.pieceIDs.length !== 1) {
       return currentGameState;
     }
@@ -558,7 +557,7 @@ export function gameReducer(currentGameState, payload) {
     if (prevDrag === undefined) {
       return currentGameState;
     }
-    const { pointer, destination } = payload;
+    const {pointer, destination} = payload;
     return {
       ...currentGameState,
       dragState: {
@@ -579,7 +578,7 @@ export function gameReducer(currentGameState, payload) {
     //
     // Initializes `dragState`. Starts a drag on all pieces that are on the board.
     // Sets `destination` to where they currently are.
-    const { pointerID, pointer } = payload;
+    const {pointerID, pointer} = payload;
     return dragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,

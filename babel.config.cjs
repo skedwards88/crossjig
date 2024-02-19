@@ -4,7 +4,7 @@ module.exports = {
       "@babel/preset-env",
       {
         targets: {
-          node: "current"
+          node: "current",
         },
       },
     ],
@@ -13,6 +13,6 @@ module.exports = {
   plugins: [
     // required since @skedwards88/word_lists uses
     // the import ... assert { type: "json" } syntax
-    "@babel/plugin-syntax-import-assertions"
-  ]
+    "@babel/plugin-syntax-import-assertions",
+  ],
 };

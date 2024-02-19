@@ -1,11 +1,11 @@
 import seedrandom from "seedrandom";
-import { generateGrid } from "./generateGrid";
-import { centerGrid } from "./centerGrid";
-import { getMaxShifts } from "./getMaxShifts";
-import { makePieces } from "./makePieces";
-import { shuffleArray } from "@skedwards88/word_logic";
+import {generateGrid} from "./generateGrid";
+import {centerGrid} from "./centerGrid";
+import {getMaxShifts} from "./getMaxShifts";
+import {makePieces} from "./makePieces";
+import {shuffleArray} from "@skedwards88/word_logic";
 
-export function generatePuzzle({ gridSize, minLetters, seed }) {
+export function generatePuzzle({gridSize, minLetters, seed}) {
   let count = 0;
   let foundPuzzleWithAcceptableSingletons = false;
   const maxFractionSingles = 0.1;
@@ -25,12 +25,12 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
 
     const centeredGrid = centerGrid(grid);
 
-    const { maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown } =
+    const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
       getMaxShifts(centeredGrid);
 
     const pieces = shuffleArray(
       makePieces(centeredGrid),
-      pseudoRandomGenerator
+      pseudoRandomGenerator,
     );
     const pieceData = pieces.map((piece, index) => ({
       letters: piece.letters,
@@ -45,7 +45,7 @@ export function generatePuzzle({ gridSize, minLetters, seed }) {
     const numSingletons = pieceData
       .map((piece) => piece.letters)
       .filter(
-        (letters) => letters.length === 1 && letters[0].length === 1
+        (letters) => letters.length === 1 && letters[0].length === 1,
       ).length;
     const numPieces = pieceData.length;
     foundPuzzleWithAcceptableSingletons =

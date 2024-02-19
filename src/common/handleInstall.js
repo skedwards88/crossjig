@@ -13,7 +13,7 @@ async function handleInstall(installPromptEvent, setInstallPromptEvent) {
 function handleBeforeInstallPrompt(
   event,
   setInstallPromptEvent,
-  setShowInstallButton
+  setShowInstallButton,
 ) {
   console.log("handleBeforeInstallPrompt");
   if (event) setInstallPromptEvent(event);
@@ -26,4 +26,4 @@ function handleAppInstalled(setInstallPromptEvent, setShowInstallButton) {
   setShowInstallButton(false);
 }
 
-export { handleInstall, handleBeforeInstallPrompt, handleAppInstalled };
+export {handleInstall, handleBeforeInstallPrompt, handleAppInstalled};

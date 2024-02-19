@@ -1,14 +1,14 @@
 import Piece from "./Piece";
 import React from "react";
-import { dragDestinationOnBoard } from "./Board";
-import { dragDestinationInPool } from "./Pool";
+import {dragDestinationOnBoard} from "./Board";
+import {dragDestinationInPool} from "./Pool";
 
 // This component is mounted each time a drag starts.
-export default function DragGroup({ dispatchGameState, gameState }) {
+export default function DragGroup({dispatchGameState, gameState}) {
   const dragState = gameState.dragState;
   const isShifting = dragState.isShifting;
   const draggedPieces = gameState.pieces.filter((piece) =>
-    dragState.pieceIDs.includes(piece.id)
+    dragState.pieceIDs.includes(piece.id),
   );
 
   // Capture the pointer. If the pointer could not be captured successfully, end the drag.
@@ -24,7 +24,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     }
     ok &&= element.hasPointerCapture(dragState.pointerID);
     if (!ok) {
-      dispatchGameState({ action: "dragEnd" });
+      dispatchGameState({action: "dragEnd"});
     }
     // Cleanup function to release the pointer.
     return () => {
@@ -52,7 +52,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
       return undefined;
     }
     let timerID = setTimeout(() => {
-      dispatchGameState({ action: "dragNeighbors" });
+      dispatchGameState({action: "dragNeighbors"});
       timerID = undefined;
     }, 500);
     return () => {
@@ -71,10 +71,10 @@ export default function DragGroup({ dispatchGameState, gameState }) {
   let top = dragState.pointer.y - dragState.pointerOffset.y;
   let left = dragState.pointer.x - dragState.pointerOffset.x;
   const groupRows = Math.max(
-    ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+    ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length),
   );
   const groupColumns = Math.max(
-    ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+    ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length),
   );
   if (isShifting) {
     // Clamp to the board rectangle.
@@ -93,7 +93,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
 
   const onPointerMove = (event) => {
     event.preventDefault();
-    const pointer = { x: event.clientX, y: event.clientY };
+    const pointer = {x: event.clientX, y: event.clientY};
     dispatchGameState({
       action: "dragMove",
       pointer,
@@ -106,7 +106,7 @@ export default function DragGroup({ dispatchGameState, gameState }) {
     if (event.clientX != 0 || event.clientY != 0) {
       onPointerMove(event);
     }
-    dispatchGameState({ action: "dragEnd" });
+    dispatchGameState({action: "dragEnd"});
   };
 
   return (
