@@ -18,47 +18,47 @@ module.exports = (env, argv) => {
 
   const copyPlugin = new CopyPlugin({
     patterns: [
-      {from: "./src/images/favicon.svg", to: "./assets/favicon.svg"},
-      {from: "./src/images/favicon.ico", to: "./assets/favicon.ico"},
-      {from: "./src/images/icon_192.png", to: "./assets/icon_192.png"},
-      {from: "./src/images/icon_512.png", to: "./assets/icon_512.png"},
+      {from: "./src/images/favicons/favicon.svg", to: "./assets/favicon.svg"},
+      {from: "./src/images/favicons/favicon.ico", to: "./assets/favicon.ico"},
+      {from: "./src/images/favicons/icon_192.png", to: "./assets/icon_192.png"},
+      {from: "./src/images/favicons/icon_512.png", to: "./assets/icon_512.png"},
       {
-        from: "./src/images/maskable_icon.png",
+        from: "./src/images/favicons/maskable_icon.png",
         to: "./assets/maskable_icon.png",
       },
       {from: "./src/manifest.json", to: "./assets/manifest.json"},
       {from: "./src/assetlinks.json", to: "./.well-known/assetlinks.json"},
       {from: "./src/privacy.html", to: "./privacy.html"},
       {
-        from: "./src/images/screenshot_720_1280_1.png",
+        from: "./src/images/screenshots/screenshot_720_1280_1.png",
         to: "./assets/screenshot_720_1280_1.png",
       },
       {
-        from: "./src/images/screenshot_720_1280_2.png",
+        from: "./src/images/screenshots/screenshot_720_1280_2.png",
         to: "./assets/screenshot_720_1280_2.png",
       },
       {
-        from: "./src/images/screenshot_720_1280_3.png",
+        from: "./src/images/screenshots/screenshot_720_1280_3.png",
         to: "./assets/screenshot_720_1280_3.png",
       },
       {
-        from: "./src/images/screenshot_720_1280_4.png",
+        from: "./src/images/screenshots/screenshot_720_1280_4.png",
         to: "./assets/screenshot_720_1280_4.png",
       },
       {
-        from: "./src/images/screenshot_1080_1080_1.png",
+        from: "./src/images/screenshots/screenshot_1080_1080_1.png",
         to: "./assets/screenshot_1080_1080_1.png",
       },
       {
-        from: "./src/images/screenshot_1080_1080_2.png",
+        from: "./src/images/screenshots/screenshot_1080_1080_2.png",
         to: "./assets/screenshot_1080_1080_2.png",
       },
       {
-        from: "./src/images/screenshot_1080_1080_3.png",
+        from: "./src/images/screenshots/screenshot_1080_1080_3.png",
         to: "./assets/screenshot_1080_1080_3.png",
       },
       {
-        from: "./src/images/screenshot_1080_1080_4.png",
+        from: "./src/images/screenshots/screenshot_1080_1080_4.png",
         to: "./assets/screenshot_1080_1080_4.png",
       },
     ],
