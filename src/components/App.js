@@ -12,9 +12,10 @@ import Settings from "./Settings";
 import {gameInit, getDailySeed} from "../logic/gameInit";
 import {gameReducer} from "../logic/gameReducer";
 
-export default function App() {
+function parseUrlQuery() {
   const searchParams = new URLSearchParams(document.location.search);
   const seedQuery = searchParams.get("puzzle");
+
   // The seed query consists of two parts: the seed and the min number of letters, separated by an underscore
   let numLetters;
   let seed;
@@ -22,6 +23,12 @@ export default function App() {
     [seed, numLetters] = seedQuery.split("_");
     numLetters = parseInt(numLetters);
   }
+
+  return [seed, numLetters];
+}
+
+export default function App() {
+  const [seed, numLetters] = parseUrlQuery();
 
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
@@ -67,28 +74,23 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (event) =>
+    const listener = (event) =>
       handleBeforeInstallPrompt(
         event,
         setInstallPromptEvent,
         setShowInstallButton,
-      ),
-    );
-    return () =>
-      window.removeEventListener("beforeinstallprompt", (event) =>
-        handleBeforeInstallPrompt(
-          event,
-          setInstallPromptEvent,
-          setShowInstallButton,
-        ),
       );
+
+    window.addEventListener("beforeinstallprompt", listener);
+    return () => window.removeEventListener("beforeinstallprompt", listener);
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener("appinstalled", () =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton),
-    );
-    return () => window.removeEventListener("appinstalled", handleAppInstalled);
+    const listener = () =>
+      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
+
+    window.addEventListener("appinstalled", listener);
+    return () => window.removeEventListener("appinstalled", listener);
   }, []);
 
   React.useEffect(() => {
