@@ -14,7 +14,7 @@ function Letter({
   const onPointerDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const pointer = { x: event.clientX, y: event.clientY };
+    const pointer = {x: event.clientX, y: event.clientY};
     dispatchGameState({
       action: "dragStart",
       pieceID,
@@ -54,7 +54,7 @@ function Letter({
   );
 }
 
-function LetterBorder({ rowIndex, colIndex, border }) {
+function LetterBorder({rowIndex, colIndex, border}) {
   let className = "letter-border";
   if (border.top) {
     className += " borderTop";
@@ -124,7 +124,7 @@ export default function Piece({
             }
             gameIsSolved={gameIsSolved}
             dispatchGameState={dispatchGameState}
-          />
+          />,
         );
         borderElements.push(
           <LetterBorder
@@ -137,7 +137,7 @@ export default function Piece({
               left: !letters[rowIndex][colIndex - 1],
               right: !letters[rowIndex][colIndex + 1],
             }}
-          />
+          />,
         );
       }
     }

@@ -1,4 +1,4 @@
-import { getGridFromPieces } from "./getGridFromPieces";
+import {getGridFromPieces} from "./getGridFromPieces";
 
 describe("getGridFromPieces", () => {
   test("if `solution` is true, it returns a 2D array representing the placement of the pieces in a grid based on the solution", () => {
@@ -17,9 +17,9 @@ describe("getGridFromPieces", () => {
         solutionTop: 2,
         solutionLeft: 10,
       },
-      { letters: [["N", "S"]], solutionTop: 10, solutionLeft: 9 },
-      { letters: [["E", "A"]], solutionTop: 10, solutionLeft: 6 },
-      { letters: [["B"], ["S"]], solutionTop: 5, solutionLeft: 10 },
+      {letters: [["N", "S"]], solutionTop: 10, solutionLeft: 9},
+      {letters: [["E", "A"]], solutionTop: 10, solutionLeft: 6},
+      {letters: [["B"], ["S"]], solutionTop: 5, solutionLeft: 10},
       {
         letters: [
           ["I", "", ""],
@@ -29,7 +29,7 @@ describe("getGridFromPieces", () => {
         solutionTop: 3,
         solutionLeft: 3,
       },
-      { letters: [["A"], ["W"]], solutionTop: 3, solutionLeft: 5 },
+      {letters: [["A"], ["W"]], solutionTop: 3, solutionLeft: 5},
       {
         letters: [
           ["S", "P", "A"],
@@ -56,7 +56,7 @@ describe("getGridFromPieces", () => {
         solutionTop: 3,
         solutionLeft: 0,
       },
-      { letters: [["V", "I"]], solutionTop: 11, solutionLeft: 0 },
+      {letters: [["V", "I"]], solutionTop: 11, solutionLeft: 0},
       {
         letters: [
           ["N", "S"],
@@ -84,9 +84,9 @@ describe("getGridFromPieces", () => {
         solutionTop: 0,
         solutionLeft: 5,
       },
-      { letters: [["F"]], solutionTop: 1, solutionLeft: 5 },
-      { letters: [["P"], ["Y"]], solutionTop: 3, solutionLeft: 7 },
-      { letters: [["D", "E"]], solutionTop: 6, solutionLeft: 5 },
+      {letters: [["F"]], solutionTop: 1, solutionLeft: 5},
+      {letters: [["P"], ["Y"]], solutionTop: 3, solutionLeft: 7},
+      {letters: [["D", "E"]], solutionTop: 6, solutionLeft: 5},
       {
         letters: [
           ["P", "L", "E"],
@@ -112,8 +112,8 @@ describe("getGridFromPieces", () => {
       ["", "", "", "", "E", "", "E", "A", "R", "N", "S", ""],
       ["V", "I", "S", "O", "R", "", "", "", "", "", "", ""],
     ];
-    expect(getGridFromPieces({ pieces, gridSize: 12, solution: true })).toEqual(
-      expectedGrid
+    expect(getGridFromPieces({pieces, gridSize: 12, solution: true})).toEqual(
+      expectedGrid,
     );
   });
 
@@ -133,9 +133,9 @@ describe("getGridFromPieces", () => {
         boardTop: 2,
         boardLeft: 10,
       },
-      { letters: [["N", "S"]], boardTop: 10, boardLeft: 9 },
-      { letters: [["E", "A"]], boardTop: 10, boardLeft: 6 },
-      { letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10 },
+      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9},
+      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6},
+      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10},
       {
         letters: [
           ["I", "", ""],
@@ -145,7 +145,7 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 3,
       },
-      { letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5 },
+      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5},
       {
         letters: [
           ["S", "P", "A"],
@@ -172,7 +172,7 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 0,
       },
-      { letters: [["V", "I"]], boardTop: 11, boardLeft: 0 },
+      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0},
       {
         letters: [
           ["N", "S"],
@@ -200,9 +200,9 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 5,
       },
-      { letters: [["F"]], boardTop: 1, boardLeft: 5 },
-      { letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7 },
-      { letters: [["D", "E"]], boardTop: 6, boardLeft: 5 },
+      {letters: [["F"]], boardTop: 1, boardLeft: 5},
+      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7},
+      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5},
       {
         letters: [
           ["P", "L", "E"],
@@ -228,9 +228,9 @@ describe("getGridFromPieces", () => {
       ["", "", "", "", "E", "", "E", "A", "R", "N", "S", ""],
       ["V", "I", "S", "O", "R", "", "", "", "", "", "", ""],
     ];
-    expect(
-      getGridFromPieces({ pieces, gridSize: 12, solution: false })
-    ).toEqual(expectedGrid);
+    expect(getGridFromPieces({pieces, gridSize: 12, solution: false})).toEqual(
+      expectedGrid,
+    );
   });
 
   test("if `solution` is false, any pieces that are not on the board are excluded", () => {
@@ -249,9 +249,9 @@ describe("getGridFromPieces", () => {
         boardTop: 2,
         boardLeft: 10,
       },
-      { letters: [["N", "S"]], boardTop: 10, boardLeft: 9 },
-      { letters: [["E", "A"]], boardTop: 10, boardLeft: 6 },
-      { letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10 },
+      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9},
+      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6},
+      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10},
       {
         letters: [
           ["I", "", ""],
@@ -261,7 +261,7 @@ describe("getGridFromPieces", () => {
         boardTop: undefined,
         boardLeft: undefined,
       },
-      { letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5 },
+      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5},
       {
         letters: [
           ["S", "P", "A"],
@@ -288,7 +288,7 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 0,
       },
-      { letters: [["V", "I"]], boardTop: 11, boardLeft: 0 },
+      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0},
       {
         letters: [
           ["N", "S"],
@@ -316,9 +316,9 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 5,
       },
-      { letters: [["F"]], boardTop: 1, boardLeft: 5 },
-      { letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7 },
-      { letters: [["D", "E"]], boardTop: 6, boardLeft: 5 },
+      {letters: [["F"]], boardTop: 1, boardLeft: 5},
+      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7},
+      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5},
       {
         letters: [
           ["P", "L", "E"],
@@ -344,9 +344,9 @@ describe("getGridFromPieces", () => {
       ["", "", "", "", "E", "", "E", "A", "", "N", "S", ""],
       ["V", "I", "S", "O", "R", "", "", "", "", "", "", ""],
     ];
-    expect(
-      getGridFromPieces({ pieces, gridSize: 12, solution: false })
-    ).toEqual(expectedGrid);
+    expect(getGridFromPieces({pieces, gridSize: 12, solution: false})).toEqual(
+      expectedGrid,
+    );
   });
 
   test("any overlapping positions are overwritten", () => {
@@ -360,15 +360,15 @@ describe("getGridFromPieces", () => {
         solutionTop: 0,
         solutionLeft: 0,
       },
-      { letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0 },
+      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0},
     ];
     const expectedGrid = [
       ["", "T", "O"],
       ["L", "A", "Y"],
       ["", "R", ""],
     ];
-    expect(getGridFromPieces({ pieces, gridSize: 3, solution: true })).toEqual(
-      expectedGrid
+    expect(getGridFromPieces({pieces, gridSize: 3, solution: true})).toEqual(
+      expectedGrid,
     );
   });
 
@@ -379,8 +379,8 @@ describe("getGridFromPieces", () => {
       ["", "", ""],
       ["", "", ""],
     ];
-    expect(getGridFromPieces({ pieces, gridSize: 3, solution: true })).toEqual(
-      expectedGrid
+    expect(getGridFromPieces({pieces, gridSize: 3, solution: true})).toEqual(
+      expectedGrid,
     );
   });
 
@@ -395,21 +395,21 @@ describe("getGridFromPieces", () => {
         solutionTop: 0,
         solutionLeft: 0,
       },
-      { letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0 },
+      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0},
     ];
 
     expect(() =>
-      getGridFromPieces({ pieces, gridSize: 2, solution: true })
+      getGridFromPieces({pieces, gridSize: 2, solution: true}),
     ).toThrow("A piece falls outside of the grid boundary.");
   });
 
   test("an error is thrown if either pieces or gridSize is undefined", () => {
-    expect(() => getGridFromPieces({ gridSize: 2 })).toThrow(
-      "Pieces must be defined."
+    expect(() => getGridFromPieces({gridSize: 2})).toThrow(
+      "Pieces must be defined.",
     );
 
-    expect(() => getGridFromPieces({ pieces: [] })).toThrow(
-      "Grid size must be defined."
+    expect(() => getGridFromPieces({pieces: []})).toThrow(
+      "Grid size must be defined.",
     );
   });
 });
@@ -430,9 +430,9 @@ test("if `solution` is false, and no pieces are on the board, an empty grid is r
       boardTop: undefined,
       boardLeft: undefined,
     },
-    { letters: [["N", "S"]], boardTop: undefined, boardLeft: undefined },
-    { letters: [["E", "A"]], boardTop: undefined, boardLeft: undefined },
-    { letters: [["B"], ["S"]], boardTop: undefined, boardLeft: undefined },
+    {letters: [["N", "S"]], boardTop: undefined, boardLeft: undefined},
+    {letters: [["E", "A"]], boardTop: undefined, boardLeft: undefined},
+    {letters: [["B"], ["S"]], boardTop: undefined, boardLeft: undefined},
   ];
 
   const expectedGrid = [
@@ -449,7 +449,7 @@ test("if `solution` is false, and no pieces are on the board, an empty grid is r
     ["", "", "", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", "", "", ""],
   ];
-  expect(getGridFromPieces({ pieces, gridSize: 12, solution: false })).toEqual(
-    expectedGrid
+  expect(getGridFromPieces({pieces, gridSize: 12, solution: false})).toEqual(
+    expectedGrid,
   );
 });

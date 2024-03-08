@@ -1,7 +1,7 @@
 import React from "react";
 import Share from "./Share";
 
-export default function Heart({ setDisplay }) {
+export default function Heart({setDisplay}) {
   const feedbackLink = `https://github.com/skedwards88/crossjig/issues/new`;
 
   return (
@@ -25,13 +25,11 @@ export default function Heart({ setDisplay }) {
         {`\n\n`}
         {<hr></hr>}
         {`\n`}
-        {`Thanks to `}
-        <a href="https://github.com/wordnik/wordlist">Wordnik</a>
-        {` for their open source word list and `}
-        <a href="https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists#English">
-          Wiktionary
+        {`Thanks to the word frequency data sources attributed in `}
+        <a href="https://github.com/skedwards88/word_lists">
+          skedwards88/word_lists
         </a>
-        {` and data therein for word frequency data.`}
+        {`.`}
         {<hr></hr>}
         {`\n`}
         <a href="./privacy.html">Privacy policy</a>

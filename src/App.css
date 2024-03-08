@@ -82,7 +82,7 @@ input[type="checkbox" i] {
 }
 
 input[type="checkbox" i]:checked {
-  background-image: url("./images/checkmark-black.svg");
+  background-image: url("./images/icons/checkmark-black.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -217,38 +217,38 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 
 #settingsButton {
-  background-image: url("./images/settings.svg");
+  background-image: url("./images/icons/settings.svg");
 }
 
 #newGameButton {
-  background-image: url("./images/new_game.svg");
+  background-image: url("./images/icons/new_game.svg");
 }
 
 #helpButton {
-  background-image: url("./images/help.svg");
+  background-image: url("./images/icons/help.svg");
 }
 
 #rulesButton {
-  background-image: url("./images/info.svg");
+  background-image: url("./images/icons/info.svg");
 }
 
 #heartButton {
-  background-image: url("./images/heart.svg");
+  background-image: url("./images/icons/heart.svg");
 }
 
 #calendarButton {
   background-image:
-    url("./images/daily.svg"),
+    url("./images/icons/daily.svg"),
     radial-gradient(circle, rgb(239 239 239 / 60%) 30%, rgb(55 54 71));
   width: calc(var(--default-font-size) * 2);
 }
 
 #calendarButtonSolved {
-  background-image: url("./images/daily.svg");
+  background-image: url("./images/icons/daily.svg");
 }
 
 #installButton {
-  background-image: url("./images/install.svg");
+  background-image: url("./images/icons/install.svg");
 }
 
 .settings {

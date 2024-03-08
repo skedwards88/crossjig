@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Settings({ setDisplay, dispatchGameState, gameState }) {
+export default function Settings({setDisplay, dispatchGameState, gameState}) {
   function handleNewGame(event) {
     event.preventDefault();
     const newNumLetters = event.target.elements.numLetters.value;
@@ -51,7 +51,7 @@ export default function Settings({ setDisplay, dispatchGameState, gameState }) {
             type="checkbox"
             defaultChecked={gameState.indicateValidity}
             onChange={() =>
-              dispatchGameState({ action: "changeIndicateValidity" })
+              dispatchGameState({action: "changeIndicateValidity"})
             }
           />
         </div>

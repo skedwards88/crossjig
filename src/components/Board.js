@@ -1,11 +1,11 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import { getGridFromPieces } from "../logic/getGridFromPieces";
-import { isKnown } from "@skedwards88/word_logic";
-import { trie } from "../logic/trie";
-import { getWordsFromPieces } from "../logic/getWordsFromPieces";
-import { transposeGrid } from "@skedwards88/word_logic";
+import {getGridFromPieces} from "../logic/getGridFromPieces";
+import {isKnown} from "@skedwards88/word_logic";
+import {trie} from "../logic/trie";
+import {getWordsFromPieces} from "../logic/getWordsFromPieces";
+import {transposeGrid} from "@skedwards88/word_logic";
 
 // Returns a grid with the number of letters at each location in the grid
 export function countingGrid(height, width, pieces) {
@@ -30,7 +30,7 @@ export function countingGrid(height, width, pieces) {
   return grid;
 }
 
-function getHorizontalValidityGrid({ grid, originalWords }) {
+function getHorizontalValidityGrid({grid, originalWords}) {
   // return a 2D array of bools indicating whether
   // the position corresponds to a letter on the board
   // that is part of a valid horizontal word
@@ -54,11 +54,11 @@ function getHorizontalValidityGrid({ grid, originalWords }) {
           // Otherwise, check whether it is a word in the trie.
           let isWord = originalWords.includes(word);
           if (!isWord) {
-            ({ isWord } = isKnown(word, trie));
+            ({isWord} = isKnown(word, trie));
           }
           if (isWord) {
             indexes.forEach(
-              (index) => (horizontalValidityGrid[rowIndex][index] = true)
+              (index) => (horizontalValidityGrid[rowIndex][index] = true),
             );
           }
         }
@@ -72,11 +72,11 @@ function getHorizontalValidityGrid({ grid, originalWords }) {
       // Otherwise, check whether it is a word in the trie.
       let isWord = originalWords.includes(word);
       if (!isWord) {
-        ({ isWord } = isKnown(word, trie));
+        ({isWord} = isKnown(word, trie));
       }
       if (isWord) {
         indexes.forEach(
-          (index) => (horizontalValidityGrid[rowIndex][index] = true)
+          (index) => (horizontalValidityGrid[rowIndex][index] = true),
         );
       }
     }
@@ -85,14 +85,14 @@ function getHorizontalValidityGrid({ grid, originalWords }) {
   return horizontalValidityGrid;
 }
 
-function getWordValidityGrids({ pieces, gridSize }) {
+function getWordValidityGrids({pieces, gridSize}) {
   const originalWords = getWordsFromPieces({
     pieces,
     gridSize,
     solution: true,
   });
 
-  const grid = getGridFromPieces({ pieces, gridSize, solution: false });
+  const grid = getGridFromPieces({pieces, gridSize, solution: false});
 
   const horizontalValidityGrid = getHorizontalValidityGrid({
     grid,
@@ -119,12 +119,12 @@ export default function Board({
   indicateValidity,
 }) {
   const boardPieces = pieces.filter(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
+    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
   );
 
   const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
   const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
-    ? getWordValidityGrids({ pieces, gridSize })
+    ? getWordValidityGrids({pieces, gridSize})
     : [undefined, undefined];
   const pieceElements = boardPieces.map((piece) => (
     <Piece
@@ -143,7 +143,7 @@ export default function Board({
   let dragShadow;
   if (dragDestination?.where === "board") {
     const draggedPieces = pieces.filter((piece) =>
-      dragPieceIDs.includes(piece.id)
+      dragPieceIDs.includes(piece.id),
     );
     const grid = countingGrid(gridSize, gridSize, draggedPieces);
     dragShadow = (
@@ -163,7 +163,7 @@ export default function Board({
         dispatchGameState({
           action: "shiftStart",
           pointerID: event.pointerId,
-          pointer: { x: event.clientX, y: event.clientY },
+          pointer: {x: event.clientX, y: event.clientY},
         });
       }}
     >
@@ -184,14 +184,16 @@ export function dragDestinationOnBoard(gameState, pointer) {
   ) {
     const draggedPieceIDs = gameState.dragState.pieceIDs;
     const draggedPieces = gameState.pieces.filter((piece) =>
-      draggedPieceIDs.includes(piece.id)
+      draggedPieceIDs.includes(piece.id),
     );
 
     const groupHeight = Math.max(
-      ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length)
+      ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length),
     );
     const groupWidth = Math.max(
-      ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length)
+      ...draggedPieces.map(
+        (piece) => piece.groupLeft + piece.letters[0].length,
+      ),
     );
     const maxTop = gameState.gridSize - groupHeight;
     const maxLeft = gameState.gridSize - groupWidth;
@@ -202,15 +204,15 @@ export function dragDestinationOnBoard(gameState, pointer) {
     const squareHeight = (boardRect.height - 1) / gameState.gridSize;
     const pointerOffset = gameState.dragState.pointerOffset;
     const unclampedLeft = Math.round(
-      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth
+      (pointer.x - pointerOffset.x - boardRect.left) / squareWidth,
     );
     const unclampedTop = Math.round(
-      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight
+      (pointer.y - pointerOffset.y - boardRect.top) / squareHeight,
     );
     const left = Math.max(0, Math.min(maxLeft, unclampedLeft));
     const top = Math.max(0, Math.min(maxTop, unclampedTop));
 
-    return { where: "board", top, left };
+    return {where: "board", top, left};
   }
 
   return undefined;

@@ -1,12 +1,12 @@
-import { crosswordValidQ } from "@skedwards88/word_logic";
-import { trie } from "../logic/trie";
-import { getWordsFromPieces } from "./getWordsFromPieces";
+import {crosswordValidQ} from "@skedwards88/word_logic";
+import {trie} from "../logic/trie";
+import {getWordsFromPieces} from "./getWordsFromPieces";
 
 function piecesOverlapQ(boardPieces, gridSize) {
   let overlappingPiecesQ = false;
 
   let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill("")))
+    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill(""))),
   );
 
   for (let index = 0; index < boardPieces.length; index++) {
@@ -33,15 +33,15 @@ function piecesOverlapQ(boardPieces, gridSize) {
       break;
     }
   }
-  return { piecesOverlap: overlappingPiecesQ, grid: grid };
+  return {piecesOverlap: overlappingPiecesQ, grid: grid};
 }
 
 export function gameSolvedQ(pieces, gridSize) {
   const boardPieces = pieces.filter(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0
+    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
   );
 
-  const { piecesOverlap, grid } = piecesOverlapQ(boardPieces, gridSize);
+  const {piecesOverlap, grid} = piecesOverlapQ(boardPieces, gridSize);
   if (piecesOverlap) {
     return {
       gameIsSolved: false,
@@ -55,7 +55,7 @@ export function gameSolvedQ(pieces, gridSize) {
     solution: true,
   });
 
-  const { gameIsSolved, reason } = crosswordValidQ({
+  const {gameIsSolved, reason} = crosswordValidQ({
     grid: grid,
     trie: trie,
     exceptedWords: originalWords,

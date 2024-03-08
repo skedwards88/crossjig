@@ -1,4 +1,4 @@
-import { getWordsFromGrid } from "./getWordsFromGrid";
+import {getWordsFromGrid} from "./getWordsFromGrid";
 
 describe("getWordsFromGrid", () => {
   test("it returns the horizontal and vertical sequences of 2 or more characters from a 2D array of characters", () => {
@@ -54,18 +54,18 @@ describe("getWordsFromGrid", () => {
   test("it rejects grids that are wider than tall", () => {
     const grid = [["W", "I", "D", "E"]];
     expect(() => getWordsFromGrid(grid)).toThrow(
-      "The number of columns and number of rows in the grid must be equal."
+      "The number of columns and number of rows in the grid must be equal.",
     );
   });
 
   test("it rejects grids that are taller than wide, including empty grids", () => {
     const grid = [["T"], ["A"], ["L"], ["L"]];
     expect(() => getWordsFromGrid(grid)).toThrow(
-      "The number of columns and number of rows in the grid must be equal."
+      "The number of columns and number of rows in the grid must be equal.",
     );
 
     expect(() => getWordsFromGrid([])).toThrow(
-      "The number of columns and number of rows in the grid must be equal."
+      "The number of columns and number of rows in the grid must be equal.",
     );
   });
 
@@ -76,7 +76,7 @@ describe("getWordsFromGrid", () => {
       ["D", "", ""],
     ];
     expect(() => getWordsFromGrid(grid)).toThrow(
-      "All of the rows in the grid must have the same length."
+      "All of the rows in the grid must have the same length.",
     );
   });
 });

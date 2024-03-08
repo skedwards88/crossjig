@@ -1,4 +1,4 @@
-import { transposeGrid } from "@skedwards88/word_logic";
+import {transposeGrid} from "@skedwards88/word_logic";
 
 export function getMaxShifts(grid) {
   const transposedGrid = transposeGrid(grid);

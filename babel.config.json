@@ -1,18 +1,18 @@
-module.exports = {
-  presets: [
+{
+  "presets": [
     [
       "@babel/preset-env",
       {
-        targets: {
-          node: "current"
-        },
-      },
+        "targets": {
+          "node": "current"
+        }
+      }
     ],
-    "@babel/preset-react",
+    "@babel/preset-react"
   ],
-  plugins: [
+  "plugins": [
     // required since @skedwards88/word_lists uses
     // the import ... assert { type: "json" } syntax
     "@babel/plugin-syntax-import-assertions"
   ]
-};
+}

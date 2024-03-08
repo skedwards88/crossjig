@@ -1,9 +1,9 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import { countingGrid } from "./Board";
+import {countingGrid} from "./Board";
 
-export default function Pool({ pieces, dragDestination, dispatchGameState }) {
+export default function Pool({pieces, dragDestination, dispatchGameState}) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
@@ -30,11 +30,11 @@ export default function Pool({ pieces, dragDestination, dispatchGameState }) {
           <DragShadow
             key={`shadow-piece-${piece.id}`}
             grid={countingGrid(piece.letters.length, piece.letters[0].length, [
-              { ...piece, groupTop: 0, groupLeft: 0 },
+              {...piece, groupTop: 0, groupLeft: 0},
             ])}
           />
         </div>
-      ))
+      )),
     );
   }
 
@@ -62,7 +62,7 @@ export function dragDestinationInPool(pointer) {
         index++;
       }
     }
-    return { where: "pool", index };
+    return {where: "pool", index};
   }
   return undefined;
 }

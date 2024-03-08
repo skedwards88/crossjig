@@ -2,6 +2,7 @@
   "name": "Crossjig Word Puzzle",
   "short_name": "Crossjig",
   "description": "A jigsaw word puzzle",
+  "id": "?crossjig=202402221",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",

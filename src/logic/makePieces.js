@@ -1,6 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
-import { assemblePiece } from "./assemblePiece";
-import { getPieceDimension } from "./getPieceDimension";
+import {assemblePiece} from "./assemblePiece";
+import {getPieceDimension} from "./getPieceDimension";
 
 export function makePieces(grid) {
   const maxPieceLetters = 5; //todo can randomize num letters
@@ -53,7 +53,7 @@ export function makePieces(grid) {
               ]
             ) {
               // and if adding this letter to the piece won't exceed the max piece dimension
-              const { numCols, numRows } = getPieceDimension([
+              const {numCols, numRows} = getPieceDimension([
                 ...pieceData,
                 {
                   top: surroundedPieceRow + rowOffset,
@@ -95,7 +95,7 @@ export function makePieces(grid) {
       pieceData: data.pieceData,
       rowIndex: data.rowIndex,
       colIndex: data.colIndex,
-    })
+    }),
   );
   return pieces;
 }

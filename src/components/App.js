@@ -9,12 +9,13 @@ import {
   handleBeforeInstallPrompt,
 } from "../common/handleInstall";
 import Settings from "./Settings";
-import { gameInit, getDailySeed } from "../logic/gameInit";
-import { gameReducer } from "../logic/gameReducer";
+import {gameInit, getDailySeed} from "../logic/gameInit";
+import {gameReducer} from "../logic/gameReducer";
 
-export default function App() {
+function parseUrlQuery() {
   const searchParams = new URLSearchParams(document.location.search);
   const seedQuery = searchParams.get("puzzle");
+
   // The seed query consists of two parts: the seed and the min number of letters, separated by an underscore
   let numLetters;
   let seed;
@@ -23,9 +24,15 @@ export default function App() {
     numLetters = parseInt(numLetters);
   }
 
+  return [seed, numLetters];
+}
+
+export default function App() {
+  const [seed, numLetters] = parseUrlQuery();
+
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
-    savedDisplay === "game" || savedDisplay === "daily" ? savedDisplay : "game"
+    savedDisplay === "game" || savedDisplay === "daily" ? savedDisplay : "game",
   );
 
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
@@ -36,12 +43,12 @@ export default function App() {
       seed,
       numLetters,
     },
-    gameInit
+    gameInit,
   );
   let [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
-    { isDaily: true },
-    gameInit
+    {isDaily: true},
+    gameInit,
   );
 
   const [, setLastOpened] = React.useState(Date.now());
@@ -67,28 +74,23 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (event) =>
+    const listener = (event) =>
       handleBeforeInstallPrompt(
         event,
         setInstallPromptEvent,
-        setShowInstallButton
-      )
-    );
-    return () =>
-      window.removeEventListener("beforeinstallprompt", (event) =>
-        handleBeforeInstallPrompt(
-          event,
-          setInstallPromptEvent,
-          setShowInstallButton
-        )
+        setShowInstallButton,
       );
+
+    window.addEventListener("beforeinstallprompt", listener);
+    return () => window.removeEventListener("beforeinstallprompt", listener);
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener("appinstalled", () =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton)
-    );
-    return () => window.removeEventListener("appinstalled", handleAppInstalled);
+    const listener = () =>
+      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
+
+    window.addEventListener("appinstalled", listener);
+    return () => window.removeEventListener("appinstalled", listener);
   }, []);
 
   React.useEffect(() => {
@@ -102,7 +104,7 @@ export default function App() {
   React.useEffect(() => {
     window.localStorage.setItem(
       "dailyCrossjigState",
-      JSON.stringify(dailyGameState)
+      JSON.stringify(dailyGameState),
     );
   }, [dailyGameState]);
 
@@ -138,7 +140,7 @@ export default function App() {
               id="helpButton"
               className="controlButton"
               disabled={dailyGameState.gameIsSolved}
-              onClick={() => dailyDispatchGameState({ action: "getHint" })}
+              onClick={() => dailyDispatchGameState({action: "getHint"})}
             ></button>
             <button id="exitDailyButton" onClick={() => setDisplay("game")}>
               Exit daily challenge

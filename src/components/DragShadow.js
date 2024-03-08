@@ -1,6 +1,6 @@
 import React from "react";
 
-function DragShadowSquare({ rowIndex, colIndex }) {
+function DragShadowSquare({rowIndex, colIndex}) {
   return (
     <div
       className="shadow-square"
@@ -12,7 +12,7 @@ function DragShadowSquare({ rowIndex, colIndex }) {
   );
 }
 
-export default function DragShadow({ grid, top, left }) {
+export default function DragShadow({grid, top, left}) {
   let squares = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[0].length; colIndex++) {
@@ -22,7 +22,7 @@ export default function DragShadow({ grid, top, left }) {
             key={`${rowIndex}-${colIndex}`}
             rowIndex={rowIndex}
             colIndex={colIndex}
-          />
+          />,
         );
       }
     }

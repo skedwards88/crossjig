@@ -1,5 +1,5 @@
 import React from "react";
-import { handleInstall } from "../common/handleInstall";
+import {handleInstall} from "../common/handleInstall";
 
 function ControlBar({
   dispatchGameState,
@@ -26,7 +26,7 @@ function ControlBar({
         id="helpButton"
         className="controlButton"
         disabled={gameState.gameIsSolved}
-        onClick={() => dispatchGameState({ action: "getHint" })}
+        onClick={() => dispatchGameState({action: "getHint"})}
       ></button>
       <button
         id="settingsButton"
@@ -48,7 +48,7 @@ function ControlBar({
           id="calendarButtonSolved"
           className="controlButton"
           onClick={() => {
-            dispatchGameState({ action: "clearStreakIfNeeded" });
+            dispatchGameState({action: "clearStreakIfNeeded"});
             setDisplay("daily");
           }}
         ></button>
