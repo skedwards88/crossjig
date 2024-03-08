@@ -32,7 +32,7 @@ export default function Share({text, seed}) {
   } else {
     return (
       <button onClick={() => handleCopy({text, fullUrl})}>
-        Copy sharing link
+        Copy link
       </button>
     );
   }
