@@ -31,9 +31,7 @@ export default function Share({text, seed}) {
     return <button onClick={() => handleShare({text, fullUrl})}>Share</button>;
   } else {
     return (
-      <button onClick={() => handleCopy({text, fullUrl})}>
-        Copy link
-      </button>
+      <button onClick={() => handleCopy({text, fullUrl})}>Copy link</button>
     );
   }
 }
