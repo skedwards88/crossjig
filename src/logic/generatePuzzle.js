@@ -1,9 +1,7 @@
 import seedrandom from "seedrandom";
 import {generateGrid} from "./generateGrid";
-import {centerGrid} from "./centerGrid";
-import {getMaxShifts} from "./getMaxShifts";
 import {makePieces} from "./makePieces";
-import {shuffleArray} from "@skedwards88/word_logic";
+import {shuffleArray, centerGrid, getMaxShifts} from "@skedwards88/word_logic";
 
 export function generatePuzzle({gridSize, minLetters, seed}) {
   let count = 0;
