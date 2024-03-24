@@ -21,10 +21,10 @@ export function generatePuzzle({gridSize, minLetters, seed}) {
       pseudoRandomGenerator: pseudoRandomGenerator,
     });
 
-    const centeredGrid = centerGrid(grid);
+    const centeredGrid = centerGrid(grid, "");
 
     const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
-      getMaxShifts(centeredGrid);
+      getMaxShifts(centeredGrid, "");
 
     const pieces = shuffleArray(
       makePieces(centeredGrid),
