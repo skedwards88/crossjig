@@ -1,3 +1,4 @@
 TODO.md
 src/privacy.html
-src/App.css
+*.css
+dist/**
