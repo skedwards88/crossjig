@@ -22,8 +22,6 @@ export default function Share({text, seed}) {
   if (navigator.canShare) {
     return <button onClick={() => handleShare({text, fullUrl})}>Share</button>;
   } else {
-    return (
-      <></>
-    );
+    return <></>;
   }
 }
