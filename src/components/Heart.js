@@ -10,11 +10,13 @@ export default function Heart({setDisplay}) {
       <div className="infoText">
         {"Like this game? Share it with your friends.\n\n"}
         {<Share text={"Check out this word puzzle!"}></Share>}
-        {`\n\n`}
+        {`\n`}
         {<hr></hr>}
         {`\n`}
         {`Want more games? Check out `}
         <a href="https://lexlet.com">Lexlet</a>
+        {" and "}
+        <a href="https://skedwards88.github.io/blobble/">Blobble</a>
         {" or see all of our puzzle-y games "}
         <a href="https://skedwards88.github.io/">here</a>
         {`. `}
