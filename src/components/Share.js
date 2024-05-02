@@ -15,14 +15,6 @@ function handleShare({text, fullUrl}) {
   sendAnalytics("share");
 }
 
-function handleCopy({text, fullUrl}) {
-  try {
-    navigator.clipboard.writeText(`${text}\n\n${fullUrl}`);
-  } catch (error) {
-    console.log("Error copying", error);
-  }
-}
-
 export default function Share({text, seed}) {
   const url = "https://crossjig.com/";
   const fullUrl = seed ? `${url}?puzzle=${seed}` : url;
@@ -31,7 +23,7 @@ export default function Share({text, seed}) {
     return <button onClick={() => handleShare({text, fullUrl})}>Share</button>;
   } else {
     return (
-      <button onClick={() => handleCopy({text, fullUrl})}>Copy link</button>
+      <></>
     );
   }
 }
