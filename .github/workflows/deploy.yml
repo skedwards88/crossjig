@@ -20,6 +20,7 @@ permissions:
   contents: write # Required for bumping version (read-only required for deployment)
   pages: write # Required for deployment
   id-token: write # Required for deployment
+  actions: read # Required for deployment
 
 # Allow one concurrent deployment
 concurrency:
@@ -34,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup git config
         run: |
@@ -74,13 +75,13 @@ jobs:
         run: npm run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "./dist/"
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
