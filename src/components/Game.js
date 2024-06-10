@@ -20,6 +20,7 @@ function Game({dispatchGameState, gameState, setDisplay}) {
       style={{
         "--grid-rows": gameState.gridSize,
         "--grid-columns": gameState.gridSize,
+        "--validity-opacity": gameState.validityOpacity,
       }}
     >
       <Board
@@ -29,7 +30,7 @@ function Game({dispatchGameState, gameState, setDisplay}) {
         dragDestination={gameState.dragState?.destination}
         gameIsSolved={gameState.gameIsSolved}
         dispatchGameState={dispatchGameState}
-        indicateValidity={gameState.indicateValidity}
+        indicateValidity={gameState.validityOpacity > 0}
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result

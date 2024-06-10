@@ -130,7 +130,7 @@ input[type="range"]::-ms-thumb {
 
 /* Slider track */
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 2vh;
+  height: calc(var(--default-font-size) * 0.5);
   cursor: pointer;
   background: var(--light-color);
   border-radius: 2px;
@@ -141,14 +141,14 @@ input[type="range"]:focus::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-moz-range-track {
-  height: 2vh;
+  height: calc(var(--default-font-size) * 0.5);
   cursor: pointer;
   background: var(--light-color);
   border-radius: 2px;
 }
 
 input[type="range"]::-ms-track {
-  height: 2vh;
+  height: calc(var(--default-font-size) * 0.5);
   cursor: pointer;
   background: var(--light-color);
   border-radius: 2px;
@@ -170,7 +170,8 @@ input[type="range"]:focus::-ms-fill-upper {
   background: var(--light-color);
 }
 
-#numLetters-info {
+#numLetters-info,
+#validityOpacity-info {
   color: var(--light-color);
   font-size: var(--default-font-size);
   padding: 0 1vh;
@@ -178,11 +179,31 @@ input[type="range"]:focus::-ms-fill-upper {
   align-items: center;
 }
 
-#numLetters-container {
+#numLetters-container,
+#validityOpacity-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: baseline;
+}
+
+#validity-example {
+  font-size: var(--default-font-size);
+  position: relative;
+  display: inline;
+
+  --validity-opacity: 0.15; /* This value is changed by the Settings component */
+}
+
+#validity-example::after {
+  position: absolute;
+  background-color: var(--light-color);
+  content: "";
+  height: calc(var(--default-font-size) / 8);
+  width: 100%;
+  top: 50%;
+  left: 0;
+  opacity: var(--validity-opacity);
 }
 
 #controls,
@@ -280,6 +301,7 @@ input[type="range"]:focus::-ms-fill-upper {
 
 .setting-description {
   padding: 0 5px 0 0;
+  width: 60%;
 }
 
 .setting-info {
@@ -326,6 +348,8 @@ a {
     "pool";
   grid-template-rows: auto 1fr;
   user-select: none;
+
+  --validity-opacity: 0.15; /* This value is changed by the Settings component */
 }
 
 #board,
@@ -381,7 +405,7 @@ a {
   width: 10%;
   height: 100%;
   background-color: var(--light-color);
-  opacity: 0.15;
+  opacity: var(--validity-opacity);
 }
 
 .letter.horizontalValid:not(.filled)::after {
@@ -392,7 +416,7 @@ a {
   height: 10%;
   width: 100%;
   background-color: var(--light-color);
-  opacity: 0.15;
+  opacity: var(--validity-opacity);
 }
 
 .letter-border {
