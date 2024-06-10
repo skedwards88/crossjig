@@ -150,7 +150,7 @@ export default function App() {
             dispatchGameState={dailyDispatchGameState}
             gameState={{
               ...dailyGameState,
-              indicateValidity: gameState?.indicateValidity ?? false,
+              validityOpacity: gameState.validityOpacity,
             }}
             setDisplay={setDisplay}
           ></Game>

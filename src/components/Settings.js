@@ -4,12 +4,13 @@ export default function Settings({setDisplay, dispatchGameState, gameState}) {
   function handleNewGame(event) {
     event.preventDefault();
     const newNumLetters = event.target.elements.numLetters.value;
-    const newIndicateValidity = event.target.elements.indicateValidity.checked;
+    const newValidityOpacity =
+      event.target.elements.validityOpacity.value / 100;
 
     dispatchGameState({
       action: "newGame",
       numLetters: newNumLetters,
-      indicateValidity: newIndicateValidity,
+      validityOpacity: newValidityOpacity,
     });
     setDisplay("game");
   }
@@ -41,19 +42,38 @@ export default function Settings({setDisplay, dispatchGameState, gameState}) {
 
         <div className="setting">
           <div className="setting-description">
-            <label htmlFor="indicateValidity">Indicate validity</label>
-            <div className="setting-info">
-              Indicate whether letters form a valid word
+            <label htmlFor="validityOpacity">Validity indication</label>
+            <div className="setting-info">{`Valid words are indicated with a strikethrough. This controls the brightness of the strikethrough.`}</div>
+            <div
+              id="validity-example"
+              style={{"--validity-opacity": gameState.validityOpacity}}
+            >
+              EXAMPLE
             </div>
           </div>
-          <input
-            id="indicateValidity"
-            type="checkbox"
-            defaultChecked={gameState.indicateValidity}
-            onChange={() =>
-              dispatchGameState({action: "changeIndicateValidity"})
-            }
-          />
+          <div id="validityOpacity-container">
+            <div id="validityOpacity-info" className="setting-info">
+              –
+            </div>
+            <input
+              id="validityOpacity"
+              className="validityOpacity"
+              type="range"
+              min={0}
+              max={100}
+              defaultValue={gameState.validityOpacity * 100 || 15}
+              onChange={(event) => {
+                const newValidityOpacity = event.target.value / 100;
+                dispatchGameState({
+                  action: "changeValidityOpacity",
+                  newValidityOpacity,
+                });
+              }}
+            />
+            <div id="validityOpacity-info" className="setting-info">
+              +
+            </div>
+          </div>
         </div>
       </div>
       <div id="setting-buttons">

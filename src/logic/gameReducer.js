@@ -500,10 +500,10 @@ function updateCompletionState(gameState) {
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
     return gameInit({...payload, seed: undefined, useSaved: false});
-  } else if (payload.action === "changeIndicateValidity") {
+  } else if (payload.action === "changeValidityOpacity") {
     return {
       ...currentGameState,
-      indicateValidity: !currentGameState.indicateValidity,
+      validityOpacity: payload.newValidityOpacity,
     };
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
