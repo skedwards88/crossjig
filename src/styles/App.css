@@ -229,6 +229,7 @@ button:disabled {
   background: rgb(127 125 125);
   border-radius: 5px;
 }
+
 #pool {
   -webkit-overflow-scrolling: auto;
   grid-area: pool;
@@ -309,7 +310,6 @@ body:has(#drag-group) {
   width: calc(var(--box-size) + 1px);
   height: calc(var(--box-size) + 1px);
 }
-
 
 #gameOver {
   display: flex;

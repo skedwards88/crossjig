@@ -124,13 +124,15 @@ export default function App() {
       return <Rules setDisplay={setDisplay}></Rules>;
 
     case "heart":
-      return <Heart
-      setDisplay={setDisplay}
-      appName="Crossjig"
-      shareText="Check out this word puzzle!"
-      repoName="crossjig"
-      url="https://crossjig.com"
-    />;
+      return (
+        <Heart
+          setDisplay={setDisplay}
+          appName="Crossjig"
+          shareText="Check out this word puzzle!"
+          repoName="crossjig"
+          url="https://crossjig.com"
+        />
+      );
 
     case "settings":
       return (

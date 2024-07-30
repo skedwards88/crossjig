@@ -2,7 +2,6 @@ import React from "react";
 import Share from "./Share";
 
 export default function Heart({setDisplay, appName, shareText, repoName, url}) {
-
   return (
     <div className="App info">
       <h1>{appName}</h1>
@@ -23,7 +22,11 @@ export default function Heart({setDisplay, appName, shareText, repoName, url}) {
         {<hr></hr>}
         {`\n`}
         {"Feedback? "}
-        <a href={`https://github.com/skedwards88/${repoName}/issues/new/choose`}>Open an issue</a>
+        <a
+          href={`https://github.com/skedwards88/${repoName}/issues/new/choose`}
+        >
+          Open an issue
+        </a>
         {" on GitHub or email SECTgames@gmail.com."}
         {`\n\n`}
         {<hr></hr>}
