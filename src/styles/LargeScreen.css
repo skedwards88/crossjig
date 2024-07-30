@@ -1,0 +1,101 @@
+/* Landscape, small screen */
+
+@media (orientation: landscape) and (max-width: 935px) {
+  #crossjig {
+    grid-template-areas: "controls game";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  #game {
+    display: grid;
+    grid-area: game;
+    grid-template-areas: "board pool";
+    grid-template-columns: auto 1fr;
+    align-self: center;
+  }
+
+  #board {
+    align-self: center;
+    margin: 0 0 0 3vmin;
+  }
+
+  #pool {
+    height: 90vh; /* fallback if svh isn't handled */
+    height: 100svh;
+  }
+
+  #controls,
+  #exitDaily {
+    flex-direction: column;
+    border: solid var(--light-color);
+    border-width: 0 2px 0 0;
+    align-items: center;
+    height: 100%;
+    width: calc(var(--default-box-size) * 1.5);
+  }
+
+  #exitDailyButton {
+    transform: rotate(270deg);
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  #calendarButton {
+    width: var(--default-font-size);
+  }
+}
+
+/* Large screen, landscape */
+@media (orientation: landscape) and (min-height: 600px) and (min-width: 936px) {
+  html {
+    --default-box-size: min(4vh, 7vw, 1cm);
+  }
+
+  .App {
+    justify-items: center;
+  }
+
+  #game {
+    --box-size:
+      min(
+        calc((48vh - 1px) / var(--grid-rows)),
+        calc((84vw - 1px) / var(--grid-columns)),
+        1cm
+      );
+  }
+
+  #controls,
+  #exitDaily {
+    justify-content: center;
+  }
+
+  #settings,
+  #setting-buttons {
+    width: fit-content;
+  }
+
+  #pool {
+    width: min(calc((var(--grid-columns) * var(--box-size) * 2)), 80vw);
+  }
+
+  #rulesText {
+    width: 50vw;
+  }
+}
+
+/* Large screen, portrait */
+@media (orientation: portrait) and (min-height: 600px) and (min-width: 600px) {
+  html {
+    --default-box-size: min(4vh, 7vw, 1cm);
+  }
+
+  #game {
+    --box-size:
+      min(
+        calc((48vh - 1px) / var(--grid-rows)),
+        calc((84vw - 1px) / var(--grid-columns)),
+        1cm
+      );
+  }
+}

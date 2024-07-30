@@ -1,0 +1,55 @@
+#controls {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  grid-area: controls;
+  width: 100vw;
+  height: calc(var(--default-box-size) * 1.2);
+  border-bottom: 2px solid var(--light-color);
+}
+
+.controlButton {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  width: var(--default-font-size);
+  height: var(--default-font-size);
+  background-color: transparent;
+  padding: 1px 6px;
+}
+
+#settingsButton {
+  background-image: url("../images/icons/settings.svg");
+}
+
+#newGameButton {
+  background-image: url("../images/icons/new_game.svg");
+}
+
+#helpButton {
+  background-image: url("../images/icons/help.svg");
+}
+
+#rulesButton {
+  background-image: url("../images/icons/info.svg");
+}
+
+#heartButton {
+  background-image: url("../images/icons/heart.svg");
+}
+
+#calendarButton {
+  background-image:
+    url("../images/icons/daily.svg"),
+    radial-gradient(circle, rgb(239 239 239 / 60%) 30%, rgb(55 54 71));
+  width: calc(var(--default-font-size) * 2);
+}
+
+#calendarButtonSolved {
+  background-image: url("../images/icons/daily.svg");
+}
+
+#installButton {
+  background-image: url("../images/icons/install.svg");
+}

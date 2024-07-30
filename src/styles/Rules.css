@@ -1,0 +1,34 @@
+.rules {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "text"
+    "close"
+    "version";
+  text-align: center;
+  overflow: scroll;
+  font-size: calc(var(--default-font-size) * 0.75);
+  justify-items: center;
+  align-items: center;
+}
+
+#rulesHeader {
+  grid-area: header;
+}
+
+#rulesText {
+  white-space: pre-line;
+  margin: 0 2vmax;
+  grid-area: text;
+}
+
+#rulesClose {
+  height: fit-content;
+  width: fit-content;
+  grid-area: close;
+}
+
+#rulesVersion {
+  grid-area: version;
+  margin: 0 0 1vmax;
+}

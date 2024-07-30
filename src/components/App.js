@@ -9,34 +9,39 @@ import {
   handleBeforeInstallPrompt,
 } from "../common/handleInstall";
 import Settings from "./Settings";
-import {gameInit, getDailySeed} from "../logic/gameInit";
+import {gameInit} from "../logic/gameInit";
+import getDailySeed from "../common/getDailySeed";
 import {gameReducer} from "../logic/gameReducer";
-
-function parseUrlQuery() {
-  const searchParams = new URLSearchParams(document.location.search);
-  const seedQuery = searchParams.get("puzzle");
-
-  // The seed query consists of two parts: the seed and the min number of letters, separated by an underscore
-  let numLetters;
-  let seed;
-  if (seedQuery) {
-    [seed, numLetters] = seedQuery.split("_");
-    numLetters = parseInt(numLetters);
-  }
-
-  return [seed, numLetters];
-}
+import {parseUrlQuery} from "../logic/parseUrlQuery";
+import {getInitialState} from "../common/getInitialState";
+import {hasVisitedSince} from "../common/hasVisitedSince";
 
 export default function App() {
+  // If a query string was passed,
+  // parse it to get the data to regenerate the game described by the query string
   const [seed, numLetters] = parseUrlQuery();
 
+  // Determine when the player last visited the game
+  // This is used to determine whether to show the rules or an announcement instead of the game
+  const hasVisited = hasVisitedSince("crossjigLastVisited", "20240429");
+  const [lastVisited] = React.useState(getDailySeed());
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "crossjigLastVisited",
+      JSON.stringify(lastVisited),
+    );
+  }, [lastVisited]);
+
+  // Determine what view to show the user
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
-    savedDisplay === "game" || savedDisplay === "daily" ? savedDisplay : "game",
+    getInitialState(savedDisplay, hasVisited),
   );
 
+  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
+
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
     {
@@ -45,12 +50,14 @@ export default function App() {
     },
     gameInit,
   );
+
   let [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
     {isDaily: true},
     gameInit,
   );
 
+  // todo consolidate lastVisited and setLastOpened?
   const [, setLastOpened] = React.useState(Date.now());
 
   function handleVisibilityChange() {
@@ -74,6 +81,8 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
     const listener = (event) =>
       handleBeforeInstallPrompt(
         event,
@@ -86,6 +95,8 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
     const listener = () =>
       handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
 
@@ -113,7 +124,15 @@ export default function App() {
       return <Rules setDisplay={setDisplay}></Rules>;
 
     case "heart":
-      return <Heart setDisplay={setDisplay}></Heart>;
+      return (
+        <Heart
+          setDisplay={setDisplay}
+          appName="Crossjig"
+          shareText="Check out this word puzzle!"
+          repoName="crossjig"
+          url="https://crossjig.com"
+        />
+      );
 
     case "settings":
       return (
@@ -150,6 +169,7 @@ export default function App() {
             dispatchGameState={dailyDispatchGameState}
             gameState={{
               ...dailyGameState,
+              // todo in the settings, pass in the dailyDispatcher too and update the validityOpacity in the daily state as well. then remove this line.
               validityOpacity: gameState.validityOpacity,
             }}
             setDisplay={setDisplay}
