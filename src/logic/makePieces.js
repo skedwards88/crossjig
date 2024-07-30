@@ -3,7 +3,7 @@ import {assemblePiece} from "./assemblePiece";
 import {getPieceDimension} from "./getPieceDimension";
 
 export function makePieces(grid) {
-  const maxPieceLetters = 5; //todo can randomize num letters
+  const maxPieceLetters = 5;
   const maxPieceDimension = 3;
   const remainingGrid = cloneDeep(grid);
   const piecesData = [];

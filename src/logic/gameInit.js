@@ -1,43 +1,30 @@
 import sendAnalytics from "../common/sendAnalytics";
 import {generatePuzzle} from "./generatePuzzle";
+import getRandomSeed from "../common/getRandomSeed";
+import getDailySeed from "../common/getDailySeed";
+import {getNumLettersForDay} from "./getNumLettersForDay";
+import {getGridSizeForLetters} from "./getGridSizeForLetters";
 
-function getRandomSeed() {
-  const currentDate = new Date();
-  return currentDate.getTime().toString();
-}
+function validateSavedState(savedState) {
+  if (typeof savedState !== "object" || savedState === null) {
+    return false;
+  }
 
-export function getDailySeed() {
-  // Get a seed based on today's date 'YYYYMMDD'
-  const currentDate = new Date();
-  const seed = `${currentDate.getFullYear()}${(currentDate.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}${currentDate.getDate().toString().padStart(2, "0")}`;
+  const fieldsAreDefined =
+    savedState.pieces &&
+    savedState.gridSize &&
+    savedState.numLetters &&
+    savedState.allPiecesAreUsed != undefined &&
+    savedState.gameIsSolved != undefined &&
+    savedState.gameIsSolvedReason != undefined &&
+    savedState.stats &&
+    savedState.hintTally != undefined;
 
-  return seed.toString();
-}
+  if (!fieldsAreDefined) {
+    return false;
+  }
 
-function getNumLettersForDay() {
-  const today = new Date().getDay();
-
-  const wordLengths = [
-    60, // Sunday
-    20,
-    25,
-    30,
-    35,
-    40,
-    50,
-  ];
-
-  return wordLengths[today];
-}
-
-function getGridSizeForLetters(numLetters) {
-  if (numLetters > 50) {
-    return 12;
-  } else if (numLetters > 30) {
-    return 10;
-  } else return 8;
+  return true;
 }
 
 export function gameInit({
@@ -64,15 +51,14 @@ export function gameInit({
   if (
     savedState &&
     savedState.seed &&
-    ((isDaily && savedState.seed === seed) || !isDaily) &&
-    savedState.pieces &&
-    savedState.gridSize &&
-    savedState.numLetters &&
-    savedState.allPiecesAreUsed != undefined &&
-    savedState.gameIsSolved != undefined &&
-    savedState.gameIsSolvedReason != undefined &&
-    savedState.stats &&
-    savedState.hintTally != undefined
+    //todo verify comment clarity
+    // If daily, use the saved state if the seed matches
+    // otherwise, we don't care if the seed matches
+    (!isDaily || savedState.seed == seed) &&
+    validateSavedState(savedState) &&
+    // Use the saved state if daily even if the game is solved
+    // otherwise, don't use the saved state if the game is solved
+    !(!isDaily && savedState.gameIsSolved)
   ) {
     return savedState;
   }

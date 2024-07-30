@@ -1,15 +1,14 @@
 import React from "react";
 import Share from "./Share";
 
-export default function Heart({setDisplay}) {
-  const feedbackLink = `https://github.com/skedwards88/crossjig/issues/new`;
+export default function Heart({setDisplay, appName, shareText, repoName, url}) {
 
   return (
     <div className="App info">
-      <h1>Crossjig</h1>
+      <h1>{appName}</h1>
       <div className="infoText">
         {"Like this game? Share it with your friends.\n\n"}
-        {<Share text={"Check out this word puzzle!"}></Share>}
+        {<Share appName={appName} text={shareText} url={url}></Share>}
         {`\n`}
         {<hr></hr>}
         {`\n`}
@@ -17,14 +16,14 @@ export default function Heart({setDisplay}) {
         <a href="https://lexlet.com">Lexlet</a>
         {" and "}
         <a href="https://skedwards88.github.io/blobble/">Blobble</a>
-        {" or see all of our puzzle-y games "}
+        {" or see all of our puzzle games "}
         <a href="https://skedwards88.github.io/">here</a>
         {`. `}
         {`\n\n`}
         {<hr></hr>}
         {`\n`}
         {"Feedback? "}
-        <a href={feedbackLink}>Open an issue</a>
+        <a href={`https://github.com/skedwards88/${repoName}/issues/new/choose`}>Open an issue</a>
         {" on GitHub or email SECTgames@gmail.com."}
         {`\n\n`}
         {<hr></hr>}
