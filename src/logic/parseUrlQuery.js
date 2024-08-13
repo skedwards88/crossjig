@@ -1,14 +1,22 @@
 export function parseUrlQuery() {
   const searchParams = new URLSearchParams(document.location.search);
-  const seedQuery = searchParams.get("puzzle");
+  const query = searchParams.get("id");
 
-  // The seed query consists of two parts: the seed and the min number of letters, separated by an underscore
+  let isCustom;
   let numLetters;
   let seed;
-  if (seedQuery) {
-    [seed, numLetters] = seedQuery.split("_");
+
+  // The query differs depending on whether it represents a random puzzle or a custom puzzle:
+  // For custom puzzles, it is "custom-" followed by a representative string
+  // For random puzzles, it is the seed and the min number of letters, separated by an underscore
+  if (query && query.startsWith("custom-")) {
+    seed = query.substring("custom-".length);
+    isCustom = true;
+  } else if (query) {
+    [seed, numLetters] = query.split("_");
     numLetters = parseInt(numLetters);
+    isCustom = false;
   }
 
-  return [seed, numLetters];
+  return [isCustom, seed, numLetters];
 }

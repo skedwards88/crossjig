@@ -19,7 +19,7 @@ import {hasVisitedSince} from "../common/hasVisitedSince";
 export default function App() {
   // If a query string was passed,
   // parse it to get the data to regenerate the game described by the query string
-  const [seed, numLetters] = parseUrlQuery();
+  const [isCustom, seed, numLetters] = parseUrlQuery();
 
   // Determine when the player last visited the game
   // This is used to determine whether to show the rules or an announcement instead of the game
@@ -47,6 +47,7 @@ export default function App() {
     {
       seed,
       numLetters,
+      isCustom,
     },
     gameInit,
   );

@@ -4,6 +4,7 @@ import getRandomSeed from "../common/getRandomSeed";
 import getDailySeed from "../common/getDailySeed";
 import {getNumLettersForDay} from "./getNumLettersForDay";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
+import {generatePuzzleFromRepresentativeString} from "./generatePuzzleFromRepresentativeString";
 
 function validateSavedState(savedState) {
   if (typeof savedState !== "object" || savedState === null) {
@@ -32,6 +33,7 @@ export function gameInit({
   validityOpacity = 0.15,
   useSaved = true,
   isDaily = false,
+  isCustom = false,
   seed,
 }) {
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
@@ -52,9 +54,9 @@ export function gameInit({
     savedState &&
     savedState.seed &&
     //todo verify comment clarity
-    // If daily, use the saved state if the seed matches
+    // If daily or custom, use the saved state if the seed matches
     // otherwise, we don't care if the seed matches
-    (!isDaily || savedState.seed == seed) &&
+    ((!isDaily && !isCustom) || savedState.seed == seed) &&
     validateSavedState(savedState) &&
     // Use the saved state if daily even if the game is solved
     // otherwise, don't use the saved state if the game is solved
@@ -63,11 +65,41 @@ export function gameInit({
     return savedState;
   }
 
-  const minLetters = isDaily ? getNumLettersForDay() : numLetters || 30;
+  let pieces;
+  let maxShiftLeft;
+  let maxShiftRight;
+  let maxShiftUp;
+  let maxShiftDown;
+  let minLetters = isDaily ? getNumLettersForDay() : numLetters || 30;
   let gridSize = getGridSizeForLetters(minLetters);
 
-  let {pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
-    generatePuzzle({gridSize: gridSize, minLetters: minLetters, seed: seed});
+  // If custom, attempt to generate the custom puzzle represented by the seed.
+  // If any errors are raised, catch them and just generate a random puzzle instead
+  if (isCustom) {
+    try {
+      ({
+        gridSize,
+        minLetters,
+        pieces,
+        maxShiftLeft,
+        maxShiftRight,
+        maxShiftUp,
+        maxShiftDown,
+      } = generatePuzzleFromRepresentativeString({representativeString: seed}));
+    } catch (error) {
+      console.error(error);
+
+      ({pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
+        generatePuzzle({
+          gridSize: gridSize,
+          minLetters: minLetters,
+          seed: seed,
+        }));
+    }
+  } else {
+    ({pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
+      generatePuzzle({gridSize: gridSize, minLetters: minLetters, seed: seed}));
+  }
 
   // Pad the puzzle with a square on each side and recenter the solution
   maxShiftRight++;
