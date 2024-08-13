@@ -1,4 +1,3 @@
-//todo put in word logic package
 // Converts a 1D array to a 2D square array
 export function arrayToGrid(array) {
   // Error if array length does not allow for a square grid

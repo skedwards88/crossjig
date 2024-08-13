@@ -15,7 +15,9 @@ export function convertRepresentativeStringToGrid(string) {
 
   // error if the first character is not an integer
   if (!/^\d+$/.test(string[0])) {
-    throw new Error("First character in input string must be an integer that represents the cipher shift");
+    throw new Error(
+      "First character in input string must be an integer that represents the cipher shift",
+    );
   }
 
   // The first character in the string is the cipher shift; the rest is the grid representation
@@ -45,7 +47,7 @@ export function convertRepresentativeStringToGrid(string) {
     throw new Error("Input string does not form a square grid");
   }
   if (dimension < 8 || dimension > 12) {
-    throw new Error("dimension Input string must form a grid between 8x8 and 12x12");
+    throw new Error("Input string must form a grid between 8x8 and 12x12");
   }
 
   // I'm assuming that people won't build custom query strings outside of the UI,

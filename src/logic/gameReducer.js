@@ -499,7 +499,12 @@ function updateCompletionState(gameState) {
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({...payload, seed: undefined, useSaved: false, isCustom: false});
+    return gameInit({
+      ...payload,
+      seed: undefined,
+      useSaved: false,
+      isCustom: false,
+    });
   } else if (payload.action === "changeValidityOpacity") {
     return {
       ...currentGameState,
