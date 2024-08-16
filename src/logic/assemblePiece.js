@@ -41,10 +41,6 @@ export function assemblePiece({pieceData, rowIndex, colIndex}) {
 // - dragGroupTop: todo. Undefined if the piece is not being dragged.
 // - dragGroupLeft: todo. Undefined if the piece is not being dragged.
 export function updatePieceDatum(oldPieceData = {}, updates = {}) {
-  // console.log(updates)
-  if (updates?.dragGroupTop != undefined) {
-    console.log(updates?.dragGroupTop);
-  }
   return {
     ...oldPieceData,
     ...updates,
