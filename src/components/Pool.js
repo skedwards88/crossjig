@@ -21,7 +21,7 @@ export default function Pool({pieces, dragDestination, dispatchGameState}) {
   ));
 
   if (dragDestination?.where === "pool") {
-    const draggedPieces = pieces.filter((piece) => piece.groupTop >= 0);
+    const draggedPieces = pieces.filter((piece) => piece.dragGroupTop >= 0);
     pieceElements.splice(
       dragDestination.index,
       0,
@@ -30,7 +30,7 @@ export default function Pool({pieces, dragDestination, dispatchGameState}) {
           <DragShadow
             key={`shadow-piece-${piece.id}`}
             grid={countingGrid(piece.letters.length, piece.letters[0].length, [
-              {...piece, groupTop: 0, groupLeft: 0},
+              {...piece, dragGroupTop: 0, dragGroupLeft: 0},
             ])}
           />
         </div>

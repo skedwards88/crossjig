@@ -71,10 +71,10 @@ export default function DragGroup({dispatchGameState, gameState}) {
   let top = dragState.pointer.y - dragState.pointerOffset.y;
   let left = dragState.pointer.x - dragState.pointerOffset.x;
   const groupRows = Math.max(
-    ...draggedPieces.map((piece) => piece.groupTop + piece.letters.length),
+    ...draggedPieces.map((piece) => piece.dragGroupTop + piece.letters.length),
   );
   const groupColumns = Math.max(
-    ...draggedPieces.map((piece) => piece.groupLeft + piece.letters[0].length),
+    ...draggedPieces.map((piece) => piece.dragGroupLeft + piece.letters[0].length),
   );
   if (isShifting) {
     // Clamp to the board rectangle.

@@ -150,8 +150,8 @@ export default function Piece({
     layoutStyle.gridRow = `${piece.boardTop + 1} / span ${nrows}`;
     layoutStyle.gridColumn = `${piece.boardLeft + 1} / span ${ncols}`;
   } else if (isDragging) {
-    layoutStyle.gridRow = `${piece.groupTop + 1} / span ${nrows}`;
-    layoutStyle.gridColumn = `${piece.groupLeft + 1} / span ${ncols}`;
+    layoutStyle.gridRow = `${piece.dragGroupTop + 1} / span ${nrows}`;
+    layoutStyle.gridColumn = `${piece.dragGroupLeft + 1} / span ${ncols}`;
   }
 
   return (

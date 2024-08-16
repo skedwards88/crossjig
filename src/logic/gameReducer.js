@@ -161,11 +161,11 @@ function dragStart({
     if (rectangles.length === 0) {
       return currentGameState;
     }
-    const groupTop = Math.min(...rectangles.map((rect) => rect.top));
-    const groupLeft = Math.min(...rectangles.map((rect) => rect.left));
+    const dragGroupTop = Math.min(...rectangles.map((rect) => rect.top));
+    const dragGroupLeft = Math.min(...rectangles.map((rect) => rect.left));
     pointerOffset = {
-      x: pointer.x - groupLeft,
-      y: pointer.y - groupTop,
+      x: pointer.x - dragGroupLeft,
+      y: pointer.y - dragGroupTop,
     };
   }
 
@@ -177,9 +177,9 @@ function dragStart({
         boardTop: undefined,
         boardLeft: undefined,
         poolIndex: undefined,
-        groupTop:
+        dragGroupTop:
           groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
-        groupLeft:
+        dragGroupLeft:
           groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
       })),
     ),
@@ -251,10 +251,10 @@ function dragEnd(currentGameState) {
       draggedPieceIDs.includes(piece.id)
         ? {
             ...piece,
-            boardTop: dest.top + piece.groupTop,
-            boardLeft: dest.left + piece.groupLeft,
-            groupTop: undefined,
-            groupLeft: undefined,
+            boardTop: dest.top + piece.dragGroupTop,
+            boardLeft: dest.left + piece.dragGroupLeft,
+            dragGroupTop: undefined,
+            dragGroupLeft: undefined,
           }
         : piece;
   } else {
@@ -264,8 +264,8 @@ function dragEnd(currentGameState) {
         ? {
             ...piece,
             poolIndex: poolIndex++,
-            groupTop: undefined,
-            groupLeft: undefined,
+            dragGroupTop: undefined,
+            dragGroupLeft: undefined,
           }
         : piece.poolIndex !== undefined && piece.poolIndex >= dest.index
         ? {...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length}
