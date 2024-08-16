@@ -2,6 +2,7 @@ import cloneDeep from "lodash.clonedeep";
 import {gameInit} from "./gameInit";
 import sendAnalytics from "../common/sendAnalytics";
 import {gameSolvedQ} from "./gameSolvedQ";
+import {updatePieceDatum} from "./assemblePiece";
 
 function getPieceIDGrid(pieces, gridSize) {
   // at each space in the grid, find the IDs of the pieces at that space, if any
@@ -172,16 +173,17 @@ function dragStart({
   currentGameState = {
     ...currentGameState,
     pieces: nontargets.concat(
-      targets.map((piece) => ({
-        ...piece,
-        boardTop: undefined,
-        boardLeft: undefined,
-        poolIndex: undefined,
-        dragGroupTop:
-          groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
-        dragGroupLeft:
-          groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
-      })),
+      targets.map((piece) =>
+        updatePieceDatum(piece, {
+          boardTop: undefined,
+          boardLeft: undefined,
+          poolIndex: undefined,
+          dragGroupTop:
+            groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
+          dragGroupLeft:
+            groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
+        }),
+      ),
     ),
     dragCount: currentGameState.dragCount + 1,
     dragState: {
@@ -214,10 +216,7 @@ function dragStart({
       pieces: currentGameState.pieces.map((piece) =>
         piece.poolIndex === undefined
           ? piece
-          : {
-              ...piece,
-              poolIndex: poolIndices[piece.id],
-            },
+          : updatePieceDatum(piece, {poolIndex: poolIndices[piece.id]}),
       ),
     };
   }
@@ -249,26 +248,26 @@ function dragEnd(currentGameState) {
   if (dest.where === "board") {
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
-        ? {
-            ...piece,
+        ? updatePieceDatum(piece, {
             boardTop: dest.top + piece.dragGroupTop,
             boardLeft: dest.left + piece.dragGroupLeft,
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
-          }
+          })
         : piece;
   } else {
     let poolIndex = dest.index;
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
-        ? {
-            ...piece,
+        ? updatePieceDatum(piece, {
             poolIndex: poolIndex++,
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
-          }
+          })
         : piece.poolIndex !== undefined && piece.poolIndex >= dest.index
-        ? {...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length}
+        ? updatePieceDatum(piece, {
+            poolIndex: piece.poolIndex + draggedPieceIDs.length,
+          })
         : piece;
   }
   return updateCompletionState({
@@ -322,12 +321,11 @@ function giveHint(currentGameState) {
       }
       const newLeft = solutionLeft - shiftLeft;
       const newTop = solutionTop - shiftUp;
-      const realignedPiece = {
-        ...pieces[pieceIndex],
+      const realignedPiece = updatePieceDatum(pieces[pieceIndex], {
         boardLeft: newLeft,
         boardTop: newTop,
         poolIndex: undefined,
-      };
+      });
       realignedPieces = [...realignedPieces, realignedPiece];
       if (boardLeft != newLeft || boardTop != newTop) {
         numRealigned++;
@@ -344,12 +342,11 @@ function giveHint(currentGameState) {
         realignedPieces = [...realignedPieces, pieces[pieceIndex]];
         continue;
       }
-      const realignedPiece = {
-        ...pieces[pieceIndex],
+      const realignedPiece = updatePieceDatum(pieces[pieceIndex], {
         boardLeft: solutionLeft,
         boardTop: solutionTop,
         poolIndex: undefined,
-      };
+      });
       realignedPieces = [...realignedPieces, realignedPiece];
       if (boardLeft != solutionLeft || boardTop != solutionTop) {
         numRealigned++;
@@ -365,12 +362,11 @@ function giveHint(currentGameState) {
         pieces[pieceIndex];
       // if the piece is not on the board, add it to the board and break the loop
       if (boardLeft === undefined || boardTop === undefined) {
-        realignedPieces[pieceIndex] = {
-          ...pieces[pieceIndex],
+        realignedPieces[pieceIndex] = updatePieceDatum(pieces[pieceIndex], {
           boardLeft: shiftLeft ? solutionLeft - shiftLeft : solutionLeft,
           boardTop: shiftUp ? solutionTop - shiftUp : solutionTop,
           poolIndex: undefined,
-        };
+        });
         break;
       }
     }
