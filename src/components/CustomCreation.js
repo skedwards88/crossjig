@@ -1,12 +1,10 @@
-// todo wip new, incomplete file
-
 import React from "react";
 import CustomPool from "./CustomPool";
 import CustomBoard from "./CustomBoard";
 import DragGroup from "./DragGroup";
 
 function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
-    // dragCount ensures a different key each time, so a fresh DragGroup is mounted even if there's
+  // dragCount ensures a different key each time, so a fresh DragGroup is mounted even if there's
   // no render between one drag ending and the next one starting.
   const dragGroup = customState.dragState ? (
     <DragGroup
@@ -20,25 +18,27 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
     <div
       id="game"
       style={{
-        "--grid-rows": 12,
-        "--grid-columns": 12,
+        "--grid-rows": customState.gridSize,
+        "--grid-columns": customState.gridSize,
         "--validity-opacity": validityOpacity,
       }}
     >
       <CustomBoard
-        customState={customState}
-        gridSize={12}
+        pieces={customState.pieces}
+        gameIsSolved={false}
         dispatchGameState={dispatchCustomState}
-        indicateValidity={validityOpacity > 0}
-        dragDestination={customState.dragState?.destination}
+        // indicateValidity={validityOpacity > 0}
+        indicateValidity={false} // todo resolve ^ (errors if true)
         dragPieceIDs={customState.dragState?.pieceIDs}
+        dragDestination={customState.dragState?.destination}
+        gridSize={12}
       ></CustomBoard>
       <CustomPool
-          customState={customState}
-          dragDestination={customState.dragState?.destination}
-          dispatchGameState={dispatchCustomState} // todo just rename dispatch params to dispatcher everywhere
-        ></CustomPool>
-        {dragGroup}
+        pieces={customState.pieces}
+        dragDestination={customState.dragState?.destination}
+        dispatchGameState={dispatchCustomState} // todo just rename dispatch params to dispatcher everywhere
+      ></CustomPool>
+      {dragGroup}
     </div>
   );
 }

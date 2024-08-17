@@ -1,4 +1,6 @@
 export function getInitialState(savedDisplay, hasVisited) {
+  // todo revert
+  return "custom";
   if (!hasVisited) {
     return "rules";
   }
