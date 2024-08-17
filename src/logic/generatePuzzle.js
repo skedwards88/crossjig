@@ -2,6 +2,7 @@ import seedrandom from "seedrandom";
 import {generateGrid} from "./generateGrid";
 import {makePieces} from "./makePieces";
 import {shuffleArray, centerGrid, getMaxShifts} from "@skedwards88/word_logic";
+import {updatePieceDatum} from "./assemblePiece";
 
 export function generatePuzzle({gridSize, minLetters, seed}) {
   let count = 0;
@@ -30,15 +31,12 @@ export function generatePuzzle({gridSize, minLetters, seed}) {
       makePieces(centeredGrid),
       pseudoRandomGenerator,
     );
-    const pieceData = pieces.map((piece, index) => ({
-      letters: piece.letters,
-      id: index,
-      boardTop: undefined,
-      boardLeft: undefined,
-      poolIndex: index,
-      solutionTop: piece.solutionTop,
-      solutionLeft: piece.solutionLeft,
-    }));
+    const pieceData = pieces.map((piece, index) =>
+      updatePieceDatum(piece, {
+        id: index,
+        poolIndex: index,
+      }),
+    );
 
     const numSingletons = pieceData
       .map((piece) => piece.letters)

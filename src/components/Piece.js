@@ -14,12 +14,12 @@ function Letter({
   const onPointerDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const pointer = {x: event.clientX, y: event.clientY};
+    const pointerStartPosition = {x: event.clientX, y: event.clientY};
     dispatchGameState({
       action: "dragStart",
       pieceID,
       pointerID: event.pointerId,
-      pointer,
+      pointerStartPosition,
     });
   };
 
@@ -150,8 +150,8 @@ export default function Piece({
     layoutStyle.gridRow = `${piece.boardTop + 1} / span ${nrows}`;
     layoutStyle.gridColumn = `${piece.boardLeft + 1} / span ${ncols}`;
   } else if (isDragging) {
-    layoutStyle.gridRow = `${piece.groupTop + 1} / span ${nrows}`;
-    layoutStyle.gridColumn = `${piece.groupLeft + 1} / span ${ncols}`;
+    layoutStyle.gridRow = `${piece.dragGroupTop + 1} / span ${nrows}`;
+    layoutStyle.gridColumn = `${piece.dragGroupLeft + 1} / span ${ncols}`;
   }
 
   return (

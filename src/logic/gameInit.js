@@ -5,6 +5,7 @@ import getDailySeed from "../common/getDailySeed";
 import {getNumLettersForDay} from "./getNumLettersForDay";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
 import {generatePuzzleFromRepresentativeString} from "./generatePuzzleFromRepresentativeString";
+import {updatePieceDatum} from "./assemblePiece";
 
 function validateSavedState(savedState) {
   if (typeof savedState !== "object" || savedState === null) {
@@ -107,11 +108,12 @@ export function gameInit({
   maxShiftLeft++;
   maxShiftUp++;
   gridSize = gridSize + 2;
-  pieces = pieces.map((piece) => ({
-    ...piece,
-    solutionTop: piece.solutionTop + 1,
-    solutionLeft: piece.solutionLeft + 1,
-  }));
+  pieces = pieces.map((piece) =>
+    updatePieceDatum(piece, {
+      solutionTop: piece.solutionTop + 1,
+      solutionLeft: piece.solutionLeft + 1,
+    }),
+  );
 
   // If there are already stats, use those
   let stats;
