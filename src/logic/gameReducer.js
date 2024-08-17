@@ -4,31 +4,35 @@ import sendAnalytics from "../common/sendAnalytics";
 import {gameSolvedQ} from "./gameSolvedQ";
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
+import {updateDragState} from "./updateDragState";
 
-function dragStart({
+function updateStateForDragStart({
   currentGameState,
-  isPartOfCurrentDrag,
-  pointerID,
-  pointer,
-  isShifting,
+  isPartOfCurrentDrag, // function that takes a piece and returns a bool indicating whether the piece is being dragged
+  pointerID, // (integer): The ID of the pointer, as captured by the pointer down event.
+  pointerStartPosition, // (object with fields `x` and `y`): The x and y position of the pointer, as captured by the pointer down event.
+  boardIsShifting, // (boolean): Whether the whole board is being dragged.
   previousDragState,
 }) {
   if (currentGameState.dragState !== undefined) {
+    console.warn("Tried to start a drag while a drag was in progress");
     return currentGameState;
   }
 
   // Find which pieces are selected, which are not, and the top left of the group (in board squares).
-  let targets = [];
-  let nontargets = [];
+  let piecesBeingDragged = [];
+  let piecesNotBeingDragged = [];
   let groupBoardTop = currentGameState.gridSize;
   let groupBoardLeft = currentGameState.gridSize;
   const poolPieces = currentGameState.pieces.filter(
     (piece) => piece.poolIndex >= 0,
   );
   let poolIndex = poolPieces.length;
+
   for (const piece of currentGameState.pieces) {
     if (isPartOfCurrentDrag(piece)) {
-      targets.push(piece);
+      piecesBeingDragged.push(piece);
+      // todo figure out what is going on here
       if (groupBoardTop !== undefined) {
         if (piece.boardTop !== undefined) {
           groupBoardTop = Math.min(groupBoardTop, piece.boardTop);
@@ -42,10 +46,12 @@ function dragStart({
         }
       }
     } else {
-      nontargets.push(piece);
+      piecesNotBeingDragged.push(piece);
     }
   }
-  if (targets.length === 0) {
+
+  if (piecesBeingDragged.length === 0) {
+    console.warn("Tried to start a drag but no pieces are being dragged");
     return currentGameState;
   }
 
@@ -67,7 +73,7 @@ function dragStart({
     };
   } else {
     // Find the top left of the group in client coordinates, to get pointerOffset.
-    const rectangles = targets.flatMap((piece) => {
+    const rectangles = piecesBeingDragged.flatMap((piece) => {
       const element = document.getElementById(`piece-${piece.id}`);
       if (!element) {
         console.warn(
@@ -83,15 +89,15 @@ function dragStart({
     const dragGroupTop = Math.min(...rectangles.map((rect) => rect.top));
     const dragGroupLeft = Math.min(...rectangles.map((rect) => rect.left));
     pointerOffset = {
-      x: pointer.x - dragGroupLeft,
-      y: pointer.y - dragGroupTop,
+      x: pointerStartPosition.x - dragGroupLeft,
+      y: pointerStartPosition.y - dragGroupTop,
     };
   }
 
   currentGameState = {
     ...currentGameState,
-    pieces: nontargets.concat(
-      targets.map((piece) =>
+    pieces: piecesNotBeingDragged.concat(
+      piecesBeingDragged.map((piece) =>
         updatePieceDatum(piece, {
           boardTop: undefined,
           boardLeft: undefined,
@@ -104,22 +110,22 @@ function dragStart({
       ),
     ),
     dragCount: currentGameState.dragCount + 1,
-    dragState: {
-      pieceIDs: targets.map((piece) => piece.id),
-      isShifting,
+    dragState: updateDragState({
+      pieceIDs: piecesBeingDragged.map((piece) => piece.id),
+      boardIsShifting,
       dragHasMoved: false,
       pointerID,
-      pointerStart: pointer,
-      pointer,
+      pointerStartPosition: pointerStartPosition,
+      pointer: pointerStartPosition,
       pointerOffset,
       destination:
         groupBoardTop !== undefined
           ? {where: "board", top: groupBoardTop, left: groupBoardLeft}
           : {where: "pool", index: poolIndex},
-    },
+    }),
   };
 
-  if (targets.some((piece) => piece.poolIndex !== undefined)) {
+  if (piecesBeingDragged.some((piece) => piece.poolIndex !== undefined)) {
     // A piece was removed from the pool, so recompute poolIndex for the other pieces.
     let remainingPoolPieces = currentGameState.pieces.filter(
       (piece) => piece.poolIndex !== undefined,
@@ -149,32 +155,32 @@ function dragStart({
 }
 
 // We let the pointer wander a few pixels before setting dragHasMoved.
-function hasMoved(start, pointer) {
+function pointerHasMovedQ(start, pointer) {
   const NOT_FAR = 9.0; // pixels
   return Math.hypot(pointer.x - start.x, pointer.y - start.y) > NOT_FAR;
 }
 
-function dragEnd(currentGameState) {
+function updateStateForDragEnd(currentGameState) {
   if (currentGameState.dragState === undefined) {
     console.warn("dragEnd called with no dragState");
     return currentGameState;
   }
 
-  const dest = currentGameState.dragState.destination;
+  const destination = currentGameState.dragState.destination;
   const draggedPieceIDs = currentGameState.dragState.pieceIDs;
   let mapper;
-  if (dest.where === "board") {
+  if (destination.where === "board") {
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
         ? updatePieceDatum(piece, {
-            boardTop: dest.top + piece.dragGroupTop,
-            boardLeft: dest.left + piece.dragGroupLeft,
+            boardTop: destination.top + piece.dragGroupTop,
+            boardLeft: destination.left + piece.dragGroupLeft,
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
           })
         : piece;
   } else {
-    let poolIndex = dest.index;
+    let poolIndex = destination.index;
     mapper = (piece) =>
       draggedPieceIDs.includes(piece.id)
         ? updatePieceDatum(piece, {
@@ -182,7 +188,7 @@ function dragEnd(currentGameState) {
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
           })
-        : piece.poolIndex !== undefined && piece.poolIndex >= dest.index
+        : piece.poolIndex !== undefined && piece.poolIndex >= destination.index
         ? updatePieceDatum(piece, {
             poolIndex: piece.poolIndex + draggedPieceIDs.length,
           })
@@ -432,13 +438,13 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragStart") {
     // Fired on pointerdown on a piece anywhere.
     // Captures initial `dragState`. `destination` is initialized to where the piece already is.
-    const {pieceID, pointerID, pointer} = payload;
-    return dragStart({
+    const {pieceID, pointerID, pointerStartPosition} = payload;
+    return updateStateForDragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.id === pieceID,
       pointerID,
-      pointer,
-      isShifting: false,
+      pointerStartPosition,
+      boardIsShifting: false,
     });
   } else if (payload.action === "dragNeighbors") {
     // Fired when the timer fires, if `!dragHasMoved`.
@@ -451,18 +457,18 @@ export function gameReducer(currentGameState, payload) {
       return currentGameState;
     }
 
-    const droppedGameState = dragEnd(currentGameState);
+    const droppedGameState = updateStateForDragEnd(currentGameState);
     const connectedPieceIDs = getConnectedPieceIDs({
       pieces: droppedGameState.pieces,
       gridSize: droppedGameState.gridSize,
       draggedPieceID: dragState.pieceIDs[0],
     });
-    return dragStart({
+    return updateStateForDragStart({
       currentGameState: droppedGameState,
       isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
       pointerID: dragState.pointerID,
-      pointer: dragState.pointer,
-      isShifting: false,
+      pointerStartPosition: dragState.pointer,
+      boardIsShifting: false,
       previousDragState: dragState,
     });
   } else if (payload.action === "dragMove") {
@@ -474,31 +480,31 @@ export function gameReducer(currentGameState, payload) {
     const {pointer, destination} = payload;
     return {
       ...currentGameState,
-      dragState: {
-        ...prevDrag,
+      dragState: updateDragState(prevDrag, {
         pointer,
         destination: destination ?? prevDrag.destination,
         dragHasMoved:
-          prevDrag.dragHasMoved || hasMoved(prevDrag.pointerStart, pointer),
-      },
+          prevDrag.dragHasMoved ||
+          pointerHasMovedQ(prevDrag.pointerStartPosition, pointer),
+      }),
     };
   } else if (payload.action === "dragEnd") {
     // Fired on lostpointercapture, after `dragMove`.
     //
     // Drop all dragged pieces to `destination` and clear `dragState`.
-    return dragEnd(currentGameState);
+    return updateStateForDragEnd(currentGameState);
   } else if (payload.action === "shiftStart") {
     // Fired on pointerdown in an empty square on the board.
     //
     // Initializes `dragState`. Starts a drag on all pieces that are on the board.
     // Sets `destination` to where they currently are.
-    const {pointerID, pointer} = payload;
-    return dragStart({
+    const {pointerID, pointerStartPosition} = payload;
+    return updateStateForDragStart({
       currentGameState,
       isPartOfCurrentDrag: (piece) => piece.boardTop !== undefined,
       pointerID,
-      pointer,
-      isShifting: true,
+      pointerStartPosition,
+      boardIsShifting: true,
     });
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;

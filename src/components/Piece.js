@@ -14,12 +14,12 @@ function Letter({
   const onPointerDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const pointer = {x: event.clientX, y: event.clientY};
+    const pointerStartPosition = {x: event.clientX, y: event.clientY};
     dispatchGameState({
       action: "dragStart",
       pieceID,
       pointerID: event.pointerId,
-      pointer,
+      pointerStartPosition,
     });
   };
 

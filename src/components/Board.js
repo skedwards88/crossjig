@@ -163,7 +163,7 @@ export default function Board({
         dispatchGameState({
           action: "shiftStart",
           pointerID: event.pointerId,
-          pointer: {x: event.clientX, y: event.clientY},
+          pointerStartPosition: {x: event.clientX, y: event.clientY},
         });
       }}
     >
@@ -188,7 +188,9 @@ export function dragDestinationOnBoard(gameState, pointer) {
     );
 
     const groupHeight = Math.max(
-      ...draggedPieces.map((piece) => piece.dragGroupTop + piece.letters.length),
+      ...draggedPieces.map(
+        (piece) => piece.dragGroupTop + piece.letters.length,
+      ),
     );
     const groupWidth = Math.max(
       ...draggedPieces.map(

@@ -6,7 +6,7 @@ import {dragDestinationInPool} from "./Pool";
 // This component is mounted each time a drag starts.
 export default function DragGroup({dispatchGameState, gameState}) {
   const dragState = gameState.dragState;
-  const isShifting = dragState.isShifting;
+  const boardIsShifting = dragState.boardIsShifting;
   const draggedPieces = gameState.pieces.filter((piece) =>
     dragState.pieceIDs.includes(piece.id),
   );
@@ -45,7 +45,7 @@ export default function DragGroup({dispatchGameState, gameState}) {
     // or if the drag position has moved since the start of the drag,
     // don't start a multi-select.
     if (
-      isShifting ||
+      boardIsShifting ||
       dragState.destination.where != "board" ||
       dragState.dragHasMoved
     ) {
@@ -61,7 +61,7 @@ export default function DragGroup({dispatchGameState, gameState}) {
       }
     };
   }, [
-    isShifting,
+    boardIsShifting,
     dragState.destination.where,
     dragState.dragHasMoved,
     dispatchGameState,
@@ -74,9 +74,11 @@ export default function DragGroup({dispatchGameState, gameState}) {
     ...draggedPieces.map((piece) => piece.dragGroupTop + piece.letters.length),
   );
   const groupColumns = Math.max(
-    ...draggedPieces.map((piece) => piece.dragGroupLeft + piece.letters[0].length),
+    ...draggedPieces.map(
+      (piece) => piece.dragGroupLeft + piece.letters[0].length,
+    ),
   );
-  if (isShifting) {
+  if (boardIsShifting) {
     // Clamp to the board rectangle.
     const board = document.getElementById("board")?.getBoundingClientRect();
     if (board) {
@@ -97,7 +99,7 @@ export default function DragGroup({dispatchGameState, gameState}) {
     dispatchGameState({
       action: "dragMove",
       pointer,
-      destination: dragDestination(gameState, pointer),
+      destination: getDragDestination(gameState, pointer),
     });
   };
   const onLostPointerCapture = (event) => {
@@ -137,9 +139,9 @@ export default function DragGroup({dispatchGameState, gameState}) {
   );
 }
 
-function dragDestination(gameState, pointer) {
+function getDragDestination(gameState, pointer) {
   let destination = undefined;
-  if (!gameState.dragState.isShifting) {
+  if (!gameState.dragState.boardIsShifting) {
     destination = dragDestinationInPool(pointer);
   }
   destination ??= dragDestinationOnBoard(gameState, pointer);

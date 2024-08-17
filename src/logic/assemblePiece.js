@@ -31,15 +31,15 @@ export function assemblePiece({pieceData, rowIndex, colIndex}) {
 
 // The purpose of this function is just to clearly delineate when I am updating the piece data
 // piece data is:
-// - letters: a 2D grid of letters in the piece. Defined at the start of the game.
-// - id: An identifier that is unique to the piece. Defined at the start of the game.
-// - solutionTop: The vertical location of the top of the piece in the solved puzzle. Defined at the start of the game.
-// - solutionLeft: The horizontal location of the left side of the piece in the solved puzzle. Defined at the start of the game.
-// - poolIndex: The position of the piece in the pool. Undefined if the piece is on the board or being dragged.
-// - boardTop: The current vertical location of the top of the piece in the board. Undefined if the piece is in the pool or being dragged.
-// - boardLeft: The current horizontal location of the left of the piece in the board. Undefined if the piece is in the pool or being dragged
-// - dragGroupTop: todo. Undefined if the piece is not being dragged.
-// - dragGroupLeft: todo. Undefined if the piece is not being dragged.
+// - letters (array of array of strings): a 2D grid of letters in the piece. Defined at the start of the game.
+// - id (integer): An identifier that is unique to the piece. Defined at the start of the game.
+// - solutionTop (integer): The vertical location of the top of the piece in the solved puzzle. Defined at the start of the game.
+// - solutionLeft (integer): The horizontal location of the left side of the piece in the solved puzzle. Defined at the start of the game.
+// - poolIndex (integer or undefined): The position of the piece in the pool. Undefined if the piece is on the board or being dragged.
+// - boardTop (integer or undefined): The current vertical location of the top of the piece in the board. Undefined if the piece is in the pool or being dragged.
+// - boardLeft (integer or undefined): The current horizontal location of the left of the piece in the board. Undefined if the piece is in the pool or being dragged
+// - dragGroupTop (integer or undefined): todo. Undefined if the piece is not being dragged.
+// - dragGroupLeft (integer or undefined): todo. Undefined if the piece is not being dragged.
 export function updatePieceDatum(oldPieceData = {}, updates = {}) {
   return {
     ...oldPieceData,
