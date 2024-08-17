@@ -2,6 +2,7 @@ import seedrandom from "seedrandom";
 import {makePieces} from "./makePieces";
 import {shuffleArray, getMaxShifts} from "@skedwards88/word_logic";
 import {convertRepresentativeStringToGrid} from "./convertRepresentativeStringToGrid";
+import {updatePieceDatum} from "./assemblePiece";
 
 export function generatePuzzleFromRepresentativeString({representativeString}) {
   const pseudoRandomGenerator = seedrandom(representativeString);
@@ -17,15 +18,12 @@ export function generatePuzzleFromRepresentativeString({representativeString}) {
   );
 
   const pieces = shuffleArray(makePieces(grid), pseudoRandomGenerator);
-  const pieceData = pieces.map((piece, index) => ({
-    letters: piece.letters,
-    id: index,
-    boardTop: undefined,
-    boardLeft: undefined,
-    poolIndex: index,
-    solutionTop: piece.solutionTop,
-    solutionLeft: piece.solutionLeft,
-  }));
+  const pieceData = pieces.map((piece, index) =>
+    updatePieceDatum(piece, {
+      id: index,
+      poolIndex: index,
+    }),
+  );
 
   return {
     pieces: pieceData,
