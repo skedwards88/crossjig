@@ -1,5 +1,3 @@
-import sendAnalytics from "../common/sendAnalytics";
-import {gameSolvedQ} from "./gameSolvedQ";
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
 import {updateDragState} from "./updateDragState";
@@ -97,6 +95,7 @@ function updateStateForDragStart({
     pieces: piecesNotBeingDragged.concat(
       piecesBeingDragged.map((piece) =>
         updatePieceDatum(piece, {
+          //todo add an empty letter here if dragging from pool?
           boardTop: undefined,
           boardLeft: undefined,
           poolIndex: undefined,
@@ -116,6 +115,10 @@ function updateStateForDragStart({
       pointerStartPosition: pointerStartPosition,
       pointer: pointerStartPosition,
       pointerOffset,
+      origin:
+        groupBoardTop !== undefined
+          ? {where: "board"}
+          : {where: "pool", index: poolIndex}, // todo add to updateDragState docs
       destination:
         groupBoardTop !== undefined
           ? {where: "board", top: groupBoardTop, left: groupBoardLeft}
@@ -123,25 +126,7 @@ function updateStateForDragStart({
     }),
   };
 
-  if (piecesBeingDragged.some((piece) => piece.poolIndex !== undefined)) {
-    // A piece was removed from the pool, so recompute poolIndex for the other pieces.
-    let remainingPoolPieces = currentGameState.pieces.filter(
-      (piece) => piece.poolIndex !== undefined,
-    );
-    remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
-    let poolIndices = Array(currentGameState.pieces.length).fill(-1);
-    remainingPoolPieces.forEach((piece, index) => {
-      poolIndices[piece.id] = index;
-    });
-    currentGameState = {
-      ...currentGameState,
-      pieces: currentGameState.pieces.map((piece) =>
-        piece.poolIndex === undefined
-          ? piece
-          : updatePieceDatum(piece, {poolIndex: poolIndices[piece.id]}),
-      ),
-    };
-  }
+  // Don' bother updating the pool index like we do in the game, since the pool will never be depleted
 
   // Clear `gameIsSolved`, but don't recompute the whole completion state. This prevents
   // the `gameIsSolvedReason` from disappearing on each drag when all the pieces are
@@ -165,80 +150,73 @@ function updateStateForDragEnd(currentGameState) {
   }
 
   const destination = currentGameState.dragState.destination;
+  const origin = currentGameState.dragState.origin;
   const draggedPieceIDs = currentGameState.dragState.pieceIDs;
-  let mapper;
+  let newPieces = [];
   if (destination.where === "board") {
-    mapper = (piece) =>
-      draggedPieceIDs.includes(piece.id)
-        ? updatePieceDatum(piece, {
+    let maxID = Math.max(...currentGameState.pieces.map((piece) => piece.id));
+    for (const piece of currentGameState.pieces) {
+      if (draggedPieceIDs.includes(piece.id)) {
+        newPieces.push(
+          updatePieceDatum(piece, {
             boardTop: destination.top + piece.dragGroupTop,
             boardLeft: destination.left + piece.dragGroupLeft,
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
-          })
-        : piece;
-  } else {
-    let poolIndex = destination.index;
-    mapper = (piece) =>
-      draggedPieceIDs.includes(piece.id)
-        ? updatePieceDatum(piece, {
-            poolIndex: poolIndex++,
+          }),
+        );
+        // If dragging from pool to board, also add a replacement to the pool
+        if (origin.where === "pool") {
+          maxID++;
+          newPieces.push(
+            updatePieceDatum(piece, {
+              dragGroupTop: undefined,
+              dragGroupLeft: undefined,
+              poolIndex: origin.index,
+              id: maxID,
+            }),
+          );
+        }
+      } else {
+        newPieces.push(piece);
+      }
+    }
+  } else if (destination.where === "pool" && origin.where === "board") {
+    // If dragging from board to pool, clear the piece from the board but don't add it to the pool
+    for (const piece of currentGameState.pieces) {
+      if (draggedPieceIDs.includes(piece.id)) {
+        continue;
+      } else {
+        newPieces.push(piece);
+      }
+    }
+  }
+  // If dragging from pool to pool, readd the piece to the pool at its original position
+  else if (destination.where === "pool" && origin.where === "pool") {
+    for (const piece of currentGameState.pieces) {
+      if (draggedPieceIDs.includes(piece.id)) {
+        newPieces.push(
+          updatePieceDatum(piece, {
+            poolIndex: origin.index,
             dragGroupTop: undefined,
             dragGroupLeft: undefined,
-          })
-        : piece.poolIndex !== undefined && piece.poolIndex >= destination.index
-        ? updatePieceDatum(piece, {
-            poolIndex: piece.poolIndex + draggedPieceIDs.length,
-          })
-        : piece;
+          }),
+        );
+      } else {
+        newPieces.push(piece);
+      }
+    }
   }
-  return updateCompletionState({
+
+  return {
     ...currentGameState,
-    pieces: currentGameState.pieces.map(mapper),
+    pieces: newPieces,
     dragState: undefined,
-  });
-}
-
-function getCompletionData(currentGameState) {
-  const allPiecesAreUsed = currentGameState.pieces.every(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
-  );
-
-  if (!allPiecesAreUsed) {
-    return {
-      allPiecesAreUsed: false,
-      gameIsSolved: false,
-      gameIsSolvedReason: "",
-    };
-  }
-
-  const {gameIsSolved, reason: gameIsSolvedReason} = gameSolvedQ(
-    currentGameState.pieces,
-    currentGameState.gridSize,
-  );
-
-  if (gameIsSolved && !currentGameState.gameIsSolved) {
-    sendAnalytics("won");
-  }
-
-  return {
-    allPiecesAreUsed: true,
-    gameIsSolved: gameIsSolved,
-    gameIsSolvedReason: gameIsSolvedReason,
-  };
-}
-
-function updateCompletionState(gameState) {
-  return {
-    ...gameState,
-    ...getCompletionData(gameState),
   };
 }
 
 export function customReducer(currentGameState, payload) {
   if (payload.action === "dragStart") {
-    // Fired on pointerdown on a piece anywhere.
-    // Captures initial `dragState`. `destination` is initialized to where the piece already is.
     const {pieceID, pointerID, pointerStartPosition} = payload;
     return updateStateForDragStart({
       currentGameState,
@@ -248,22 +226,21 @@ export function customReducer(currentGameState, payload) {
       boardIsShifting: false,
     });
   } else if (payload.action === "dragNeighbors") {
-    // Fired when the timer fires, if `!dragHasMoved`.
-    //
-    // Set `piece.isDragging` on all neighbors using `destination` to figure out
-    // which pieces are neighbors. Implemented by dropping the current piece, then picking
-    // it and all connected pieces up again.
+    // Fired when the timer fires, if `!dragHasMoved`
+    // Drop the current piece, then pick up it and all connected pieces
     const {dragState} = currentGameState;
     if (dragState === undefined || dragState.pieceIDs.length !== 1) {
       return currentGameState;
     }
 
     const droppedGameState = updateStateForDragEnd(currentGameState);
+
     const connectedPieceIDs = getConnectedPieceIDs({
       pieces: droppedGameState.pieces,
       gridSize: droppedGameState.gridSize,
       draggedPieceID: dragState.pieceIDs[0],
     });
+
     return updateStateForDragStart({
       currentGameState: droppedGameState,
       isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
