@@ -2,6 +2,7 @@ import {updatePieceDatum} from "./assemblePiece";
 
 export function customInit() {
   // todo saved state
+  // todo analytics
 
   const alphabet = [
     "A",
