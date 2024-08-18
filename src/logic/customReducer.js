@@ -1,6 +1,7 @@
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
 import {updateDragState} from "./updateDragState";
+import {arraysMatchQ} from "@skedwards88/word_logic";
 
 function updateStateForDragStart({
   currentGameState,
@@ -155,6 +156,19 @@ function updateStateForDragEnd(currentGameState) {
   let newPieces = [];
   if (destination.where === "board") {
     let maxID = Math.max(...currentGameState.pieces.map((piece) => piece.id));
+
+    // Any letters dropped on the board will overwrite anything at that position
+    // (this is a deviation from the standard game)
+    let overwrittenPositions = [];
+    for (const piece of currentGameState.pieces) {
+      if (draggedPieceIDs.includes(piece.id)) {
+        overwrittenPositions.push([
+          destination.top + piece.dragGroupTop,
+          destination.left + piece.dragGroupLeft,
+        ]);
+      }
+    }
+
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {
         newPieces.push(
@@ -165,6 +179,7 @@ function updateStateForDragEnd(currentGameState) {
             dragGroupLeft: undefined,
           }),
         );
+
         // If dragging from pool to board, also add a replacement to the pool
         if (origin.where === "pool") {
           maxID++;
@@ -177,7 +192,12 @@ function updateStateForDragEnd(currentGameState) {
             }),
           );
         }
-      } else {
+      } else if (
+        !overwrittenPositions.some(
+          (position) =>
+            position[0] == piece.boardTop && position[1] == piece.boardLeft,
+        )
+      ) {
         newPieces.push(piece);
       }
     }
