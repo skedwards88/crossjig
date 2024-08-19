@@ -10,7 +10,6 @@ export function convertGridToRepresentativeString(grid) {
   // todo center the grid
   // todo validate that the puzzle consists of known words vert and horiz
 
-
   let stringifiedGrid = "";
   let spaceCount = 0;
 

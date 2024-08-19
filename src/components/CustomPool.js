@@ -1,10 +1,7 @@
 import React from "react";
 import Piece from "./Piece";
 
-export default function CustomPool({
-  pieces,
-  dispatchGameState,
-}) {
+export default function CustomPool({pieces, dispatchGameState}) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 

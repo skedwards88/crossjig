@@ -96,27 +96,31 @@ function updateStateForDragStart({
     placeholderPoolPieces = piecesBeingDragged.map((piece) =>
       updatePieceDatum(piece, {
         letters: [[""]],
-        id: (piece.id + 1) * (-1)
+        id: (piece.id + 1) * -1,
       }),
-    )
+    );
   }
 
   currentGameState = {
     ...currentGameState,
-    pieces: piecesNotBeingDragged.concat(
-      piecesBeingDragged.map((piece) =>
-        updatePieceDatum(piece, {
-          //todo add an empty letter here if dragging from pool?
-          boardTop: undefined,
-          boardLeft: undefined,
-          poolIndex: undefined,
-          dragGroupTop:
-            groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
-          dragGroupLeft:
-            groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
-        }),
-      ),
-    ).concat(placeholderPoolPieces),
+    pieces: piecesNotBeingDragged
+      .concat(
+        piecesBeingDragged.map((piece) =>
+          updatePieceDatum(piece, {
+            //todo add an empty letter here if dragging from pool?
+            boardTop: undefined,
+            boardLeft: undefined,
+            poolIndex: undefined,
+            dragGroupTop:
+              groupBoardTop === undefined ? 0 : piece.boardTop - groupBoardTop,
+            dragGroupLeft:
+              groupBoardLeft === undefined
+                ? 0
+                : piece.boardLeft - groupBoardLeft,
+          }),
+        ),
+      )
+      .concat(placeholderPoolPieces),
     dragCount: currentGameState.dragCount + 1,
     dragState: updateDragState({
       pieceIDs: piecesBeingDragged.map((piece) => piece.id),
@@ -217,7 +221,7 @@ function updateStateForDragEnd(currentGameState) {
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {
         continue;
-      } else if (piece.letters[0][0] !== ""){
+      } else if (piece.letters[0][0] !== "") {
         newPieces.push(piece);
       }
     }
@@ -233,7 +237,7 @@ function updateStateForDragEnd(currentGameState) {
             dragGroupLeft: undefined,
           }),
         );
-      } else if (piece.letters[0][0] !== ""){
+      } else if (piece.letters[0][0] !== "") {
         newPieces.push(piece);
       }
     }

@@ -63,8 +63,7 @@ export default function App() {
 
   const [customState, dispatchCustomState] = React.useReducer(
     customReducer,
-    {
-    },
+    {},
     customInit,
   );
 
@@ -208,7 +207,7 @@ export default function App() {
             setDisplay={setDisplay}
           ></CustomCreation>
         </div>
-      )
+      );
 
     default:
       return (
