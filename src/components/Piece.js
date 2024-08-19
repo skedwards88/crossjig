@@ -106,6 +106,7 @@ export default function Piece({
             pieceColIndex={colIndex}
             overlapping={
               isOnBoard &&
+              overlapGrid &&
               overlapGrid[piece.boardTop + rowIndex][
                 piece.boardLeft + colIndex
               ] > 1

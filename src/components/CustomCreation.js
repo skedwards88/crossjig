@@ -27,8 +27,7 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
         pieces={customState.pieces}
         gameIsSolved={false}
         dispatchGameState={dispatchCustomState}
-        // indicateValidity={validityOpacity > 0}
-        indicateValidity={false} // todo resolve ^ (errors if true)
+        indicateValidity={validityOpacity > 0}
         dragPieceIDs={customState.dragState?.pieceIDs}
         dragDestination={customState.dragState?.destination}
         gridSize={12}

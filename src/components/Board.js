@@ -85,12 +85,18 @@ function getHorizontalValidityGrid({grid, originalWords}) {
   return horizontalValidityGrid;
 }
 
-function getWordValidityGrids({pieces, gridSize}) {
-  const originalWords = getWordsFromPieces({
-    pieces,
-    gridSize,
-    solution: true,
-  });
+export function getWordValidityGrids({
+  pieces,
+  gridSize,
+  includeOriginalSolution = true,
+}) {
+  const originalWords = includeOriginalSolution
+    ? getWordsFromPieces({
+        pieces,
+        gridSize,
+        solution: true,
+      })
+    : [];
 
   const grid = getGridFromPieces({pieces, gridSize, solution: false});
 
