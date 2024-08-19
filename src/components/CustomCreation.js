@@ -1,5 +1,5 @@
 import React from "react";
-import CustomPool from "./CustomPool";
+import Pool from "./Pool";
 import Board from "./Board";
 import DragGroup from "./DragGroup";
 
@@ -33,11 +33,11 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
         gridSize={12}
         customCreation={true}
       ></Board>
-      <CustomPool
+      <Pool
+        // don't pass drag destination so that won't render drag shadow on pool
         pieces={customState.pieces}
-        dragDestination={customState.dragState?.destination}
-        dispatchGameState={dispatchCustomState} // todo just rename dispatch params to dispatcher everywhere
-      ></CustomPool>
+        dispatchGameState={dispatchCustomState}
+      ></Pool>
       {dragGroup}
     </div>
   );
