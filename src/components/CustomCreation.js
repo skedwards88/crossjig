@@ -16,7 +16,7 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
 
   return (
     <div
-      id="game"
+      id="custom"
       style={{
         "--grid-rows": customState.gridSize,
         "--grid-columns": customState.gridSize,

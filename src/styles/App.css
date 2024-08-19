@@ -109,7 +109,7 @@ button:disabled {
   border-bottom: 2px solid var(--light-color);
 }
 
-#game {
+#game, #custom {
   display: grid;
 
   --box-size:
@@ -251,6 +251,10 @@ button:disabled {
   justify-content: center;
 }
 
+#custom #pool {
+  align-content: flex-start;
+}
+
 .piece {
   touch-action: none;
   pointer-events: none;
@@ -265,6 +269,10 @@ button:disabled {
   justify-content: center;
   width: fit-content;
   padding: 3vmin;
+}
+
+#custom .pool-slot {
+  padding: 2vmin;
 }
 
 .letter,

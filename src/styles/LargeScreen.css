@@ -7,7 +7,7 @@
     grid-template-rows: 1fr;
   }
 
-  #game {
+#game, #custom {
     display: grid;
     grid-area: game;
     grid-template-areas: "board pool";
@@ -56,7 +56,7 @@
     justify-items: center;
   }
 
-  #game {
+  #game, #custom {
     --box-size:
       min(
         calc((48vh - 1px) / var(--grid-rows)),
@@ -90,7 +90,7 @@
     --default-box-size: min(4vh, 7vw, 1cm);
   }
 
-  #game {
+  #game, #custom {
     --box-size:
       min(
         calc((48vh - 1px) / var(--grid-rows)),
