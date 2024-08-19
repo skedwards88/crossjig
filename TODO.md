@@ -33,7 +33,7 @@ For screenshots:
 
 - wip new, incomplete file:
 - Use the hasVisited state to announce
-- make way to share (of if can't share, to get link)
+- make way to share (or if can't share, to get link)
 
 // todo later PR:
 
@@ -42,3 +42,4 @@ For screenshots:
   - countingGrid
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
+- consolidate control buttons into hamburger menu
