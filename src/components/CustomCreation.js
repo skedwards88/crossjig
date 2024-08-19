@@ -1,6 +1,6 @@
 import React from "react";
 import CustomPool from "./CustomPool";
-import CustomBoard from "./CustomBoard";
+import Board from "./Board";
 import DragGroup from "./DragGroup";
 
 function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
@@ -23,7 +23,7 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
         "--validity-opacity": validityOpacity,
       }}
     >
-      <CustomBoard
+      <Board
         pieces={customState.pieces}
         gameIsSolved={false}
         dispatchGameState={dispatchCustomState}
@@ -31,7 +31,8 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
         dragPieceIDs={customState.dragState?.pieceIDs}
         dragDestination={customState.dragState?.destination}
         gridSize={12}
-      ></CustomBoard>
+        customCreation={true}
+      ></Board>
       <CustomPool
         pieces={customState.pieces}
         dragDestination={customState.dragState?.destination}

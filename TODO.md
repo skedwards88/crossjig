@@ -33,3 +33,8 @@ For screenshots:
 - Use the hasVisited state to announce
 - put arrayToGrid to common or to word-logic package
 - make way to share (of if can't share, to get link)
+
+// todo later PR
+- relocate to new file:
+ - getWordValidityGrids
+ - countingGrid

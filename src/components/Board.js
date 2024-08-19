@@ -123,15 +123,24 @@ export default function Board({
   gameIsSolved,
   dispatchGameState,
   indicateValidity,
+  customCreation = false,
 }) {
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
   );
 
-  const overlapGrid = countingGrid(gridSize, gridSize, boardPieces);
+  const overlapGrid = customCreation
+    ? undefined
+    : countingGrid(gridSize, gridSize, boardPieces);
+
   const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
-    ? getWordValidityGrids({pieces, gridSize})
+    ? getWordValidityGrids({
+        pieces,
+        gridSize,
+        includeOriginalSolution: !customCreation,
+      })
     : [undefined, undefined];
+
   const pieceElements = boardPieces.map((piece) => (
     <Piece
       key={piece.id}
