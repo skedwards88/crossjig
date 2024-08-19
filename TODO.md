@@ -32,3 +32,4 @@ For screenshots:
 // todo wip new, incomplete file
 - Use the hasVisited state to announce
 - put arrayToGrid to common or to word-logic package
+- make way to share (of if can't share, to get link)

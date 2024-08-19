@@ -1,11 +1,8 @@
 import React from "react";
 import Piece from "./Piece";
-import DragShadow from "./DragShadow";
-import {countingGrid} from "./Board";
 
 export default function CustomPool({
   pieces,
-  dragDestination,
   dispatchGameState,
 }) {
   const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
@@ -23,24 +20,6 @@ export default function CustomPool({
       />
     </div>
   ));
-
-  if (dragDestination?.where === "pool") {
-    const draggedPieces = pieces.filter((piece) => piece.dragGroupTop >= 0);
-    pieceElements.splice(
-      dragDestination.index,
-      0,
-      draggedPieces.map((piece) => (
-        <div className="pool-slot shadow" key={piece.id}>
-          <DragShadow
-            key={`shadow-piece-${piece.id}`}
-            grid={countingGrid(piece.letters.length, piece.letters[0].length, [
-              {...piece, dragGroupTop: 0, dragGroupLeft: 0},
-            ])}
-          />
-        </div>
-      )),
-    );
-  }
 
   return <div id="pool">{pieceElements}</div>;
 }

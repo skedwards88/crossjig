@@ -1,7 +1,6 @@
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
 import {updateDragState} from "./updateDragState";
-import {arraysMatchQ} from "@skedwards88/word_logic";
 
 function updateStateForDragStart({
   currentGameState,
@@ -91,6 +90,17 @@ function updateStateForDragStart({
     };
   }
 
+  // If dragging from the pool, add a dummy placeholder
+  let placeholderPoolPieces = [];
+  if (groupBoardTop === undefined) {
+    placeholderPoolPieces = piecesBeingDragged.map((piece) =>
+      updatePieceDatum(piece, {
+        letters: [[""]],
+        id: (piece.id + 1) * (-1)
+      }),
+    )
+  }
+
   currentGameState = {
     ...currentGameState,
     pieces: piecesNotBeingDragged.concat(
@@ -106,7 +116,7 @@ function updateStateForDragStart({
             groupBoardLeft === undefined ? 0 : piece.boardLeft - groupBoardLeft,
         }),
       ),
-    ),
+    ).concat(placeholderPoolPieces),
     dragCount: currentGameState.dragCount + 1,
     dragState: updateDragState({
       pieceIDs: piecesBeingDragged.map((piece) => piece.id),
@@ -193,6 +203,7 @@ function updateStateForDragEnd(currentGameState) {
           );
         }
       } else if (
+        piece.letters[0][0] !== "" &&
         !overwrittenPositions.some(
           (position) =>
             position[0] == piece.boardTop && position[1] == piece.boardLeft,
@@ -206,7 +217,7 @@ function updateStateForDragEnd(currentGameState) {
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {
         continue;
-      } else {
+      } else if (piece.letters[0][0] !== ""){
         newPieces.push(piece);
       }
     }
@@ -222,7 +233,7 @@ function updateStateForDragEnd(currentGameState) {
             dragGroupLeft: undefined,
           }),
         );
-      } else {
+      } else if (piece.letters[0][0] !== ""){
         newPieces.push(piece);
       }
     }
