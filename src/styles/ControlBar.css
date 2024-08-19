@@ -39,6 +39,10 @@
   background-image: url("../images/icons/heart.svg");
 }
 
+#customButton {
+  background-image: url("../images/icons/custom.svg");
+}
+
 #calendarButton {
   background-image:
     url("../images/icons/daily.svg"),
