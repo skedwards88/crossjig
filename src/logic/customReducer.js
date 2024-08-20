@@ -143,13 +143,7 @@ function updateStateForDragStart({
 
   // Don' bother updating the pool index like we do in the game, since the pool will never be depleted
 
-  // Clear `gameIsSolved`, but don't recompute the whole completion state. This prevents
-  // the `gameIsSolvedReason` from disappearing on each drag when all the pieces are
-  // on the board but the puzzle isn't solved yet.
-  return {
-    ...currentGameState,
-    gameIsSolved: false,
-  };
+  return currentGameState
 }
 
 // We let the pointer wander a few pixels before setting dragHasMoved.

@@ -56,11 +56,7 @@ export function customInit(useSaved = true) {
   return {
     pieces,
     gridSize: 12,
-    allPiecesAreUsed: false, //todo don't need?
-    gameIsSolved: false, //todo don't need?
-    gameIsSolvedReason: "", //todo don't need?
     dragCount: 0,
     dragState: undefined,
-    validityOpacity: 0.5, //todo don't need?
   };
 }
