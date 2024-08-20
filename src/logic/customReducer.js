@@ -113,7 +113,6 @@ function updateStateForDragStart({
       .concat(
         piecesBeingDragged.map((piece) =>
           updatePieceDatum(piece, {
-            //todo add an empty letter here if dragging from pool?
             boardTop: undefined,
             boardLeft: undefined,
             poolIndex: undefined,
@@ -139,7 +138,7 @@ function updateStateForDragStart({
       origin:
         groupBoardTop !== undefined
           ? {where: "board"}
-          : {where: "pool", index: poolIndex}, // todo add to updateDragState docs
+          : {where: "pool", index: poolIndex},
       destination:
         groupBoardTop !== undefined
           ? {where: "board", top: groupBoardTop, left: groupBoardLeft}
