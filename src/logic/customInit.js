@@ -1,12 +1,14 @@
+import sendAnalytics from "../common/sendAnalytics";
 import {updatePieceDatum} from "./assemblePiece";
 
-export function customInit() {
-  const savedState = JSON.parse(localStorage.getItem("crossjigCustomCreation"));
+export function customInit(useSaved = true) {
+  const savedState = useSaved
+    ? JSON.parse(localStorage.getItem("crossjigCustomCreation"))
+    : undefined;
 
   if (savedState) {
     return savedState;
   }
-  // todo analytics
 
   const alphabet = [
     "A",
@@ -48,6 +50,8 @@ export function customInit() {
       poolIndex: index,
     }),
   );
+
+  sendAnalytics("new_custom");
 
   return {
     pieces,
