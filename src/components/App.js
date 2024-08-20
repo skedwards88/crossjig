@@ -129,6 +129,13 @@ export default function App() {
     );
   }, [dailyGameState]);
 
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "crossjigCustomCreation",
+      JSON.stringify(customState),
+    );
+  }, [customState]);
+
   switch (display) {
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;

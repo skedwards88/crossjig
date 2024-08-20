@@ -1,7 +1,11 @@
 import {updatePieceDatum} from "./assemblePiece";
 
 export function customInit() {
-  // todo saved state
+  const savedState = JSON.parse(localStorage.getItem("crossjigCustomCreation"));
+
+  if (savedState) {
+    return savedState;
+  }
   // todo analytics
 
   const alphabet = [

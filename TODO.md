@@ -31,9 +31,10 @@ For screenshots:
 
 // todo now
 
-- wip new, incomplete file:
+- wip new, incomplete file
 - Use the hasVisited state to announce
 - make way to share (or if can't share, to get link)
+- add some custom daily puzzles
 
 // todo later PR:
 
@@ -42,4 +43,5 @@ For screenshots:
   - countingGrid
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
-- consolidate control buttons into hamburger menu
+- consolidate control buttons into hamburger menu (and add share button)
+- add link to sponsors?
