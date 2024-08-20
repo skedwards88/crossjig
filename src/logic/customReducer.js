@@ -28,8 +28,14 @@ function updateStateForDragStart({
   for (const piece of currentGameState.pieces) {
     if (isPartOfCurrentDrag(piece)) {
       piecesBeingDragged.push(piece);
-      // todo figure out what is going on here
+
       if (groupBoardTop !== undefined) {
+        // If the piece is on the board, set the groupBoardTop variable to be whichever is smaller:
+        // the top of the current piece, or the previously set groupBoardTop variable.
+        // This determines the top of the drag group.
+        // (Do the same for the left.)
+        // If the piece is not on the board, set the groupBoardTop to undefined,
+        // which will short circuit this block in the future.
         if (piece.boardTop !== undefined) {
           groupBoardTop = Math.min(groupBoardTop, piece.boardTop);
           groupBoardLeft = Math.min(groupBoardLeft, piece.boardLeft);
