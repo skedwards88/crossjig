@@ -1,5 +1,7 @@
 import {resizeGrid} from "./resizeGrid";
 
+// todo add more tests
+
 describe("resizeGrid", () => {
   test("trims a grid down to 8x8", () => {
     const input = [

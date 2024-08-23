@@ -25,17 +25,8 @@ export function resizeGrid(grid) {
   const targetPadLeft = Math.floor((targetDimension - usedWidth) / 2);
   const targetPadRight = Math.ceil((targetDimension - usedWidth) / 2);
 
-  console.log("maxShiftUp: " + maxShiftUp);
-  console.log("maxShiftDown: " + maxShiftDown);
-  console.log("usedHeight: " + usedHeight);
-  console.log("target: " + targetDimension);
-  console.log("targetPadTop: " + targetPadTop);
-  console.log("targetPadBottom: " + targetPadBottom);
-  console.log("targetPadLeft: " + targetPadLeft);
-  console.log("targetPadRight: " + targetPadRight);
-
   if (targetPadTop < maxShiftUp) {
-    // trim
+    // trim top
     paddedGrid.splice(0, maxShiftUp - targetPadTop);
   } else {
     // or pad
@@ -48,7 +39,7 @@ export function resizeGrid(grid) {
   }
 
   if (targetPadBottom < maxShiftDown) {
-    // trim
+    // trim bottom
     paddedGrid.splice(-(maxShiftDown - targetPadBottom));
   } else {
     // or pad
@@ -61,7 +52,7 @@ export function resizeGrid(grid) {
   }
 
   if (targetPadLeft < maxShiftLeft) {
-    // trim
+    // trim left
     paddedGrid.forEach((row) => row.splice(0, maxShiftLeft - targetPadLeft));
   } else {
     // or pad
@@ -72,7 +63,7 @@ export function resizeGrid(grid) {
   }
 
   if (targetPadRight < maxShiftRight) {
-    // trim
+    // trim right
     paddedGrid.forEach((row) => row.splice(-(maxShiftRight - targetPadRight)));
   } else {
     // or pad
