@@ -1,7 +1,12 @@
 export function cipherLetter(letter, shift) {
   // Error if the letter is not a single uppercase character
   if (!/^[A-Z]$/.test(letter)) {
-    throw new Error("Input must be a single uppercase character A-Z");
+    throw new Error("Input letter must be a single uppercase character A-Z");
+  }
+
+  // Error if the shift is not an integer
+  if (!Number.isInteger(shift)) {
+    throw new Error("Input shift must be an integer");
   }
 
   // Convert the letter to its ASCII code
