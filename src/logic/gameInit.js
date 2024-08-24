@@ -71,7 +71,9 @@ export function gameInit({
   let maxShiftRight;
   let maxShiftUp;
   let maxShiftDown;
-  let minLetters = isDaily ? getNumLettersForDay() : numLetters || 30;
+  let minLetters = isDaily
+    ? getNumLettersForDay()
+    : Math.min(Math.max(numLetters, 20), 60) || 30; // Custom puzzles can exceed the min/max letters used for a randomly generated game. Constrain min letters in this cases so that future randomly generated games don't use these extreme values.
   let gridSize = getGridSizeForLetters(minLetters);
 
   // If custom, attempt to generate the custom puzzle represented by the seed.
