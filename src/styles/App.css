@@ -334,10 +334,11 @@ body:has(#drag-group) {
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
-  font-size: calc(var(--default-font-size)* 0.75);
+  font-size: calc(var(--default-font-size) * 0.75);
 }
 
-.customMessage > div, .customMessage > a {
+.customMessage > div,
+.customMessage > a {
   white-space: pre-line;
   text-wrap: wrap;
   overflow-wrap: break-word;
