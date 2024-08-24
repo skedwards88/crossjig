@@ -76,6 +76,44 @@ export default function App() {
   // todo consolidate lastVisited and setLastOpened?
   const [, setLastOpened] = React.useState(Date.now());
 
+  function handleCustomGeneration() {
+    // If there is nothing to share, display a message with errors
+    if (!customState.pieces.some((piece) => piece.boardTop >= 0)) {
+      throw new Error("Add some letters to the board first!");
+    }
+
+    // Validate the grid
+    // - The UI restricts the grid size, so don't need to validate that
+    // - Make sure all letters are connected
+    // - Make sure all horizontal and vertical words are known
+    const grid = getGridFromPieces({
+      pieces: customState.pieces,
+      gridSize: customState.gridSize,
+      solution: false,
+    });
+
+    const {gameIsSolved, reason} = crosswordValidQ({
+      grid: grid,
+      trie: trie,
+    });
+
+    // If the board is not valid, display a message with errors
+    if (!gameIsSolved) {
+      throw new Error(reason);
+    }
+
+    // Center and resize/pad the grid
+    // Convert the grid to a representative string
+    const resizedGrid = resizeGrid(grid);
+    const cipherShift = pickRandomIntBetween(5, 9);
+    const representativeString = convertGridToRepresentativeString(
+      resizedGrid,
+      cipherShift,
+    );
+
+    return representativeString;
+  }
+
   function handleVisibilityChange() {
     // If the visibility of the app changes to become visible,
     // update the state to force the app to re-render.
@@ -209,55 +247,46 @@ export default function App() {
       return (
         <div className="App" id="crossjig">
           <div id="controls">
-            <button id="exitCustomButton" onClick={() => setDisplay("game")}>
-              Cancel
+            <button
+              id="playCustomButton"
+              onClick={() => {
+                let representativeString;
+                try {
+                  representativeString = handleCustomGeneration();
+                } catch (error) {
+                  const invalidReason = error.message;
+                  dispatchCustomState({
+                    action: "updateInvalidReason",
+                    invalidReason: invalidReason,
+                  });
+                  setDisplay("customError");
+                  return;
+                }
+
+                dispatchGameState({
+                  action: "playCustom",
+                  representativeString,
+                });
+                setDisplay("game");
+              }}
+            >
+              Play
             </button>
             <button
               id="shareCustomButton"
               onClick={() => {
-                // If there is nothing to share, display a message with errors
-                if (!customState.pieces.some((piece) => piece.boardTop >= 0)) {
+                let representativeString;
+                try {
+                  representativeString = handleCustomGeneration();
+                } catch (error) {
+                  const invalidReason = error.message;
                   dispatchCustomState({
                     action: "updateInvalidReason",
-                    invalidReason: "Add some letters to the board first!",
+                    invalidReason: invalidReason,
                   });
                   setDisplay("customError");
                   return;
                 }
-
-                // Validate the grid
-                // - The UI restricts the grid size, so don't need to validate that
-                // - Make sure all letters are connected
-                // - Make sure all horizontal and vertical words are known
-                const grid = getGridFromPieces({
-                  pieces: customState.pieces,
-                  gridSize: customState.gridSize,
-                  solution: false,
-                });
-
-                const {gameIsSolved, reason} = crosswordValidQ({
-                  grid: grid,
-                  trie: trie,
-                });
-
-                // If the board is not valid, display a message with errors
-                if (!gameIsSolved) {
-                  dispatchCustomState({
-                    action: "updateInvalidReason",
-                    invalidReason: reason,
-                  });
-                  setDisplay("customError");
-                  return;
-                }
-
-                // Center and resize/pad the grid
-                // Convert the grid to a representative string
-                const resizedGrid = resizeGrid(grid);
-                const cipherShift = pickRandomIntBetween(5, 9);
-                const representativeString = convertGridToRepresentativeString(
-                  resizedGrid,
-                  cipherShift,
-                );
 
                 // Share (or show the link if sharing is not supported)
                 if (navigator.canShare) {
@@ -277,6 +306,9 @@ export default function App() {
               }}
             >
               Share
+            </button>
+            <button id="exitCustomButton" onClick={() => setDisplay("game")}>
+              Cancel
             </button>
           </div>
           <CustomCreation

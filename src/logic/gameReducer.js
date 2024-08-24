@@ -547,6 +547,11 @@ export function gameReducer(currentGameState, payload) {
       useSaved: false,
       isCustom: false,
     });
+  } else if (payload.action === "playCustom") {
+    return gameInit({
+      seed: payload.representativeString,
+      isCustom: true,
+    });
   } else if (payload.action === "changeValidityOpacity") {
     return {
       ...currentGameState,
@@ -657,7 +662,7 @@ export function gameReducer(currentGameState, payload) {
         stats: newStats,
       };
     }
-  }  else if (payload.action === "updateInvalidReason") {
+  } else if (payload.action === "updateInvalidReason") {
     return {
       ...currentGameState,
       invalidReason: payload.invalidReason,
