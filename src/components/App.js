@@ -24,6 +24,7 @@ import {convertGridToRepresentativeString} from "../logic/convertGridToRepresent
 import {getGridFromPieces} from "../logic/getGridFromPieces";
 import {crosswordValidQ, pickRandomIntBetween} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
+import {resizeGrid} from "../logic/resizeGrid";
 
 export default function App() {
   // If a query string was passed,
@@ -250,10 +251,12 @@ export default function App() {
                   return;
                 }
 
+                // Center and resize/pad the grid
                 // Convert the grid to a representative string
+                const resizedGrid = resizeGrid(grid);
                 const cipherShift = pickRandomIntBetween(5, 9);
                 const representativeString = convertGridToRepresentativeString(
-                  grid,
+                  resizedGrid,
                   cipherShift,
                 );
 

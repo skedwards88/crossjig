@@ -33,10 +33,10 @@ For screenshots:
 
 - wip new, incomplete file
 - Use the hasVisited state to announce
-- make way to share (or if can't share, to get link)
 - add some custom daily puzzles
 - consolidate logic between the two reducers
 - large screen
+- todo comments
 
 // todo later PR:
 
