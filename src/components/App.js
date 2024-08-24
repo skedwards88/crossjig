@@ -4,6 +4,7 @@ import Heart from "./Heart";
 import Rules from "./Rules";
 import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
+import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
 import {
   handleAppInstalled,
@@ -18,6 +19,11 @@ import {customReducer} from "../logic/customReducer";
 import {parseUrlQuery} from "../logic/parseUrlQuery";
 import {getInitialState} from "../common/getInitialState";
 import {hasVisitedSince} from "../common/hasVisitedSince";
+import {handleShare} from "../common/handleShare";
+import {convertGridToRepresentativeString} from "../logic/convertGridToRepresentativeString";
+import {getGridFromPieces} from "../logic/getGridFromPieces";
+import {crosswordValidQ, pickRandomIntBetween} from "@skedwards88/word_logic";
+import {trie} from "../logic/trie";
 
 export default function App() {
   // If a query string was passed,
@@ -206,6 +212,70 @@ export default function App() {
             <button id="exitCustomButton" onClick={() => setDisplay("game")}>
               Cancel
             </button>
+            <button
+              id="shareCustomButton"
+              onClick={() => {
+                // If there is nothing to share, display a message with errors
+                if (!customState.pieces.some((piece) => piece.boardTop >= 0)) {
+                  dispatchCustomState({
+                    action: "updateInvalidReason",
+                    invalidReason: "Add some letters to the board first!",
+                  });
+                  setDisplay("customError");
+                  return;
+                }
+
+                // Validate the grid
+                // - The UI restricts the grid size, so don't need to validate that
+                // - Make sure all letters are connected
+                // - Make sure all horizontal and vertical words are known
+                const grid = getGridFromPieces({
+                  pieces: customState.pieces,
+                  gridSize: customState.gridSize,
+                  solution: false,
+                });
+
+                const {gameIsSolved, reason} = crosswordValidQ({
+                  grid: grid,
+                  trie: trie,
+                });
+
+                // If the board is not valid, display a message with errors
+                if (!gameIsSolved) {
+                  dispatchCustomState({
+                    action: "updateInvalidReason",
+                    invalidReason: reason,
+                  });
+                  setDisplay("customError");
+                  return;
+                }
+
+                // Convert the grid to a representative string
+                const cipherShift = pickRandomIntBetween(5, 9);
+                const representativeString = convertGridToRepresentativeString(
+                  grid,
+                  cipherShift,
+                );
+
+                // Share (or show the link if sharing is not supported)
+                if (navigator.canShare) {
+                  handleShare({
+                    appName: "Crossjig",
+                    text: "Try this custom crossjig that I created!",
+                    url: "https://crossjig.com",
+                    representativeString,
+                  });
+                } else {
+                  dispatchCustomState({
+                    action: "updateRepresentativeString",
+                    representativeString,
+                  });
+                  setDisplay("customShare");
+                }
+              }}
+            >
+              Share
+            </button>
           </div>
           <CustomCreation
             dispatchCustomState={dispatchCustomState}
@@ -214,6 +284,33 @@ export default function App() {
             setDisplay={setDisplay}
           ></CustomCreation>
         </div>
+      );
+
+    case "customError":
+      return (
+        <div className="App customMessage">
+          <div>{`Your game isn't ready to share yet: \n\n${customState.invalidReason}`}</div>
+          <button
+            onClick={() => {
+              dispatchCustomState({
+                action: "updateInvalidReason",
+                invalidReason: "",
+              });
+              setDisplay("custom");
+            }}
+          >
+            Ok
+          </button>
+        </div>
+      );
+
+    case "customShare":
+      return (
+        <CustomShare
+          representativeString={customState.representativeString}
+          dispatchCustomState={dispatchCustomState}
+          setDisplay={setDisplay}
+        ></CustomShare>
       );
 
     default:

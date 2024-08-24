@@ -148,7 +148,7 @@ function updateStateForDragStart({
 
   // Don' bother updating the pool index like we do in the game, since the pool will never be depleted
 
-  return currentGameState
+  return currentGameState;
 }
 
 // We let the pointer wander a few pixels before setting dragHasMoved.
@@ -318,6 +318,16 @@ export function customReducer(currentGameState, payload) {
       pointerStartPosition,
       boardIsShifting: true,
     });
+  } else if (payload.action === "updateInvalidReason") {
+    return {
+      ...currentGameState,
+      invalidReason: payload.invalidReason,
+    };
+  } else if (payload.action === "updateRepresentativeString") {
+    return {
+      ...currentGameState,
+      representativeString: payload.representativeString,
+    };
   } else {
     console.log(`unknown action: ${payload.action}`);
     return currentGameState;

@@ -324,3 +324,34 @@ body:has(#drag-group) {
   display: flex;
   flex-direction: column;
 }
+
+.customMessage {
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  overflow: scroll;
+  justify-items: center;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: calc(var(--default-font-size)* 0.75);
+}
+
+.customMessage > div, .customMessage > a {
+  white-space: pre-line;
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  padding: 10px;
+}
+
+#custom-message-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
+#custom-message-buttons > button {
+  margin: 10px;
+}

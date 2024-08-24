@@ -35,6 +35,8 @@ For screenshots:
 - Use the hasVisited state to announce
 - make way to share (or if can't share, to get link)
 - add some custom daily puzzles
+- consolidate logic between the two reducers
+- large screen
 
 // todo later PR:
 
@@ -45,3 +47,4 @@ For screenshots:
 - put arrayToGrid to common or to word-logic package
 - consolidate control buttons into hamburger menu (and add share button)
 - add link to sponsors?
+- piecesOverlapQ should use getGridFromPieces

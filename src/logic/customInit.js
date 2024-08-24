@@ -58,5 +58,7 @@ export function customInit(useSaved = true) {
     gridSize: 12,
     dragCount: 0,
     dragState: undefined,
+    representativeString: "",
+    invalidReason: "",
   };
 }
