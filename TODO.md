@@ -31,15 +31,13 @@ For screenshots:
 
 // todo now
 
-- wip new, incomplete file
-- Use the hasVisited state to announce
-- add some custom daily puzzles
-- consolidate logic between the two reducers
 - large screen
 - todo comments
 
 // todo later PR:
 
+- add some custom daily puzzles
+- Use the hasVisited state to announce
 - relocate to new file:
   - getWordValidityGrids
   - countingGrid
@@ -48,3 +46,5 @@ For screenshots:
 - consolidate control buttons into hamburger menu (and add share button)
 - add link to sponsors?
 - piecesOverlapQ should use getGridFromPieces
+- rules = use line-spacing in css instead of multiple br
+- rules = use the icons instead of words

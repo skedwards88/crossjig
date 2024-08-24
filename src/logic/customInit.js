@@ -60,5 +60,6 @@ export function customInit(useSaved = true) {
     dragState: undefined,
     representativeString: "",
     invalidReason: "",
+    isCustomCreation: true,
   };
 }

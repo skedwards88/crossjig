@@ -15,7 +15,6 @@ import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
 import getDailySeed from "../common/getDailySeed";
 import {gameReducer} from "../logic/gameReducer";
-import {customReducer} from "../logic/customReducer";
 import {parseUrlQuery} from "../logic/parseUrlQuery";
 import {getInitialState} from "../common/getInitialState";
 import {hasVisitedSince} from "../common/hasVisitedSince";
@@ -69,7 +68,7 @@ export default function App() {
   );
 
   const [customState, dispatchCustomState] = React.useReducer(
-    customReducer,
+    gameReducer,
     {},
     customInit,
   );
