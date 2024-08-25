@@ -294,7 +294,7 @@ export default function App() {
                     appName: "Crossjig",
                     text: "Try this custom crossjig that I created!",
                     url: "https://crossjig.com",
-                    representativeString,
+                    seed: `custom-${representativeString}`,
                   });
                 } else {
                   dispatchCustomState({
