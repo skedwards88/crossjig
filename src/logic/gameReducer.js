@@ -101,7 +101,8 @@ function updateStateForDragStart({
     };
   }
 
-  // (For custom creation only) If dragging from the pool, add a dummy placeholder
+  // (For custom creation only)
+  // If dragging from the pool, add a dummy placeholder
   let placeholderPoolPieces = [];
   if (isCustomCreation && groupBoardTop === undefined) {
     placeholderPoolPieces = piecesBeingDragged.map((piece) =>
@@ -289,8 +290,9 @@ function updateStateForCustomDragEnd(currentGameState) {
         newPieces.push(piece);
       }
     }
-  } else if (destination.where === "pool" && origin.where === "board") {
-    // If dragging from board to pool, clear the piece from the board but don't add it to the pool
+  }
+  // If dragging from board to pool, clear the piece from the board but don't add it to the pool
+  else if (destination.where === "pool" && origin.where === "board") {
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {
         continue;
@@ -300,6 +302,7 @@ function updateStateForCustomDragEnd(currentGameState) {
     }
   }
   // If dragging from pool to pool, readd the piece to the pool at its original position
+  // (and get rid of the empty placeholder piece)
   else if (destination.where === "pool" && origin.where === "pool") {
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {

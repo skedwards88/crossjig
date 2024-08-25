@@ -54,6 +54,7 @@ export function convertRepresentativeStringToGrid(string) {
   // so I don't need to remove whitespace from the edges or center the grid.
   // (Since this is done when the custom query is generated via the UI.)
   // By this same logic, I'm not validating that the puzzle consists of known words.
+  // (Since that is done when a player tries to generate the query string via the UI.)
 
   const grid = arrayToGrid(list);
   return grid;

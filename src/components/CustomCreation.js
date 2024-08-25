@@ -30,7 +30,7 @@ function CustomCreation({dispatchCustomState, customState, validityOpacity}) {
         indicateValidity={validityOpacity > 0}
         dragPieceIDs={customState.dragState?.pieceIDs}
         dragDestination={customState.dragState?.destination}
-        gridSize={12}
+        gridSize={customState.gridSize}
         customCreation={true}
       ></Board>
       <Pool

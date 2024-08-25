@@ -54,9 +54,7 @@ export function gameInit({
   if (
     savedState &&
     savedState.seed &&
-    //todo verify comment clarity
-    // If daily or custom, use the saved state if the seed matches
-    // otherwise, we don't care if the seed matches
+    // Make sure the seed matches (unless this isn't a daily or custom game)
     ((!isDaily && !isCustom) || savedState.seed == seed) &&
     validateSavedState(savedState) &&
     // Use the saved state if daily even if the game is solved
@@ -90,7 +88,9 @@ export function gameInit({
         maxShiftDown,
       } = generatePuzzleFromRepresentativeString({representativeString: seed}));
     } catch (error) {
-      console.error(error);
+      console.error(
+        `Error generating custom puzzle from seed ${seed}. Will proceed to generate random game instead. Caught error: ${error}`,
+      );
 
       ({pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
         generatePuzzle({

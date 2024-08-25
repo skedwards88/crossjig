@@ -27,10 +27,10 @@ export function generatePuzzleFromRepresentativeString({representativeString}) {
 
   return {
     pieces: pieceData,
-    maxShiftLeft: maxShiftLeft,
-    maxShiftRight: maxShiftRight,
-    maxShiftUp: maxShiftUp,
-    maxShiftDown: maxShiftDown,
+    maxShiftLeft,
+    maxShiftRight,
+    maxShiftUp,
+    maxShiftDown,
     gridSize,
     minLetters,
   };
