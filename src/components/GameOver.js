@@ -31,9 +31,17 @@ export default function GameOver({dispatchGameState, gameState, setDisplay}) {
       </button>
       <Share
         appName="Crossjig"
-        text="Check out this word puzzle!"
+        text={
+          gameState.isCustom
+            ? "Check out this custom crossjig!"
+            : "Check out this crossjig!"
+        }
         url="https://crossjig.com"
-        seed={`${gameState.seed}_${gameState.numLetters}`}
+        seed={
+          gameState.isCustom
+            ? `custom-${gameState.seed}`
+            : `${gameState.seed}_${gameState.numLetters}`
+        }
       ></Share>
     </div>
   );

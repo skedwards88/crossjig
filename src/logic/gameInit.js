@@ -166,5 +166,6 @@ export function gameInit({
     dragCount: 0,
     dragState: undefined,
     validityOpacity,
+    isCustom,
   };
 }
