@@ -39,6 +39,11 @@ function ControlBar({
         onClick={() => setDisplay("rules")}
       ></button>
       <button
+        id="customButton"
+        className="controlButton"
+        onClick={() => setDisplay("custom")}
+      ></button>
+      <button
         id="heartButton"
         className="controlButton"
         onClick={() => setDisplay("heart")}

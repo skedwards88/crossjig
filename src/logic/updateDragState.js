@@ -15,6 +15,12 @@
 //   - if on the pool:
 //     - where: "pool"
 //    - index (integer): The starting index of the drag group in the pool
+// - origin: Info about where the piece originated
+//   - if on the board:
+//     - where: "board"
+//   - if on the pool:
+//     - where: "pool"
+//     - index (integer): The starting index of the drag group in the pool
 export function updateDragState(oldDragState = {}, updates = {}) {
   return {
     ...oldDragState,

@@ -29,6 +29,9 @@ export default function Rules({setDisplay}) {
         challenge is easiest on Monday and gets harder over the week.
         <br />
         <br />
+        Click the <b>pencil</b> to build your own puzzle to share with friends.
+        <br />
+        <br />
       </p>
       <button
         id="rulesClose"

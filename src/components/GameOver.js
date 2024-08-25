@@ -33,7 +33,6 @@ export default function GameOver({dispatchGameState, gameState, setDisplay}) {
         appName="Crossjig"
         text="Check out this word puzzle!"
         url="https://crossjig.com"
-        query="puzzle"
         seed={`${gameState.seed}_${gameState.numLetters}`}
       ></Share>
     </div>
