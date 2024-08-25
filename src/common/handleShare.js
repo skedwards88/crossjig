@@ -11,7 +11,7 @@ export function handleShare({appName, text, url, seed, query}) {
   navigator
     .share({
       title: appName,
-      text: `${text}\n\n`,
+      text: `${text}\n`,
       url: fullUrl,
     })
     .then(() => console.log("Successful share"))
@@ -25,7 +25,7 @@ export function handleCopy({text, url, seed}) {
   const fullUrl = assembleShareLink({url, seed});
 
   try {
-    navigator.clipboard.writeText(`${text}\n\n${fullUrl}`);
+    navigator.clipboard.writeText(`${text}\n${fullUrl}`);
   } catch (error) {
     console.log("Error copying", error);
   }

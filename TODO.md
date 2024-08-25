@@ -31,17 +31,17 @@ For screenshots:
 
 // todo later PR:
 
-- add some custom daily puzzles
+- improve large screen
 - Use the hasVisited state to announce
+- add some custom daily puzzles
+- consolidate control buttons into hamburger menu (and add share button)
+
+- add link to sponsors?
+- rules = use the icons instead of words
+- rules = use line-spacing in css instead of multiple br
 - relocate to new file:
   - getWordValidityGrids
   - countingGrid
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
-- consolidate control buttons into hamburger menu (and add share button)
-- add link to sponsors?
 - piecesOverlapQ should use getGridFromPieces
-- rules = use line-spacing in css instead of multiple br
-- rules = use the icons instead of words
-- improve large screen
-- from main game, if sharing custom puzzle after playing, update the share text to reflect that
