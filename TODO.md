@@ -44,3 +44,4 @@ For screenshots:
 - rules = use line-spacing in css instead of multiple br
 - rules = use the icons instead of words
 - improve large screen
+- from main game, if sharing custom puzzle after playing, update the share text to reflect that
