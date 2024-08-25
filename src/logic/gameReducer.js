@@ -13,7 +13,7 @@ function updateStateForDragStart({
   pointerStartPosition, // (object with fields `x` and `y`): The x and y position of the pointer, as captured by the pointer down event.
   boardIsShifting, // (boolean): Whether the whole board is being dragged.
   previousDragState,
-  isCustomCreation = false, // (boolean): Whether the player is creating a custom game
+  isCustomCreating = false, // (boolean): Whether the player is creating a custom game
 }) {
   if (currentGameState.dragState !== undefined) {
     console.warn("Tried to start a drag while a drag was in progress");
@@ -104,7 +104,7 @@ function updateStateForDragStart({
   // (For custom creation only)
   // If dragging from the pool, add a dummy placeholder
   let placeholderPoolPieces = [];
-  if (isCustomCreation && groupBoardTop === undefined) {
+  if (isCustomCreating && groupBoardTop === undefined) {
     placeholderPoolPieces = piecesBeingDragged.map((piece) =>
       updatePieceDatum(piece, {
         letters: [[""]],
@@ -154,7 +154,7 @@ function updateStateForDragStart({
 
   // Don't bother updating the pool index for custom creation since the pool will never be depleted
   if (
-    !isCustomCreation &&
+    !isCustomCreating &&
     piecesBeingDragged.some((piece) => piece.poolIndex !== undefined)
   ) {
     // A piece was removed from the pool, so recompute poolIndex for the other pieces.
@@ -578,7 +578,7 @@ export function gameReducer(currentGameState, payload) {
       pointerID,
       pointerStartPosition,
       boardIsShifting: false,
-      isCustomCreation: currentGameState.isCustomCreation,
+      isCustomCreating: currentGameState.isCustomCreating,
     });
   } else if (payload.action === "dragNeighbors") {
     // Fired when the timer fires, if `!dragHasMoved`
@@ -588,7 +588,7 @@ export function gameReducer(currentGameState, payload) {
       return currentGameState;
     }
 
-    const droppedGameState = currentGameState.isCustomCreation
+    const droppedGameState = currentGameState.isCustomCreating
       ? updateStateForCustomDragEnd(currentGameState)
       : updateStateForDragEnd(currentGameState);
     const connectedPieceIDs = getConnectedPieceIDs({
@@ -603,7 +603,7 @@ export function gameReducer(currentGameState, payload) {
       pointerStartPosition: dragState.pointer,
       boardIsShifting: false,
       previousDragState: dragState,
-      isCustomCreation: currentGameState.isCustomCreation,
+      isCustomCreating: currentGameState.isCustomCreating,
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
@@ -626,7 +626,7 @@ export function gameReducer(currentGameState, payload) {
     // Fired on lostpointercapture, after `dragMove`.
     //
     // Drop all dragged pieces to `destination` and clear `dragState`.
-    return currentGameState.isCustomCreation
+    return currentGameState.isCustomCreating
       ? updateStateForCustomDragEnd(currentGameState)
       : updateStateForDragEnd(currentGameState);
   } else if (payload.action === "shiftStart") {
@@ -641,7 +641,7 @@ export function gameReducer(currentGameState, payload) {
       pointerID,
       pointerStartPosition,
       boardIsShifting: true,
-      isCustomCreation: currentGameState.isCustomCreation,
+      isCustomCreating: currentGameState.isCustomCreating,
     });
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;
