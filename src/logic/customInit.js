@@ -6,11 +6,8 @@ export function customInit(useSaved = true) {
     ? JSON.parse(localStorage.getItem("crossjigCustomCreation"))
     : undefined;
 
-  if (savedState) {
-    return {
-      ...savedState,
-      isCustomCreating: true,
-    };
+  if (savedState && savedState.isCustomCreating) {
+    return savedState;
   }
 
   const alphabet = [
