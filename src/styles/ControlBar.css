@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+#extendedMenu > h1 {
+  text-align: center;
+}
+
 #extendedMenu > button {
   background-color: var(--dark-color);
   color: var(--light-color);
@@ -48,53 +52,61 @@
   padding: 1px 6px;
 }
 
-#settingsButton {
+#settingsIcon {
   background-image: url("../images/icons/settings.svg");
 }
 
-#newGameButton {
+#newGameIcon {
   background-image: url("../images/icons/new_game.svg");
 }
 
-#helpButton {
-  background-image: url("../images/icons/help.svg");
+#hintIcon {
+  background-image: url("../images/icons/hint.svg");
 }
 
-#rulesButton {
-  background-image: url("../images/icons/info.svg");
+#rulesIcon {
+  background-image: url("../images/icons/question.svg");
 }
 
-#heartButton {
+#heartIcon {
   background-image: url("../images/icons/heart.svg");
 }
 
-#customButton {
+#customIcon {
   background-image: url("../images/icons/custom.svg");
 }
 
-#shareButton {
+#shareIcon {
   background-image: url("../images/icons/share.svg");
 }
 
-#backButton {
+#backIcon {
   background-image: url("../images/icons/back.svg");
 }
 
-#moreButton {
+#moreIcon {
   background-image: url("../images/icons/more.svg");
 }
 
-#calendarButton {
+#menuIcon {
+  background-image: url("../images/icons/menu.svg");
+}
+
+#infoIcon {
+  background-image: url("../images/icons/info.svg");
+}
+
+#calendarIcon {
   background-image:
     url("../images/icons/daily.svg"),
     radial-gradient(circle, rgb(239 239 239 / 60%) 30%, rgb(55 54 71));
   width: calc(var(--default-font-size) * 2);
 }
 
-#calendarButtonSolved {
+#calendarIconSolved {
   background-image: url("../images/icons/daily.svg");
 }
 
-#installButton {
+#installIcon {
   background-image: url("../images/icons/install.svg");
 }

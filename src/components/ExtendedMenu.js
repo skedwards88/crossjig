@@ -1,48 +1,72 @@
 import React from "react";
 import packageJson from "../../package.json";
 import {handleShare} from "../common/handleShare";
+import {handleInstall} from "../common/handleInstall";
 
-export default function ExtendedMenu({setDisplay}) {
+export default function ExtendedMenu({
+  setDisplay,
+  setInstallPromptEvent,
+  showInstallButton,
+  installPromptEvent,
+}) {
   return (
     <div className="App" id="extendedMenu">
+      <h1>Crossjig</h1>
       <button onClick={() => setDisplay("rules")}>
-        <div id="rulesButton" className="extendedMenuIcon"></div>
+        <div id="rulesIcon" className="extendedMenuIcon"></div>
         <span>How to play</span>
       </button>
 
       <button onClick={() => setDisplay("custom")}>
-        <div id="customButton" className="extendedMenuIcon"></div>
+        <div id="customIcon" className="extendedMenuIcon"></div>
         <span>Create a custom crossjig</span>
       </button>
 
-      {!navigator.canShare ? (
+      {navigator.canShare ? (
         <button
-          onClick={() => handleShare({appName: "Crossjig", text, url, seed})}
+          onClick={() =>
+            handleShare({
+              appName: "Crossjig",
+              text: "Check out this word game!",
+              url: "https://crossjig.com",
+            })
+          }
         >
-          <div id="shareButton" className="extendedMenuIcon"></div>
+          <div id="shareIcon" className="extendedMenuIcon"></div>
           <span>Share</span>
         </button>
       ) : (
         <></>
       )}
 
-      <button>
-        <div id="installButton" className="extendedMenuIcon"></div>
-        <span>Install</span>
-      </button>
+      {showInstallButton && installPromptEvent ? (
+        <button
+          onClick={() =>
+            handleInstall(installPromptEvent, setInstallPromptEvent)
+          }
+        >
+          <div id="installIcon" className="extendedMenuIcon"></div>
+          <span>{"Install (offline play and easy access)"}</span>
+        </button>
+      ) : (
+        <button onClick={() => setDisplay("fallbackInstall")}>
+          <div id="installIcon" className="extendedMenuIcon"></div>
+          <span>{"Install (play offline)"}</span>
+        </button>
+      )}
 
       <button onClick={() => setDisplay("moreGames")}>
-        <div id="moreButton" className="extendedMenuIcon"></div>
+        <div id="heartIcon" className="extendedMenuIcon"></div>
         <span>More games like this</span>
       </button>
 
-      <button>
-        <div id="heartButton" className="extendedMenuIcon"></div>
-        <span>Acknowledgements</span>
+      <button onClick={() => setDisplay("heart")}>
+        <div id="infoIcon" className="extendedMenuIcon"></div>
+        <span>Info and feedback</span>
       </button>
 
-      <button>
-        <div id="backButton" className="extendedMenuIcon"></div>
+      <button onClick={() => setDisplay("game")}>
+        <div id="backIcon" className="extendedMenuIcon"></div>
         <span>Return to game</span>
       </button>
       <small id="version">version {packageJson.version}</small>

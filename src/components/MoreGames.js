@@ -18,5 +18,3 @@ export default function MoreGames({setDisplay}) {
     </div>
   );
 }
-
-// todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images?)

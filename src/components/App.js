@@ -8,6 +8,7 @@ import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
+import FallbackInstall from "./FallbackInstall";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -187,15 +188,7 @@ export default function App() {
       return <Rules setDisplay={setDisplay}></Rules>;
 
     case "heart":
-      return (
-        <Heart
-          setDisplay={setDisplay}
-          appName="Crossjig"
-          shareText="Check out this word puzzle!"
-          repoName="crossjig"
-          url="https://crossjig.com"
-        />
-      );
+      return <Heart setDisplay={setDisplay} repoName="crossjig" />;
 
     case "settings":
       return (
@@ -219,12 +212,12 @@ export default function App() {
         <div className="App" id="crossjig">
           <div id="exitDaily">
             <button
-              id="helpButton"
+              id="hintIcon"
               className="controlButton"
               disabled={dailyGameState.gameIsSolved}
               onClick={() => dailyDispatchGameState({action: "getHint"})}
             ></button>
-            <button id="exitDailyButton" onClick={() => setDisplay("game")}>
+            <button id="exitDailyIcon" onClick={() => setDisplay("game")}>
               Exit daily challenge
             </button>
           </div>
@@ -352,17 +345,24 @@ export default function App() {
     case "moreGames":
       return <MoreGames setDisplay={setDisplay}></MoreGames>;
 
+    case "fallbackInstall":
+      return <FallbackInstall setDisplay={setDisplay}></FallbackInstall>;
+
     case "extendedMenu":
-      return <ExtendedMenu setDisplay={setDisplay}></ExtendedMenu>;
+      return (
+        <ExtendedMenu
+          setDisplay={setDisplay}
+          setInstallPromptEvent={setInstallPromptEvent}
+          showInstallButton={showInstallButton}
+          installPromptEvent={installPromptEvent}
+        ></ExtendedMenu>
+      );
 
     default:
       return (
         <div className="App" id="crossjig">
           <ControlBar
             setDisplay={setDisplay}
-            setInstallPromptEvent={setInstallPromptEvent}
-            showInstallButton={showInstallButton}
-            installPromptEvent={installPromptEvent}
             dispatchGameState={dispatchGameState}
             gameState={gameState}
             dailyIsSolved={dailyGameState.gameIsSolved}

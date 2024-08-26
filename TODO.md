@@ -44,3 +44,4 @@ For screenshots:
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
+- // todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images? in MoreGames.js

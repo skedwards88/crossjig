@@ -1,19 +1,10 @@
 import React from "react";
-import {handleInstall} from "../common/handleInstall";
 
-function ControlBar({
-  dispatchGameState,
-  gameState,
-  setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
-  dailyIsSolved,
-}) {
+function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
   return (
     <div id="controls">
       <button
-        id="newGameButton"
+        id="newGameIcon"
         className="controlButton"
         onClick={() => {
           dispatchGameState({
@@ -23,24 +14,19 @@ function ControlBar({
         }}
       ></button>
       <button
-        id="helpButton"
+        id="hintIcon"
         className="controlButton"
         disabled={gameState.gameIsSolved}
         onClick={() => dispatchGameState({action: "getHint"})}
       ></button>
       <button
-        id="settingsButton"
+        id="settingsIcon"
         className="controlButton"
         onClick={() => setDisplay("settings")}
       ></button>
-      <button
-        id="heartButton"
-        className="controlButton"
-        onClick={() => setDisplay("heart")}
-      ></button>
       {dailyIsSolved ? (
         <button
-          id="calendarButtonSolved"
+          id="calendarIconSolved"
           className="controlButton"
           onClick={() => {
             dispatchGameState({action: "clearStreakIfNeeded"});
@@ -49,22 +35,16 @@ function ControlBar({
         ></button>
       ) : (
         <button
-          id="calendarButton"
+          id="calendarIcon"
           className="controlButton"
           onClick={() => setDisplay("daily")}
         ></button>
       )}
-      {showInstallButton && installPromptEvent ? (
-        <button
-          id="installButton"
-          className="controlButton"
-          onClick={() =>
-            handleInstall(installPromptEvent, setInstallPromptEvent)
-          }
-        ></button>
-      ) : (
-        <></>
-      )}
+      <button
+        id="menuIcon"
+        className="controlButton"
+        onClick={() => setDisplay("extendedMenu")}
+      ></button>
     </div>
   );
 }
