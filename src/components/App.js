@@ -9,6 +9,7 @@ import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
 import FallbackInstall from "./FallbackInstall";
+import CustomError from "./CustomError";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -317,20 +318,11 @@ export default function App() {
 
     case "customError":
       return (
-        <div className="App customMessage">
-          <div>{`Your custom crossjig isn't ready to share yet: \n\n${customState.invalidReason}`}</div>
-          <button
-            onClick={() => {
-              dispatchCustomState({
-                action: "updateInvalidReason",
-                invalidReason: "",
-              });
-              setDisplay("custom");
-            }}
-          >
-            Ok
-          </button>
-        </div>
+        <CustomError
+          invalidReason={customState.invalidReason}
+          dispatchCustomState={dispatchCustomState}
+          setDisplay={setDisplay}
+        ></CustomError>
       );
 
     case "customShare":
