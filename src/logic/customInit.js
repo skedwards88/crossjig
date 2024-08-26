@@ -7,7 +7,10 @@ export function customInit(useSaved = true) {
     : undefined;
 
   if (savedState) {
-    return savedState;
+    return {
+      ...savedState,
+      isCustomCreating: true,
+    };
   }
 
   const alphabet = [
