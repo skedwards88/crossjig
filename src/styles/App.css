@@ -337,7 +337,6 @@ body:has(#drag-group) {
   font-size: calc(var(--default-font-size) * 0.75);
 }
 
-.customMessage > div,
 .customMessage > a {
   white-space: pre-line;
   text-wrap: wrap;

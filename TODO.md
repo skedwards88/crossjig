@@ -31,7 +31,6 @@ For screenshots:
 
 // todo later PR:
 
-- improve large screen
 - Use the hasVisited state to announce
 - add some custom daily puzzles
 - consolidate control buttons into hamburger menu (and add share button)
@@ -45,3 +44,4 @@ For screenshots:
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
+- // todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images? in MoreGames.js
