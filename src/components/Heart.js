@@ -1,16 +1,9 @@
 import React from "react";
-import Share from "./Share";
 
-export default function Heart({setDisplay, appName, shareText, repoName, url}) {
+export default function Heart({setDisplay, repoName}) {
   return (
     <div className="App info">
-      <h1>{appName}</h1>
       <div className="infoText">
-        {"Like this game? Share it with your friends.\n\n"}
-        {<Share appName={appName} text={shareText} url={url}></Share>}
-        {`\n`}
-        {<hr></hr>}
-        {`\n`}
         {"Feedback? "}
         <a
           href={`https://github.com/skedwards88/${repoName}/issues/new/choose`}
@@ -26,6 +19,7 @@ export default function Heart({setDisplay, appName, shareText, repoName, url}) {
           skedwards88/word_lists
         </a>
         {`.`}
+        {`\n\n`}
         {<hr></hr>}
         {`\n`}
         <a href="./privacy.html">Privacy policy</a>
