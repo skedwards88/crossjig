@@ -1,6 +1,9 @@
 #extendedMenu {
   display: flex;
   flex-direction: column;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #extendedMenu > h1 {
@@ -14,6 +17,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: left;
+}
+
+#extendedMenu span {
+  padding: 10px;
 }
 
 .extendedMenuIcon {
