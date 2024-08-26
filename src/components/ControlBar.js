@@ -1,4 +1,5 @@
 import React from "react";
+import {handleShare} from "../common/handleShare";
 
 function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
   return (
@@ -13,17 +14,14 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
           });
         }}
       ></button>
+
       <button
         id="hintIcon"
         className="controlButton"
         disabled={gameState.gameIsSolved}
         onClick={() => dispatchGameState({action: "getHint"})}
       ></button>
-      <button
-        id="settingsIcon"
-        className="controlButton"
-        onClick={() => setDisplay("settings")}
-      ></button>
+
       {dailyIsSolved ? (
         <button
           id="calendarIconSolved"
@@ -40,6 +38,29 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
           onClick={() => setDisplay("daily")}
         ></button>
       )}
+
+      <button
+        id="customIcon"
+        className="controlButton"
+        onClick={() => setDisplay("custom")}
+      ></button>
+
+      {navigator.canShare ? (
+        <button
+          id="shareIcon"
+          className="controlButton"
+          onClick={() =>
+            handleShare({
+              appName: "Crossjig",
+              text: "Check out this word game!",
+              url: "https://crossjig.com",
+            })
+          }
+        ></button>
+      ) : (
+        <></>
+      )}
+
       <button
         id="menuIcon"
         className="controlButton"

@@ -22,6 +22,11 @@ export default function ExtendedMenu({
         <span>Create a custom crossjig</span>
       </button>
 
+      <button onClick={() => setDisplay("settings")}>
+        <div id="settingsIcon" className="extendedMenuIcon"></div>
+        <span>Settings</span>
+      </button>
+
       {navigator.canShare ? (
         <button
           onClick={() =>
