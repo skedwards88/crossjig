@@ -12,6 +12,15 @@
   align-items: center;
 }
 
+.rulesIcon {
+  display: inline-block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: calc(var(--default-font-size) * 0.75);
+  height: calc(var(--default-font-size) * 0.75);
+}
+
 #rulesHeader {
   grid-area: header;
 }
