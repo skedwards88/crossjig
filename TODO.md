@@ -33,15 +33,12 @@ For screenshots:
 
 - Use the hasVisited state to announce
 - add some custom daily puzzles
-- consolidate control buttons into hamburger menu (and add share button)
 
+- // todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images? in MoreGames.js
 - add link to sponsors?
-- rules = use the icons instead of words
-- rules = use line-spacing in css instead of multiple br
 - relocate to new file:
   - getWordValidityGrids
   - countingGrid
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
-- // todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images? in MoreGames.js

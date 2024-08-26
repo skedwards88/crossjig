@@ -41,13 +41,13 @@ export function convertRepresentativeStringToGrid(string) {
     }
   }
 
-  // Error if the list does not form a square grid between 8x8 and 12x12
+  // Error if the list does not form a square grid between 8x8 and 14x14
   const dimension = Math.sqrt(list.length);
   if (dimension % 1 !== 0) {
     throw new Error("Input string does not form a square grid");
   }
-  if (dimension < 8 || dimension > 12) {
-    throw new Error("Input string must form a grid between 8x8 and 12x12");
+  if (dimension < 8 || dimension > 14) {
+    throw new Error("Input string must form a grid between 8x8 and 14x14");
   }
 
   // I'm assuming that people won't build custom query strings outside of the UI,

@@ -87,14 +87,14 @@ describe("convertRepresentativeStringToGrid", () => {
   test("throws an error if the resulting grid is smaller than 8x8", () => {
     const input = "0AB2EF3";
     expect(() => convertRepresentativeStringToGrid(input)).toThrow(
-      "Input string must form a grid between 8x8 and 12x12",
+      "Input string must form a grid between 8x8 and 14x14",
     );
   });
 
-  test("throws an error if the resulting grid is larger than 12x12", () => {
-    const input = "0AB165CD";
+  test("throws an error if the resulting grid is larger than 14x14", () => {
+    const input = "0AB221CD";
     expect(() => convertRepresentativeStringToGrid(input)).toThrow(
-      "Input string must form a grid between 8x8 and 12x12",
+      "Input string must form a grid between 8x8 and 14x14",
     );
   });
 });
