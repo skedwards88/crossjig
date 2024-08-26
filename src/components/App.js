@@ -243,7 +243,8 @@ export default function App() {
         <div className="App" id="crossjig">
           <div id="controls">
             <button
-              id="playCustomButton"
+              id="playIcon"
+              className="controlButton"
               onClick={() => {
                 let representativeString;
                 try {
@@ -264,11 +265,11 @@ export default function App() {
                 });
                 setDisplay("game");
               }}
-            >
-              Play
-            </button>
+            ></button>
+
             <button
-              id="shareCustomButton"
+              id="shareIcon"
+              className="controlButton"
               onClick={() => {
                 let representativeString;
                 try {
@@ -299,11 +300,10 @@ export default function App() {
                   setDisplay("customShare");
                 }
               }}
-            >
-              Share
-            </button>
+            ></button>
+
             <button id="exitCustomButton" onClick={() => setDisplay("game")}>
-              Cancel
+              Exit custom creation
             </button>
           </div>
           <CustomCreation
@@ -318,7 +318,7 @@ export default function App() {
     case "customError":
       return (
         <div className="App customMessage">
-          <div>{`Your game isn't ready to share yet: \n\n${customState.invalidReason}`}</div>
+          <div>{`Your custom crossjig isn't ready to share yet: \n\n${customState.invalidReason}`}</div>
           <button
             onClick={() => {
               dispatchCustomState({

@@ -110,3 +110,7 @@
 #installIcon {
   background-image: url("../images/icons/install.svg");
 }
+
+#playIcon {
+  background-image: url("../images/icons/play.svg");
+}
