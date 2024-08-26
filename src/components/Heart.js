@@ -11,16 +11,6 @@ export default function Heart({setDisplay, appName, shareText, repoName, url}) {
         {`\n`}
         {<hr></hr>}
         {`\n`}
-        {`Want more games? Check out `}
-        <a href="https://lexlet.com">Lexlet</a>
-        {" and "}
-        <a href="https://skedwards88.github.io/blobble/">Blobble</a>
-        {" or see all of our puzzle games "}
-        <a href="https://skedwards88.github.io/">here</a>
-        {`. `}
-        {`\n\n`}
-        {<hr></hr>}
-        {`\n`}
         {"Feedback? "}
         <a
           href={`https://github.com/skedwards88/${repoName}/issues/new/choose`}

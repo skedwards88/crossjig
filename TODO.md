@@ -31,7 +31,6 @@ For screenshots:
 
 // todo later PR:
 
-- improve large screen
 - Use the hasVisited state to announce
 - add some custom daily puzzles
 - consolidate control buttons into hamburger menu (and add share button)

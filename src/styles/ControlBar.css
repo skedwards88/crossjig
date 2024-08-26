@@ -1,3 +1,32 @@
+#extendedMenu {
+  display: flex;
+  flex-direction: column;
+}
+
+#extendedMenu > button {
+  background-color: var(--dark-color);
+  color: var(--light-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+
+.extendedMenuIcon {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  width: var(--default-font-size);
+  height: var(--default-font-size);
+  background-color: transparent;
+  padding: 1px 6px;
+}
+
+#version {
+  text-align: center;
+}
+
 #controls {
   display: flex;
   justify-content: space-evenly;
@@ -41,6 +70,18 @@
 
 #customButton {
   background-image: url("../images/icons/custom.svg");
+}
+
+#shareButton {
+  background-image: url("../images/icons/share.svg");
+}
+
+#backButton {
+  background-image: url("../images/icons/back.svg");
+}
+
+#moreButton {
+  background-image: url("../images/icons/more.svg");
 }
 
 #calendarButton {

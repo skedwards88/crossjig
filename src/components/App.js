@@ -2,6 +2,8 @@ import React from "react";
 import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
+import ExtendedMenu from "./ExtendedMenu";
+import MoreGames from "./MoreGames";
 import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
@@ -346,6 +348,12 @@ export default function App() {
           setDisplay={setDisplay}
         ></CustomShare>
       );
+
+    case "moreGames":
+      return <MoreGames setDisplay={setDisplay}></MoreGames>;
+
+    case "extendedMenu":
+      return <ExtendedMenu setDisplay={setDisplay}></ExtendedMenu>;
 
     default:
       return (
