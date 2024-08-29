@@ -4,7 +4,7 @@ import Result from "./Result";
 import Board from "./Board";
 import DragGroup from "./DragGroup";
 
-function Game({dispatchGameState, gameState, setDisplay}) {
+function Game({dispatchGameState, gameState, setDisplay, validityOpacity}) {
   // dragCount ensures a different key each time, so a fresh DragGroup is mounted even if there's
   // no render between one drag ending and the next one starting.
   const dragGroup = gameState.dragState ? (
@@ -20,7 +20,7 @@ function Game({dispatchGameState, gameState, setDisplay}) {
       style={{
         "--grid-rows": gameState.gridSize,
         "--grid-columns": gameState.gridSize,
-        "--validity-opacity": gameState.validityOpacity,
+        "--validity-opacity": validityOpacity,
       }}
     >
       <Board
@@ -30,7 +30,7 @@ function Game({dispatchGameState, gameState, setDisplay}) {
         dragDestination={gameState.dragState?.destination}
         gameIsSolved={gameState.gameIsSolved}
         dispatchGameState={dispatchGameState}
-        indicateValidity={gameState.validityOpacity > 0}
+        indicateValidity={validityOpacity > 0}
       ></Board>
       {gameState.allPiecesAreUsed ? (
         <Result

@@ -30,7 +30,6 @@ function validateSavedState(savedState) {
 
 export function gameInit({
   numLetters,
-  validityOpacity = 0.15,
   useSaved = true,
   isDaily = false,
   isCustom = false,
@@ -157,7 +156,6 @@ export function gameInit({
     hintTally: 0,
     dragCount: 0,
     dragState: undefined,
-    validityOpacity,
     isCustom,
   };
 }

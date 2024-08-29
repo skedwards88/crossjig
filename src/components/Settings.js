@@ -1,16 +1,23 @@
 import React from "react";
 
-export default function Settings({setDisplay, dispatchGameState, gameState}) {
+export default function Settings({
+  setDisplay,
+  dispatchGameState,
+  gameState,
+  setValidityOpacity,
+  originalValidityOpacity,
+}) {
   function handleNewGame(event) {
     event.preventDefault();
     const newNumLetters = event.target.elements.numLetters.value;
     const newValidityOpacity =
       event.target.elements.validityOpacity.value / 100;
 
+    setValidityOpacity(newValidityOpacity);
+
     dispatchGameState({
       action: "newGame",
       numLetters: newNumLetters,
-      validityOpacity: newValidityOpacity,
     });
     setDisplay("game");
   }
@@ -46,7 +53,7 @@ export default function Settings({setDisplay, dispatchGameState, gameState}) {
             <div className="setting-info">{`Valid words are indicated with a strikethrough. This controls the brightness of the strikethrough.`}</div>
             <div
               id="validity-example"
-              style={{"--validity-opacity": gameState.validityOpacity}}
+              style={{"--validity-opacity": originalValidityOpacity}}
             >
               EXAMPLE
             </div>
@@ -61,13 +68,10 @@ export default function Settings({setDisplay, dispatchGameState, gameState}) {
               type="range"
               min={0}
               max={100}
-              defaultValue={gameState.validityOpacity * 100 || 15}
+              defaultValue={originalValidityOpacity * 100 || 15}
               onChange={(event) => {
                 const newValidityOpacity = event.target.value / 100;
-                dispatchGameState({
-                  action: "changeValidityOpacity",
-                  newValidityOpacity,
-                });
+                setValidityOpacity(newValidityOpacity);
               }}
             />
             <div id="validityOpacity-info" className="setting-info">
