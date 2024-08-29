@@ -51,6 +51,12 @@ export default function App() {
     getInitialState(savedDisplay, hasVisited),
   );
 
+  // Determine the opacity for the validity indicator
+  const savedValidityOpacity =
+    JSON.parse(localStorage.getItem("crossjigValidityOpacity")) ?? 0.15;
+  const [validityOpacity, setValidityOpacity] =
+    React.useState(savedValidityOpacity);
+
   // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
@@ -167,6 +173,13 @@ export default function App() {
   }, [display]);
 
   React.useEffect(() => {
+    window.localStorage.setItem(
+      "crossjigValidityOpacity",
+      JSON.stringify(validityOpacity),
+    );
+  }, [validityOpacity]);
+
+  React.useEffect(() => {
     window.localStorage.setItem("crossjigState", JSON.stringify(gameState));
   }, [gameState]);
 
@@ -197,6 +210,8 @@ export default function App() {
           setDisplay={setDisplay}
           dispatchGameState={dispatchGameState}
           gameState={gameState}
+          setValidityOpacity={setValidityOpacity}
+          originalValidityOpacity={validityOpacity}
         />
       );
 
@@ -224,11 +239,8 @@ export default function App() {
           </div>
           <Game
             dispatchGameState={dailyDispatchGameState}
-            gameState={{
-              ...dailyGameState,
-              // todo in the settings, pass in the dailyDispatcher too and update the validityOpacity in the daily state as well. then remove this line.
-              validityOpacity: gameState.validityOpacity,
-            }}
+            gameState={dailyGameState}
+            validityOpacity={validityOpacity}
             setDisplay={setDisplay}
           ></Game>
         </div>
@@ -309,7 +321,7 @@ export default function App() {
           </div>
           <CustomCreation
             dispatchCustomState={dispatchCustomState}
-            validityOpacity={gameState.validityOpacity}
+            validityOpacity={validityOpacity}
             customState={customState}
             setDisplay={setDisplay}
           ></CustomCreation>
@@ -362,6 +374,7 @@ export default function App() {
           <Game
             dispatchGameState={dispatchGameState}
             gameState={gameState}
+            validityOpacity={validityOpacity}
           ></Game>
         </div>
       );

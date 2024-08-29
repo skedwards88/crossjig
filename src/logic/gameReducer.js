@@ -555,11 +555,6 @@ export function gameReducer(currentGameState, payload) {
       seed: payload.representativeString,
       isCustom: true,
     });
-  } else if (payload.action === "changeValidityOpacity") {
-    return {
-      ...currentGameState,
-      validityOpacity: payload.newValidityOpacity,
-    };
   } else if (payload.action === "getHint") {
     sendAnalytics("hint");
 
