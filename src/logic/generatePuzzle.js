@@ -24,14 +24,16 @@ export function generatePuzzle({gridSize, minLetters, seed}) {
 
     const centeredGrid = centerGrid(grid, "");
 
-    const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
-      getMaxShifts(centeredGrid, "");
+    let {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} = getMaxShifts(
+      centeredGrid,
+      "",
+    );
 
     const pieces = shuffleArray(
       makePieces(centeredGrid),
       pseudoRandomGenerator,
     );
-    const pieceData = pieces.map((piece, index) =>
+    let pieceData = pieces.map((piece, index) =>
       updatePieceDatum(piece, {
         id: index,
         poolIndex: index,
@@ -48,7 +50,21 @@ export function generatePuzzle({gridSize, minLetters, seed}) {
       numSingletons / numPieces < maxFractionSingles;
 
     if (foundPuzzleWithAcceptableSingletons || count > 100) {
+      // Pad the puzzle with a square on each side and recenter the solution
+      maxShiftRight++;
+      maxShiftDown++;
+      maxShiftLeft++;
+      maxShiftUp++;
+      gridSize = gridSize + 2;
+      pieceData = pieceData.map((piece) =>
+        updatePieceDatum(piece, {
+          solutionTop: piece.solutionTop + 1,
+          solutionLeft: piece.solutionLeft + 1,
+        }),
+      );
+
       return {
+        gridSize,
         pieces: pieceData,
         maxShiftLeft: maxShiftLeft,
         maxShiftRight: maxShiftRight,

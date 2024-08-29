@@ -5,7 +5,6 @@ import getDailySeed from "../common/getDailySeed";
 import {getNumLettersForDay} from "./getNumLettersForDay";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
 import {generatePuzzleFromRepresentativeString} from "./generatePuzzleFromRepresentativeString";
-import {updatePieceDatum} from "./assemblePiece";
 
 function validateSavedState(savedState) {
   if (typeof savedState !== "object" || savedState === null) {
@@ -92,30 +91,23 @@ export function gameInit({
         `Error generating custom puzzle from seed ${seed}. Will proceed to generate random game instead. Caught error: ${error}`,
       );
 
-      ({pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
-        generatePuzzle({
-          gridSize: gridSize,
-          minLetters: minLetters,
-          seed: seed,
-        }));
+      ({
+        gridSize,
+        pieces,
+        maxShiftLeft,
+        maxShiftRight,
+        maxShiftUp,
+        maxShiftDown,
+      } = generatePuzzle({
+        gridSize: gridSize,
+        minLetters: minLetters,
+        seed: seed,
+      }));
     }
   } else {
-    ({pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
+    ({gridSize, pieces, maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
       generatePuzzle({gridSize: gridSize, minLetters: minLetters, seed: seed}));
   }
-
-  // Pad the puzzle with a square on each side and recenter the solution
-  maxShiftRight++;
-  maxShiftDown++;
-  maxShiftLeft++;
-  maxShiftUp++;
-  gridSize = gridSize + 2;
-  pieces = pieces.map((piece) =>
-    updatePieceDatum(piece, {
-      solutionTop: piece.solutionTop + 1,
-      solutionLeft: piece.solutionLeft + 1,
-    }),
-  );
 
   // If there are already stats, use those
   let stats;
