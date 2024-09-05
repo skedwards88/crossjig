@@ -81,6 +81,11 @@
     width: min(calc((var(--grid-columns) * var(--box-size) * 2)), 80vw);
   }
 
+  #lookupLetters {
+    max-width: 80vw;
+    justify-self: center;
+  }
+
   #rulesText {
     width: 50vw;
   }
@@ -100,5 +105,11 @@
         calc((84vw - 1px) / var(--grid-columns)),
         1cm
       );
+  }
+
+  #custom > #pool,
+  #lookupLetters {
+    max-width: 80vw;
+    justify-self: center;
   }
 }
