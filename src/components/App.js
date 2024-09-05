@@ -10,6 +10,7 @@ import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
 import FallbackInstall from "./FallbackInstall";
 import CustomError from "./CustomError";
+import CustomLookup from "./CustomLookup";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -315,8 +316,16 @@ export default function App() {
               }}
             ></button>
 
+            <button
+              id="hintIcon"
+              className="controlButton"
+              onClick={() => {
+                setDisplay("customLookup");
+              }}
+            ></button>
+
             <button id="exitCustomButton" onClick={() => setDisplay("game")}>
-              Exit custom creation
+              Exit creation
             </button>
           </div>
           <CustomCreation
@@ -345,6 +354,9 @@ export default function App() {
           setDisplay={setDisplay}
         ></CustomShare>
       );
+
+    case "customLookup":
+      return <CustomLookup setDisplay={setDisplay}></CustomLookup>;
 
     case "moreGames":
       return <MoreGames setDisplay={setDisplay}></MoreGames>;

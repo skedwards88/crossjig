@@ -355,3 +355,62 @@ body:has(#drag-group) {
 #custom-message-buttons > button {
   margin: 10px;
 }
+
+#customLookup {
+  display: grid;
+  grid-template-areas:
+    "result"
+    "pattern"
+    "controls"
+    "letters";
+  grid-template-rows: 1fr auto auto;
+}
+
+#lookupResult {
+  grid-area: result;
+  white-space: pre-wrap;
+  text-align: center;
+  display: flex;
+  flex-flow: column wrap;
+  overflow: scroll;
+  padding: 10px;
+}
+
+#lookupResult > div {
+  margin: 3px;
+  font-size: calc(var(--default-font-size) / 2);
+}
+
+#lookupString {
+  grid-area: pattern;
+  text-align: center;
+}
+
+#customLookupControls {
+  grid-area: controls;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#customLookupControls > button {
+  height: fit-content;
+}
+
+#lookupLetters {
+  grid-area: letters;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+#lookupLetter {
+  padding: 0;
+  height: 1.4em;
+  width: 1.4em;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+}
