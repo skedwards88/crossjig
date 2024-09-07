@@ -89,6 +89,12 @@
   #rulesText {
     width: 50vw;
   }
+
+  #moreGames .game-image {
+    margin: 2vw;
+    width: 20vw;
+    height: 35vw;
+  }
 }
 
 /* Large screen, portrait */
@@ -111,5 +117,11 @@
   #lookupLetters {
     max-width: 80vw;
     justify-self: center;
+  }
+
+  #moreGames .game-image {
+    margin: 2vw;
+    width: 20vw;
+    height: 35vw;
   }
 }
