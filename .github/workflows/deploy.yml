@@ -42,8 +42,12 @@ jobs:
           git config --global user.name "skedwards88"
           git config --global user.email "skedwards88@gmail.com"
 
+
       - name: Bump version
         run: npm version patch
+
+      - name: Install webp compression tool
+        run: sudo apt-get install -y webp
 
       - name: Install requirements
         run: npm ci

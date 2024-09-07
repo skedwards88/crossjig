@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "compressImages": "./compressImages.sh",
+    "prebuild": "npm run compressImages",
     "build": "webpack",
     "dev": "webpack-dev-server --mode development",
     "start": "webpack-dev-server",

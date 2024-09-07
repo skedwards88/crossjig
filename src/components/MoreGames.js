@@ -3,8 +3,9 @@ import React from "react";
 export default function MoreGames({setDisplay}) {
   // To add a new game:
   // - add it to the list here
-  // - add a screenshot under images/moreGames
-  // - reference the screenshot in src/styles/MoreGames.css
+  // - add a png screenshot under images/moreGames
+  // - to preview locally, run `npm run compressImages` to generate a webp version of the png (this will also be done during deployment)
+  // - reference the webp screenshot in src/styles/MoreGames.css
   const games = {
     lexlet: "https://lexlet.com",
     blobble: "https://skedwards88.github.io/blobble/",
