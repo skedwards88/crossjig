@@ -17,23 +17,23 @@ export default function Rules({setDisplay}) {
           <b>Long press and drag</b> to move a group of touching pieces.
         </p>
         <p>
-          Click <div id="hintIcon" className="rulesIcon"></div> to get a hint. A
-          hint will move all pieces that are on the board to their correct
+          Click <span id="hintIcon" className="rulesIcon"></span> to get a hint.
+          A hint will move all pieces that are on the board to their correct
           location. If all pieces are already in the correct location, a new
           piece will be added to the board.
         </p>
         <p>
-          Click <div id="settingsIcon" className="rulesIcon"></div> to change
+          Click <span id="settingsIcon" className="rulesIcon"></span> to change
           the number of pieces in the puzzle or the validity indication.
         </p>
         <p>
-          Click <div id="calendarIconSolved" className="rulesIcon"></div> to
+          Click <span id="calendarIconSolved" className="rulesIcon"></span> to
           play the daily challenge. The daily challenge is easiest on Monday and
           gets harder over the week.
         </p>
         <p>
-          Click <div id="customIcon" className="rulesIcon"></div> to build your
-          own crossjig to share with friends.
+          Click <span id="customIcon" className="rulesIcon"></span> to build
+          your own crossjig to share with friends.
         </p>
       </div>
       <button

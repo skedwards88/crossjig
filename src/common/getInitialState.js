@@ -1,6 +1,14 @@
-export function getInitialState(savedDisplay, hasVisited) {
-  if (!hasVisited) {
+export function getInitialState(
+  savedDisplay,
+  hasVisitedEver,
+  hasVisitedRecently,
+) {
+  if (!hasVisitedEver) {
     return "rules";
+  }
+
+  if (!hasVisitedRecently) {
+    return "whatsNew";
   }
 
   if (savedDisplay === "game" || savedDisplay === "daily") {

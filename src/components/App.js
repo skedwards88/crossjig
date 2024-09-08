@@ -11,6 +11,7 @@ import ControlBar from "./ControlBar";
 import FallbackInstall from "./FallbackInstall";
 import CustomError from "./CustomError";
 import CustomLookup from "./CustomLookup";
+import WhatsNew from "./WhatsNew";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -37,7 +38,9 @@ export default function App() {
 
   // Determine when the player last visited the game
   // This is used to determine whether to show the rules or an announcement instead of the game
-  const hasVisited = hasVisitedSince("crossjigLastVisited", "20240429");
+  const hasVisitedEver = hasVisitedSince("crossjigLastVisited", "20240429");
+  const hasVisitedRecently = hasVisitedSince("crossjigLastVisited", "20240908");
+
   const [lastVisited] = React.useState(getDailySeed());
   React.useEffect(() => {
     window.localStorage.setItem(
@@ -49,7 +52,7 @@ export default function App() {
   // Determine what view to show the user
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
-    getInitialState(savedDisplay, hasVisited),
+    getInitialState(savedDisplay, hasVisitedEver, hasVisitedRecently),
   );
 
   // Determine the opacity for the validity indicator
@@ -84,8 +87,7 @@ export default function App() {
     customInit,
   );
 
-  // todo consolidate lastVisited and setLastOpened?
-  const [, setLastOpened] = React.useState(Date.now());
+  const [, setLastVisible] = React.useState(Date.now());
 
   function handleCustomGeneration() {
     // If there is nothing to share, display a message with errors
@@ -131,7 +133,7 @@ export default function App() {
     // This is to help the daily challenge refresh if the app has
     // been open in the background since an earlier challenge.
     if (!document.hidden) {
-      setLastOpened(Date.now());
+      setLastVisible(Date.now());
     }
   }
 
@@ -373,6 +375,9 @@ export default function App() {
           installPromptEvent={installPromptEvent}
         ></ExtendedMenu>
       );
+
+    case "whatsNew":
+      return <WhatsNew setDisplay={setDisplay}></WhatsNew>;
 
     default:
       return (
