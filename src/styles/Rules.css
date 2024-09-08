@@ -21,6 +21,14 @@
   height: calc(var(--default-font-size) * 0.75);
 }
 
+/* What's new uses the rules styling, and this is used for what's new */
+button.rulesIcon {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
 #rulesHeader {
   grid-area: header;
 }

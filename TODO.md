@@ -31,10 +31,8 @@ For screenshots:
 
 // todo later PR:
 
-- Use the hasVisited state to announce
 - add some custom daily puzzles
 
-- // todo put screenshots of lexlet and blobble and wordfall ()as webp/compressed images? in MoreGames.js
 - add link to sponsors?
 - relocate to new file:
   - getWordValidityGrids
