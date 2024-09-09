@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function WhatsNew({setDisplay}) {
+export default function WhatsNew({setDisplay, setHasSeenWhatsNew}) {
   return (
     <div className="App info">
       <div id="rulesText">
@@ -12,6 +12,7 @@ export default function WhatsNew({setDisplay}) {
             className="rulesIcon"
             onClick={() => {
               setDisplay("custom");
+              setHasSeenWhatsNew(true);
             }}
           ></button>{" "}
           to build your own crossjig to share with friends.
@@ -20,6 +21,7 @@ export default function WhatsNew({setDisplay}) {
       <button
         onClick={() => {
           setDisplay("game");
+          setHasSeenWhatsNew(true);
         }}
       >
         {"Back to game"}

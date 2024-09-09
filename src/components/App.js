@@ -37,9 +37,23 @@ export default function App() {
   const [isCustom, seed, numLetters] = parseUrlQuery();
 
   // Determine when the player last visited the game
-  // This is used to determine whether to show the rules or an announcement instead of the game
+  // This is used to determine whether to show the rules instead of the game
   const hasVisitedEver = hasVisitedSince("crossjigLastVisited", "20240429");
-  const hasVisitedRecently = hasVisitedSince("crossjigLastVisited", "20240908");
+
+  const savedHasSeenWhatsNew = JSON.parse(
+    localStorage.getItem("crossjigHasSeenWhatsNew20240909"),
+  );
+
+  const [hasSeenWhatsNew, setHasSeenWhatsNew] = React.useState(
+    savedHasSeenWhatsNew ?? false,
+  );
+
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "crossjigHasSeenWhatsNew20240909",
+      JSON.stringify(hasSeenWhatsNew),
+    );
+  }, [hasSeenWhatsNew]);
 
   const [lastVisited] = React.useState(getDailySeed());
   React.useEffect(() => {
@@ -52,7 +66,7 @@ export default function App() {
   // Determine what view to show the user
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
-    getInitialState(savedDisplay, hasVisitedEver, hasVisitedRecently),
+    getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew),
   );
 
   // Determine the opacity for the validity indicator
@@ -202,7 +216,12 @@ export default function App() {
 
   switch (display) {
     case "rules":
-      return <Rules setDisplay={setDisplay}></Rules>;
+      return (
+        <Rules
+          setDisplay={setDisplay}
+          setHasSeenWhatsNew={setHasSeenWhatsNew}
+        ></Rules>
+      );
 
     case "heart":
       return <Heart setDisplay={setDisplay} repoName="crossjig" />;
@@ -377,7 +396,12 @@ export default function App() {
       );
 
     case "whatsNew":
-      return <WhatsNew setDisplay={setDisplay}></WhatsNew>;
+      return (
+        <WhatsNew
+          setDisplay={setDisplay}
+          setHasSeenWhatsNew={setHasSeenWhatsNew}
+        ></WhatsNew>
+      );
 
     default:
       return (
