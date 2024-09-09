@@ -1,13 +1,9 @@
-export function getInitialState(
-  savedDisplay,
-  hasVisitedEver,
-  hasVisitedRecently,
-) {
+export function getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew) {
   if (!hasVisitedEver) {
     return "rules";
   }
 
-  if (!hasVisitedRecently) {
+  if (!hasSeenWhatsNew) {
     return "whatsNew";
   }
 

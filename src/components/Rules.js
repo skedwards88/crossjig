@@ -1,7 +1,7 @@
 import React from "react";
 import packageJson from "../../package.json";
 
-export default function Rules({setDisplay}) {
+export default function Rules({setDisplay, setHasSeenWhatsNew}) {
   return (
     <div className="App rules">
       <h1 id="rulesHeader">Crossjig: How to play</h1>
@@ -41,6 +41,7 @@ export default function Rules({setDisplay}) {
         className="close"
         onClick={() => {
           setDisplay("game");
+          setHasSeenWhatsNew(true);
         }}
       >
         {"Play"}

@@ -7,19 +7,19 @@ describe("getInitialState", () => {
     expect(getInitialState("game", false, false)).toBe("rules");
   });
 
-  test("returns 'whatsNew' if hasVisitedRecently is false", () => {
+  test("returns 'whatsNew' if hasSeenWhatsNew is false", () => {
     expect(getInitialState("game", true, false)).toBe("whatsNew");
   });
 
-  test("returns 'game' if hasVisitedEver and hasVisitedRecently are true and savedDisplay is 'game", () => {
+  test("returns 'game' if hasVisitedEver and hasSeenWhatsNew are true and savedDisplay is 'game", () => {
     expect(getInitialState("game", true, true)).toBe("game");
   });
 
-  test("returns 'daily' if hasVisitedEver and hasVisitedRecently are true and savedDisplay is 'daily", () => {
+  test("returns 'daily' if hasVisitedEver and hasSeenWhatsNew are true and savedDisplay is 'daily", () => {
     expect(getInitialState("daily", true, true)).toBe("daily");
   });
 
-  test("returns 'game' if hasVisitedEver and hasVisitedRecently are and savedDisplay is not 'game' or 'daily", () => {
+  test("returns 'game' if hasVisitedEver and hasSeenWhatsNew are and savedDisplay is not 'game' or 'daily", () => {
     expect(getInitialState("rules", true, true)).toBe("game");
   });
 });
