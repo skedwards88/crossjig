@@ -6,29 +6,7 @@ import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
 import {getWordsFromPieces} from "../logic/getWordsFromPieces";
 import {transposeGrid} from "@skedwards88/word_logic";
-
-// Returns a grid with the number of letters at each location in the grid
-export function countingGrid(height, width, pieces) {
-  let grid = Array(height)
-    .fill(undefined)
-    .map(() => Array(width).fill(0));
-
-  for (let piece of pieces) {
-    const letters = piece.letters;
-    let top = piece.boardTop ?? piece.dragGroupTop;
-    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = piece.boardLeft ?? piece.dragGroupLeft;
-      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        if (letters[rowIndex][colIndex]) {
-          grid[top][left]++;
-        }
-        left++;
-      }
-      top++;
-    }
-  }
-  return grid;
-}
+import {getLetterCountPerSquare} from "../logic/getLetterCountPerSquare";
 
 function getHorizontalValidityGrid({grid, originalWords}) {
   // return a 2D array of bools indicating whether
@@ -131,7 +109,7 @@ export default function Board({
 
   const overlapGrid = customCreation
     ? undefined
-    : countingGrid(gridSize, gridSize, boardPieces);
+    : getLetterCountPerSquare(gridSize, gridSize, boardPieces);
 
   const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
     ? getWordValidityGrids({
@@ -160,7 +138,7 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id),
     );
-    const grid = countingGrid(gridSize, gridSize, draggedPieces);
+    const grid = getLetterCountPerSquare(gridSize, gridSize, draggedPieces);
     dragShadow = (
       <DragShadow
         grid={grid}

@@ -36,7 +36,6 @@ For screenshots:
 - add link to sponsors?
 - relocate to new file:
   - getWordValidityGrids
-  - countingGrid
 - just rename dispatch params to dispatcher everywhere
 - put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
