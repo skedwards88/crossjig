@@ -35,5 +35,6 @@ For screenshots:
 
 - add link to sponsors?
 - just rename dispatch params to dispatcher everywhere
-- put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
+
+- move common functions to word-logic package
