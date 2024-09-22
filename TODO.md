@@ -34,9 +34,7 @@ For screenshots:
 - add some custom daily puzzles
 
 - add link to sponsors?
-- relocate to new file:
-  - getWordValidityGrids
-  - countingGrid
 - just rename dispatch params to dispatcher everywhere
-- put arrayToGrid to common or to word-logic package
 - piecesOverlapQ should use getGridFromPieces
+
+- move common functions to word-logic package
