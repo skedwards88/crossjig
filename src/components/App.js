@@ -55,7 +55,7 @@ export default function App() {
     );
   }, [hasSeenWhatsNew]);
 
-  const [lastVisited] = React.useState(getDailySeed());
+  const [lastVisited] = React.useState(getDailySeed()[0]);
   React.useEffect(() => {
     window.localStorage.setItem(
       "crossjigLastVisited",
@@ -239,7 +239,7 @@ export default function App() {
 
     case "daily":
       // force reinitialize the daily state if the day has changed
-      if (dailyGameState.seed != getDailySeed()) {
+      if (dailyGameState.seed != getDailySeed()[0]) {
         dailyDispatchGameState({
           action: "newGame",
           isDaily: true,

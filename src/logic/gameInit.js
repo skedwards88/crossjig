@@ -38,7 +38,7 @@ export function gameInit({
   const savedStateName = isDaily ? "dailyCrossjigState" : "crossjigState";
 
   if (isDaily) {
-    seed = getDailySeed();
+    [seed, isCustom] = getDailySeed();
   }
 
   if (!seed) {
