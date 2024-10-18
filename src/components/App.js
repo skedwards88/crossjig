@@ -20,6 +20,7 @@ import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
 import getDailySeed from "../common/getDailySeed";
+import {getSeedFromDate} from "../common/getSeedFromDate";
 import {gameReducer} from "../logic/gameReducer";
 import {parseUrlQuery} from "../logic/parseUrlQuery";
 import {getInitialState} from "../common/getInitialState";
@@ -55,7 +56,7 @@ export default function App() {
     );
   }, [hasSeenWhatsNew]);
 
-  const [lastVisited] = React.useState(getDailySeed());
+  const [lastVisited] = React.useState(getSeedFromDate());
   React.useEffect(() => {
     window.localStorage.setItem(
       "crossjigLastVisited",
@@ -239,7 +240,7 @@ export default function App() {
 
     case "daily":
       // force reinitialize the daily state if the day has changed
-      if (dailyGameState.seed != getDailySeed()) {
+      if (dailyGameState.seed != getDailySeed()[0]) {
         dailyDispatchGameState({
           action: "newGame",
           isDaily: true,
