@@ -8,7 +8,7 @@ A word based jigsaw puzzle
 
 [Play Now!](https://crossjig.com/)
 
-<img src="src/images/icon_512.png" alt="game icon" width="70"/>
+<img src="src/images/screenshots/screenshot_720_1280_2.png" alt="Screenshot of a partially complete Crossjig puzzle" width="200"/>
 
 Do you have feedback or ideas for improvement? [Open an issue](https://github.com/skedwards88/crossjig/issues/new).
 
