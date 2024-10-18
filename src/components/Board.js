@@ -1,119 +1,8 @@
 import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
-import {getGridFromPieces} from "../logic/getGridFromPieces";
-import {isKnown} from "@skedwards88/word_logic";
-import {trie} from "../logic/trie";
-import {getWordsFromPieces} from "../logic/getWordsFromPieces";
-import {transposeGrid} from "@skedwards88/word_logic";
-
-// Returns a grid with the number of letters at each location in the grid
-export function countingGrid(height, width, pieces) {
-  let grid = Array(height)
-    .fill(undefined)
-    .map(() => Array(width).fill(0));
-
-  for (let piece of pieces) {
-    const letters = piece.letters;
-    let top = piece.boardTop ?? piece.dragGroupTop;
-    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = piece.boardLeft ?? piece.dragGroupLeft;
-      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
-        if (letters[rowIndex][colIndex]) {
-          grid[top][left]++;
-        }
-        left++;
-      }
-      top++;
-    }
-  }
-  return grid;
-}
-
-function getHorizontalValidityGrid({grid, originalWords}) {
-  // return a 2D array of bools indicating whether
-  // the position corresponds to a letter on the board
-  // that is part of a valid horizontal word
-  const height = grid.length;
-  const width = grid[0].length;
-
-  const horizontalValidityGrid = Array(height)
-    .fill(undefined)
-    .map(() => Array(width).fill(false));
-
-  for (const [rowIndex, row] of grid.entries()) {
-    let word = "";
-    let indexes = [];
-    for (const [columnIndex, letter] of row.entries()) {
-      if (letter != "") {
-        word += letter;
-        indexes.push(columnIndex);
-      } else {
-        if (word.length > 1) {
-          // If the word is one of the original words, always consider it valid (in case we updated the dictionary in the interim).
-          // Otherwise, check whether it is a word in the trie.
-          let isWord = originalWords.includes(word);
-          if (!isWord) {
-            ({isWord} = isKnown(word, trie));
-          }
-          if (isWord) {
-            indexes.forEach(
-              (index) => (horizontalValidityGrid[rowIndex][index] = true),
-            );
-          }
-        }
-        word = "";
-        indexes = [];
-      }
-    }
-    // Also end the word if we reach the end of the row
-    if (word.length > 1) {
-      // If the word is one of the original words, always consider it valid (in case we updated the dictionary in the interim).
-      // Otherwise, check whether it is a word in the trie.
-      let isWord = originalWords.includes(word);
-      if (!isWord) {
-        ({isWord} = isKnown(word, trie));
-      }
-      if (isWord) {
-        indexes.forEach(
-          (index) => (horizontalValidityGrid[rowIndex][index] = true),
-        );
-      }
-    }
-  }
-
-  return horizontalValidityGrid;
-}
-
-export function getWordValidityGrids({
-  pieces,
-  gridSize,
-  includeOriginalSolution = true,
-}) {
-  const originalWords = includeOriginalSolution
-    ? getWordsFromPieces({
-        pieces,
-        gridSize,
-        solution: true,
-      })
-    : [];
-
-  const grid = getGridFromPieces({pieces, gridSize, solution: false});
-
-  const horizontalValidityGrid = getHorizontalValidityGrid({
-    grid,
-    originalWords,
-  });
-
-  const transposedGrid = transposeGrid(grid);
-  const horizontalTransposedValidityGrid = getHorizontalValidityGrid({
-    grid: transposedGrid,
-    originalWords,
-  });
-  const verticalValidityGrid = transposeGrid(horizontalTransposedValidityGrid);
-
-  return [horizontalValidityGrid, verticalValidityGrid];
-}
+import {getLetterCountPerSquare} from "../logic/getLetterCountPerSquare";
+import {getWordValidityGrids} from "../logic/getWordValidityGrids";
 
 export default function Board({
   pieces,
@@ -131,7 +20,7 @@ export default function Board({
 
   const overlapGrid = customCreation
     ? undefined
-    : countingGrid(gridSize, gridSize, boardPieces);
+    : getLetterCountPerSquare(gridSize, gridSize, boardPieces);
 
   const [horizontalValidityGrid, verticalValidityGrid] = indicateValidity
     ? getWordValidityGrids({
@@ -160,7 +49,7 @@ export default function Board({
     const draggedPieces = pieces.filter((piece) =>
       dragPieceIDs.includes(piece.id),
     );
-    const grid = countingGrid(gridSize, gridSize, draggedPieces);
+    const grid = getLetterCountPerSquare(gridSize, gridSize, draggedPieces);
     dragShadow = (
       <DragShadow
         grid={grid}
