@@ -1,5 +1,7 @@
 # TODO
 
+- Add tests for custom daily puzzles: must have appropriate number of letters for day, must consist of known words
+
 - make small puzzle more interconnected -- maybe by limiting grid size during generation?
 
 - Add a tutorial video that pops up at the start. like palette
