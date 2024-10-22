@@ -1,5 +1,7 @@
-export function getNumLettersForDay() {
-  const today = new Date().getDay();
+export function getNumLettersForDay(dayNumber) {
+  if (dayNumber === undefined) {
+    dayNumber = new Date().getDay();
+  }
 
   const wordLengths = [
     60, // Sunday
@@ -11,5 +13,5 @@ export function getNumLettersForDay() {
     50,
   ];
 
-  return wordLengths[today];
+  return wordLengths[dayNumber];
 }
