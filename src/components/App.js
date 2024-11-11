@@ -67,7 +67,7 @@ export default function App() {
   // Determine what view to show the user
   const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
   const [display, setDisplay] = React.useState(
-    getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew),
+    getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew, isCustom),
   );
 
   // Determine the opacity for the validity indicator
