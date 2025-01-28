@@ -5,3 +5,4 @@ PWA_Builder
 .env
 .env.test
 .vscode/
+.DS_Store
