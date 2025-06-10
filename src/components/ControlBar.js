@@ -40,9 +40,15 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
       )}
 
       <button
-        id="customIcon"
+        id="settingsIcon"
         className="controlButton"
-        onClick={() => setDisplay("custom")}
+        onClick={() => setDisplay("settings")}
+      ></button>
+
+      <button
+        id="heartIcon"
+        className="controlButton"
+        onClick={() => setDisplay("moreGames")}
       ></button>
 
       {navigator.canShare ? (
