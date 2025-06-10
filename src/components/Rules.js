@@ -7,8 +7,8 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
       <h1 id="rulesHeader">Crossjig: How to play</h1>
       <div id="rulesText">
         <p>
-          <b>Drag</b> the pieces to the board to make words vertically and
-          horizontally. All words must connect.
+          <b>Drag</b> pieces to the board to make words vertically and
+          horizontally.
         </p>
         <p>
           <b>Drag a blank space</b> to move the whole puzzle.
@@ -16,11 +16,21 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
         <p>
           <b>Long press and drag</b> to move a group of touching pieces.
         </p>
+        <button
+          id="rulesClose"
+          className="close"
+          onClick={() => {
+            setDisplay("game");
+            setHasSeenWhatsNew(true);
+          }}
+        >
+          {"Go to puzzle"}
+        </button>
+        <hr></hr>
         <p>
-          Click <span id="hintIcon" className="rulesIcon"></span> to get a hint.
-          A hint will move all pieces that are on the board to their correct
-          location. If all pieces are already in the correct location, a new
-          piece will be added to the board.
+          Click <span id="hintIcon" className="rulesIcon"></span> for a hint. A
+          hint moves all pieces that are on the board to their correct location.
+          If all pieces are already correct, a new piece is added to the board.
         </p>
         <p>
           Click <span id="settingsIcon" className="rulesIcon"></span> to change
@@ -44,7 +54,7 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
           setHasSeenWhatsNew(true);
         }}
       >
-        {"Play"}
+        {"Go to puzzle"}
       </button>
       <small id="rulesVersion">version {packageJson.version}</small>
     </div>
