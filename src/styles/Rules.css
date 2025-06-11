@@ -6,7 +6,7 @@
     "close"
     "version";
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
   font-size: calc(var(--default-font-size) * 0.75);
   justify-items: center;
   align-items: center;

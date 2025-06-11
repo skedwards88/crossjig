@@ -57,7 +57,7 @@ button:disabled {
   height: 90vh; /* fallback if svh isn't handled */
   height: 100svh;
   width: 100vw;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #info {
@@ -74,7 +74,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
@@ -245,7 +245,7 @@ button:disabled {
     );
   display: flex;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
@@ -330,7 +330,7 @@ body:has(#drag-group) {
   display: flex;
   flex-direction: column;
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
@@ -372,7 +372,7 @@ body:has(#drag-group) {
   text-align: center;
   display: flex;
   flex-flow: column wrap;
-  overflow: scroll;
+  overflow: auto;
   padding: 10px;
 }
 
@@ -400,7 +400,7 @@ body:has(#drag-group) {
   grid-area: letters;
   display: flex;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
