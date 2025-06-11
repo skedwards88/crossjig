@@ -29,7 +29,10 @@ export default function MoreGames({setDisplay}) {
       <div className="infoText">
         {`Want more games? Check these out, or see all of our puzzle games `}
         <a href="https://skedwards88.github.io/">here</a>
-        {`. `}
+        {`.\n\n`}
+        {`Follow us on `}
+        <a href="https://www.patreon.com/skedwards88/">Patreon</a>
+        {` to get sneak previews and learn about new releases.`}
 
         <div id="moreGames">{gameElements}</div>
       </div>
