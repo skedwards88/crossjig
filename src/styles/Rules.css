@@ -53,8 +53,9 @@ button.rulesIcon {
 }
 
 #rulesDemo {
-  /* width: 100vw; */
   height: 50vh;
   object-fit: contain;
   grid-area: demo;
+  border: 1px solid var(--light-color);
+  border-radius: 5%;
 }
