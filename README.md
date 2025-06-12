@@ -23,3 +23,9 @@ To run locally with live reloading and no service worker, run `npm run dev`. (If
 To run locally and register the service worker, run `npm start`.
 
 To deploy, push to `main` or manually trigger the GitHub Actions `deploy.yml` workflow. During deployment, the prebuild script will compress some png images into the webp format. You can also compress these images by running `npm run compressImages` if you have the [webp compression tool](https://developers.google.com/speed/webp/docs/precompiled) installed.
+
+Command for compressing the demo video:
+
+`ffmpeg -i src/images/screenshots/demo.mp4 -vf "crop=1440:2944:0:4,scale=300:612" -vcodec libx264 -crf 28 -preset slow -movflags +faststart -an src/images/screenshots/demo-compressed.mp4`
+
+`crop` value was determined with `ffplay src/images/screenshots/demo-compressed.mp4 -vf cropdetect`

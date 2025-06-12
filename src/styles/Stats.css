@@ -1,6 +1,6 @@
 .stats {
   font-size: calc(var(--default-font-size) * 0.75);
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

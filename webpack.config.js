@@ -61,6 +61,10 @@ module.exports = (env, argv) => {
         from: "./src/images/screenshots/screenshot_1080_1080_4.png",
         to: "./assets/screenshot_1080_1080_4.png",
       },
+      {
+        from: "./src/images/screenshots/demo-compressed.mp4",
+        to: "./assets/demo-compressed.mp4",
+      },
     ],
     options: {
       concurrency: 100,

@@ -2,11 +2,12 @@
   display: grid;
   grid-template-areas:
     "header"
+    "demo"
     "text"
     "close"
     "version";
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
   font-size: calc(var(--default-font-size) * 0.75);
   justify-items: center;
   align-items: center;
@@ -31,6 +32,7 @@ button.rulesIcon {
 
 #rulesHeader {
   grid-area: header;
+  font-size: var(--default-font-size);
 }
 
 #rulesText {
@@ -48,4 +50,11 @@ button.rulesIcon {
 #rulesVersion {
   grid-area: version;
   margin: 0 0 1vmax;
+}
+
+#rulesDemo {
+  /* width: 100vw; */
+  height: 50vh;
+  object-fit: contain;
+  grid-area: demo;
 }

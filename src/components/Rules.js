@@ -5,6 +5,15 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
   return (
     <div className="App rules">
       <h1 id="rulesHeader">Crossjig: How to play</h1>
+      <video
+        src="assets/demo-compressed.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        id="rulesDemo"
+      ></video>
+
       <div id="rulesText">
         <p>
           <b>Drag</b> pieces to the board to make words vertically and
