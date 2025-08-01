@@ -31,7 +31,7 @@ export default function MoreGames({setDisplay}) {
         <a href="https://skedwards88.github.io/">here</a>
         {`.\n\n`}
         {`Follow us on `}
-        <a href="https://www.patreon.com/skedwards88/">Patreon</a>
+        <a href="https://www.patreon.com/TwistedTrailGames/">Patreon</a>
         {` to get sneak previews and learn about new releases.`}
 
         <div id="moreGames">{gameElements}</div>
