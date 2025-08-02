@@ -9,6 +9,7 @@
   "start_url": "https://crossjig.com",
   "background_color": "#373647",
   "theme_color": "#373647",
+  "handle_links": "preferred",
   "shortcuts": [],
   "categories": ["games", "entertainment", "education"],
   "icons": [
