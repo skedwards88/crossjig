@@ -414,3 +414,29 @@ body:has(#drag-group) {
   background-color: var(--light-color);
   color: var(--dark-color);
 }
+
+.appStoreButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.appStoreButton {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  width: 40%;
+  max-width: 180px;
+  aspect-ratio: 3 / 1;
+  margin-bottom: 10%;
+}
+
+#googlePlayStore {
+  background-image: url("../images/appStores/google.png");
+}
+
+#appleAppStore {
+  background-image: url("../images/appStores/apple_black.svg");
+}
