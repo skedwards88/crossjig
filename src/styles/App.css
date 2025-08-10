@@ -443,11 +443,12 @@ body:has(#drag-group) {
 }
 
 #pwa {
-  border: 1px solid rgb(255 255 255 / 70%);
-  background-color: black;
-  color: white;
-  box-sizing: border-box;
-  font-size: clamp(10px, 8vw, 16px);
+  background-image: url("../images/appStores/browser.svg");
+  /* Unset some button styling */
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 0 10% 0 ;
 }
 
 ol,

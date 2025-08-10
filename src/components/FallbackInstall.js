@@ -17,9 +17,10 @@ export default function FallbackInstall({setDisplay}) {
             className="appStoreButton"
             id="pwa"
             onClick={() => setDisplay("pwaInstall")}
+            aria-label="Install from your browser"
           >
-            Install from your browser
           </button>
+
         </div>
       </div>
       <button className="close" onClick={() => setDisplay("game")}>
