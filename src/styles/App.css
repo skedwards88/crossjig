@@ -444,11 +444,12 @@ body:has(#drag-group) {
 
 #pwa {
   background-image: url("../images/appStores/browser.svg");
+
   /* Unset some button styling */
   background-color: transparent;
   border: none;
   padding: 0;
-  margin: 0 0 10% 0 ;
+  margin: 0 0 10%;
 }
 
 ol,
