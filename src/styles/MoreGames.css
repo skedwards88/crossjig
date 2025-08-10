@@ -12,7 +12,7 @@
   background-size: cover;
   background-position: center;
   border: 1px solid var(--light-color);
-  border-radius: 5%;
+  border-radius: 7px;
 }
 
 .blobble {
