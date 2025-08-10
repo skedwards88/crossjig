@@ -4,7 +4,7 @@ import AppleStore from "./AppleStore";
 
 function getInstructionsForPlatform() {
   const userAgent = navigator.userAgent;
-  const isIOS = /iPhone|iPad|iPod/.test(userAgent);
+  const isIOS = /iPhone|iPad/.test(userAgent);
   const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
   const isAndroid = /Android/i.test(userAgent);
   const isChromium = /Chrome|Chromium|Edg\//.test(userAgent);
