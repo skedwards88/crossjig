@@ -1,6 +1,60 @@
 import React from "react";
 import packageJson from "../../package.json";
 
+function isRunningStandalone() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches || // most browsers
+    window.navigator.standalone === true // safari
+  );
+}
+
+function isOnMobile() {
+  const userAgent = navigator.userAgent;
+  return /Android|iPhone|iPad/i.test(userAgent);
+}
+
+function PlayButtons({setDisplay, setHasSeenWhatsNew}) {
+  if (!isRunningStandalone() && isOnMobile()) {
+    return (
+      <div>
+        <button
+          id="rulesInstall"
+          className="close"
+          onClick={() => {
+            setDisplay("fallbackInstall");
+            setHasSeenWhatsNew(true);
+          }}
+        >
+          {"Install app"}
+        </button>
+        <button
+          id="rulesPlay"
+          className="close"
+          onClick={() => {
+            setDisplay("game");
+            setHasSeenWhatsNew(true);
+          }}
+        >
+          {"Play in browser"}
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <button
+        id="rulesPlay"
+        className="close"
+        onClick={() => {
+          setDisplay("game");
+          setHasSeenWhatsNew(true);
+        }}
+      >
+        {"Go to puzzle"}
+      </button>
+    );
+  }
+}
+
 export default function Rules({setDisplay, setHasSeenWhatsNew}) {
   return (
     <div className="App rules">
@@ -25,16 +79,10 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
         <p>
           <b>Long press and drag</b> to move a group of touching pieces.
         </p>
-        <button
-          id="rulesClose"
-          className="close"
-          onClick={() => {
-            setDisplay("game");
-            setHasSeenWhatsNew(true);
-          }}
-        >
-          {"Go to puzzle"}
-        </button>
+        <PlayButtons
+          setDisplay={setDisplay}
+          setHasSeenWhatsNew={setHasSeenWhatsNew}
+        />
         <hr></hr>
         <p>
           Click <span id="hintIcon" className="rulesIcon"></span> for a hint. A
@@ -55,16 +103,10 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
           your own crossjig to share with friends.
         </p>
       </div>
-      <button
-        id="rulesClose"
-        className="close"
-        onClick={() => {
-          setDisplay("game");
-          setHasSeenWhatsNew(true);
-        }}
-      >
-        {"Go to puzzle"}
-      </button>
+      <PlayButtons
+        setDisplay={setDisplay}
+        setHasSeenWhatsNew={setHasSeenWhatsNew}
+      />
       <small id="rulesVersion">version {packageJson.version}</small>
     </div>
   );

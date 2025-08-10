@@ -1,15 +1,9 @@
 .rules {
-  display: grid;
-  grid-template-areas:
-    "header"
-    "demo"
-    "text"
-    "close"
-    "version";
+  display: flex;
+  flex-direction: column;
   text-align: center;
   overflow: auto;
   font-size: calc(var(--default-font-size) * 0.75);
-  justify-items: center;
   align-items: center;
 }
 
@@ -31,31 +25,28 @@ button.rulesIcon {
 }
 
 #rulesHeader {
-  grid-area: header;
   font-size: var(--default-font-size);
+  margin-bottom: 10px;
 }
 
 #rulesText {
   white-space: pre-line;
   margin: 0 2vmax;
-  grid-area: text;
 }
 
-#rulesClose {
+#rulesPlay,
+#rulesInstall {
   height: fit-content;
   width: fit-content;
-  grid-area: close;
 }
 
 #rulesVersion {
-  grid-area: version;
   margin: 0 0 1vmax;
 }
 
 #rulesDemo {
   height: 50vh;
   object-fit: contain;
-  grid-area: demo;
   border: 1px solid var(--light-color);
-  border-radius: 5%;
+  border-radius: 13px;
 }
