@@ -6,7 +6,7 @@ import "./styles/ControlBar.css";
 import "./styles/Settings.css";
 import "./styles/Rules.css";
 import "./styles/Stats.css";
-import "./styles/MoreGames.css";
+import "@skedwards88/shared-components/src/styles/MoreGames.css";
 import "./styles/LargeScreen.css";
 
 if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {

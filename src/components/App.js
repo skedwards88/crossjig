@@ -3,7 +3,7 @@ import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
 import ExtendedMenu from "./ExtendedMenu";
-import MoreGames from "./MoreGames";
+import MoreGames from "@skedwards88/shared-components/src/components/MoreGames.js";
 import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
@@ -382,7 +382,11 @@ export default function App() {
       return <CustomLookup setDisplay={setDisplay}></CustomLookup>;
 
     case "moreGames":
-      return <MoreGames setDisplay={setDisplay}></MoreGames>;
+      return <MoreGames setDisplay={setDisplay} games={["lexlet",
+"blobble",
+"wordfall",
+"gribbles",
+"logicGrid",]}></MoreGames>;
 
     case "fallbackInstall":
       return <FallbackInstall setDisplay={setDisplay}></FallbackInstall>;

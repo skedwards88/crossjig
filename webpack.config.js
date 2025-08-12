@@ -93,7 +93,10 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          exclude: /(node_modules|bower_components)/,
+          include: [
+            path.resolve(__dirname, 'src'),
+            path.dirname(require.resolve('@skedwards88/shared-components/package.json')),
+          ],
           loader: "babel-loader",
           options: {presets: ["@babel/env"]},
         },

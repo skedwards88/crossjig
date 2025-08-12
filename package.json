@@ -5,8 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "compressImages": "./compressImages.sh",
-    "prebuild": "npm run compressImages",
     "build": "webpack",
     "dev": "webpack-dev-server --mode development",
     "start": "webpack-dev-server",
@@ -27,6 +25,7 @@
   },
   "homepage": "https://github.com/skedwards88/crossjig#readme",
   "dependencies": {
+    "@skedwards88/shared-components": "latest",
     "@skedwards88/word_lists": "latest",
     "@skedwards88/word_logic": "4.0.1",
     "lodash.clonedeep": "^4.5.0",
