@@ -3,7 +3,7 @@ import Game from "./Game";
 import Heart from "./Heart";
 import Rules from "./Rules";
 import ExtendedMenu from "./ExtendedMenu";
-import MoreGames from "@skedwards88/shared-components/src/components/MoreGames.js";
+import MoreGames from "@skedwards88/shared-components/src/components/MoreGames";
 import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
