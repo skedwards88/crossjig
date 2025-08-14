@@ -94,8 +94,10 @@ module.exports = (env, argv) => {
         {
           test: /\.(js|jsx)$/,
           include: [
-            path.resolve(__dirname, 'src'),
-            path.dirname(require.resolve('@skedwards88/shared-components/package.json')),
+            path.resolve(__dirname, "src"),
+            path.dirname(
+              require.resolve("@skedwards88/shared-components/package.json"),
+            ),
           ],
           loader: "babel-loader",
           options: {presets: ["@babel/env"]},

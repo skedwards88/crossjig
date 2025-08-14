@@ -382,11 +382,16 @@ export default function App() {
       return <CustomLookup setDisplay={setDisplay}></CustomLookup>;
 
     case "moreGames":
-      return <MoreGames setDisplay={setDisplay} games={["lexlet",
-"blobble",
-"wordfall",
-"gribbles",
-"logicGrid",]}></MoreGames>;
+      return (
+        <MoreGames
+          setDisplay={setDisplay}
+          games={["lexlet", "blobble", "wordfall", "gribbles", "logicGrid"]}
+          googleLink={
+            "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
+          }
+          appleLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
+        ></MoreGames>
+      );
 
     case "fallbackInstall":
       return <FallbackInstall setDisplay={setDisplay}></FallbackInstall>;
