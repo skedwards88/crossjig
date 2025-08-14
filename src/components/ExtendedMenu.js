@@ -1,6 +1,8 @@
 import React from "react";
 import packageJson from "../../package.json";
 import {handleShare} from "../common/handleShare";
+import {isRunningStandalone} from "../common/isRunningStandalone";
+import {isOnMobile} from "../common/isOnMobile";
 
 export default function ExtendedMenu({setDisplay}) {
   return (
@@ -38,10 +40,14 @@ export default function ExtendedMenu({setDisplay}) {
         <></>
       )}
 
-      <button onClick={() => setDisplay("installOverview")}>
-        <div id="installIcon" className="extendedMenuIcon"></div>
-        <span>{"Install (offline play)"}</span>
-      </button>
+      {!isRunningStandalone() && isOnMobile() ? (
+        <button onClick={() => setDisplay("installOverview")}>
+          <div id="installIcon" className="extendedMenuIcon"></div>
+          <span>{"Install (offline play)"}</span>
+        </button>
+      ) : (
+        <></>
+      )}
 
       <button onClick={() => setDisplay("moreGames")}>
         <div id="heartIcon" className="extendedMenuIcon"></div>

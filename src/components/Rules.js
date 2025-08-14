@@ -1,17 +1,7 @@
 import React from "react";
 import packageJson from "../../package.json";
-
-function isRunningStandalone() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches || // most browsers
-    window.navigator.standalone === true // safari
-  );
-}
-
-function isOnMobile() {
-  const userAgent = navigator.userAgent;
-  return /Android|iPhone|iPad/i.test(userAgent);
-}
+import {isRunningStandalone} from "../common/isRunningStandalone";
+import {isOnMobile} from "../common/isOnMobile";
 
 function PlayButtons({setDisplay, setHasSeenWhatsNew}) {
   if (!isRunningStandalone() && isOnMobile()) {
