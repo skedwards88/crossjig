@@ -1,14 +1,8 @@
 import React from "react";
 import packageJson from "../../package.json";
 import {handleShare} from "../common/handleShare";
-import {handleInstall} from "../common/handleInstall";
 
-export default function ExtendedMenu({
-  setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
-}) {
+export default function ExtendedMenu({setDisplay}) {
   return (
     <div className="App" id="extendedMenu">
       <h1>Crossjig</h1>
@@ -44,21 +38,10 @@ export default function ExtendedMenu({
         <></>
       )}
 
-      {showInstallButton && installPromptEvent ? (
-        <button
-          onClick={() =>
-            handleInstall(installPromptEvent, setInstallPromptEvent)
-          }
-        >
-          <div id="installIcon" className="extendedMenuIcon"></div>
-          <span>{"Install (offline play and easy access)"}</span>
-        </button>
-      ) : (
-        <button onClick={() => setDisplay("fallbackInstall")}>
-          <div id="installIcon" className="extendedMenuIcon"></div>
-          <span>{"Install (play offline)"}</span>
-        </button>
-      )}
+      <button onClick={() => setDisplay("installOverview")}>
+        <div id="installIcon" className="extendedMenuIcon"></div>
+        <span>{"Install (offline play)"}</span>
+      </button>
 
       <button onClick={() => setDisplay("moreGames")}>
         <div id="heartIcon" className="extendedMenuIcon"></div>

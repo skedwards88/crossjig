@@ -21,7 +21,7 @@ function PlayButtons({setDisplay, setHasSeenWhatsNew}) {
           id="rulesInstall"
           className="close"
           onClick={() => {
-            setDisplay("fallbackInstall");
+            setDisplay("installOverview");
             setHasSeenWhatsNew(true);
           }}
         >

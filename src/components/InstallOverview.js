@@ -1,8 +1,14 @@
 import React from "react";
 import GooglePlayStore from "./GooglePlayStore";
 import AppleStore from "./AppleStore";
+import {handleInstall} from "../common/handleInstall";
 
-export default function FallbackInstall({setDisplay}) {
+export default function InstallOverview({
+  setDisplay,
+  setInstallPromptEvent,
+  showInstallButton,
+  installPromptEvent,
+}) {
   return (
     <div className="App info">
       <div className="infoText">
@@ -16,7 +22,11 @@ export default function FallbackInstall({setDisplay}) {
           <button
             className="appStoreButton"
             id="pwa"
-            onClick={() => setDisplay("pwaInstall")}
+            onClick={
+              showInstallButton && installPromptEvent
+                ? () => handleInstall(installPromptEvent, setInstallPromptEvent)
+                : () => setDisplay("pwaInstall")
+            }
             aria-label="Install from your browser"
           ></button>
         </div>

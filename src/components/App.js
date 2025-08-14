@@ -8,7 +8,7 @@ import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
-import FallbackInstall from "./FallbackInstall";
+import InstallOverview from "./InstallOverview";
 import PWAInstall from "./PWAInstall";
 import CustomError from "./CustomError";
 import CustomLookup from "./CustomLookup";
@@ -393,21 +393,21 @@ export default function App() {
         ></MoreGames>
       );
 
-    case "fallbackInstall":
-      return <FallbackInstall setDisplay={setDisplay}></FallbackInstall>;
+    case "installOverview":
+      return (
+        <InstallOverview
+          setDisplay={setDisplay}
+          setInstallPromptEvent={setInstallPromptEvent}
+          showInstallButton={showInstallButton}
+          installPromptEvent={installPromptEvent}
+        ></InstallOverview>
+      );
 
     case "pwaInstall":
       return <PWAInstall setDisplay={setDisplay}></PWAInstall>;
 
     case "extendedMenu":
-      return (
-        <ExtendedMenu
-          setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
-        ></ExtendedMenu>
-      );
+      return <ExtendedMenu setDisplay={setDisplay}></ExtendedMenu>;
 
     case "whatsNew":
       return (
