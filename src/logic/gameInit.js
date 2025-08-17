@@ -1,4 +1,4 @@
-import sendAnalytics from "../common/sendAnalytics";
+import sendAnalytics from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {generatePuzzle} from "./generatePuzzle";
 import getRandomSeed from "../common/getRandomSeed";
 import getDailySeed from "../common/getDailySeed";

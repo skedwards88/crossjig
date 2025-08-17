@@ -8,15 +8,15 @@ import Stats from "./Stats";
 import CustomCreation from "./CustomCreation";
 import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
-import InstallOverview from "./InstallOverview";
-import PWAInstall from "./PWAInstall";
+import InstallOverview from "@skedwards88/shared-components/src/components/InstallOverview";
+import PWAInstall from "@skedwards88/shared-components/src/components/PWAInstall";
 import CustomError from "./CustomError";
 import CustomLookup from "./CustomLookup";
 import WhatsNew from "./WhatsNew";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
-} from "../common/handleInstall";
+} from "@skedwards88/shared-components/src/logic/handleInstall";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
@@ -400,11 +400,23 @@ export default function App() {
           setInstallPromptEvent={setInstallPromptEvent}
           showInstallButton={showInstallButton}
           installPromptEvent={installPromptEvent}
+          googleAppLink={
+            "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
+          }
+          appleAppLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
         ></InstallOverview>
       );
 
     case "pwaInstall":
-      return <PWAInstall setDisplay={setDisplay}></PWAInstall>;
+      return (
+        <PWAInstall
+          setDisplay={setDisplay}
+          googleAppLink={
+            "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
+          }
+          appleAppLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
+        ></PWAInstall>
+      );
 
     case "extendedMenu":
       return <ExtendedMenu setDisplay={setDisplay}></ExtendedMenu>;

@@ -1,4 +1,4 @@
-import sendAnalytics from "../common/sendAnalytics";
+import sendAnalytics from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {updatePieceDatum} from "./assemblePiece";
 
 export function customInit(useSaved = true) {

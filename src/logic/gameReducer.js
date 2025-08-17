@@ -1,6 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import {gameInit} from "./gameInit";
-import sendAnalytics from "../common/sendAnalytics";
+import sendAnalytics from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {gameSolvedQ} from "./gameSolvedQ";
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";

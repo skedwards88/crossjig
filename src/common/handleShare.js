@@ -1,4 +1,4 @@
-import sendAnalytics from "./sendAnalytics";
+import sendAnalytics from "@skedwards88/shared-components/src/logic/sendAnalytics";
 
 export function assembleShareLink({url, seed, query = "id"}) {
   const fullUrl = seed ? `${url}?${query}=${seed}` : url;
