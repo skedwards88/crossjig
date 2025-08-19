@@ -34,6 +34,42 @@ import {trie} from "../logic/trie";
 import {resizeGrid} from "../logic/resizeGrid";
 
 export default function App() {
+  // *****
+  // Install handling setup
+  // *****
+  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
+  const [installPromptEvent, setInstallPromptEvent] = React.useState();
+  const [showInstallButton, setShowInstallButton] = React.useState(true);
+
+  React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
+    const listener = (event) =>
+      handleBeforeInstallPrompt(
+        event,
+        setInstallPromptEvent,
+        setShowInstallButton,
+      );
+
+    window.addEventListener("beforeinstallprompt", listener);
+
+    return () => window.removeEventListener("beforeinstallprompt", listener);
+  }, []);
+
+  React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
+    const listener = () =>
+      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
+
+    window.addEventListener("appinstalled", listener);
+
+    return () => window.removeEventListener("appinstalled", listener);
+  }, []);
+  // *****
+  // End install handling setup
+  // *****
+
   // If a query string was passed,
   // parse it to get the data to regenerate the game described by the query string
   const [isCustom, seed, numLetters] = parseUrlQuery();
@@ -76,10 +112,6 @@ export default function App() {
     JSON.parse(localStorage.getItem("crossjigValidityOpacity")) ?? 0.15;
   const [validityOpacity, setValidityOpacity] =
     React.useState(savedValidityOpacity);
-
-  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
-  const [installPromptEvent, setInstallPromptEvent] = React.useState();
-  const [showInstallButton, setShowInstallButton] = React.useState(true);
 
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
@@ -161,30 +193,6 @@ export default function App() {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
-
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = (event) =>
-      handleBeforeInstallPrompt(
-        event,
-        setInstallPromptEvent,
-        setShowInstallButton,
-      );
-
-    window.addEventListener("beforeinstallprompt", listener);
-    return () => window.removeEventListener("beforeinstallprompt", listener);
-  }, []);
-
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = () =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
-
-    window.addEventListener("appinstalled", listener);
-    return () => window.removeEventListener("appinstalled", listener);
   }, []);
 
   React.useEffect(() => {
