@@ -59,7 +59,7 @@ input[type="checkbox" i] {
 }
 
 input[type="checkbox" i]:checked {
-  background-image: url("../images/icons/checkmark-black.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/checkmark-black.svg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
