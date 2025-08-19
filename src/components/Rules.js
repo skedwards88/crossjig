@@ -1,49 +1,6 @@
 import React from "react";
 import packageJson from "../../package.json";
-import {isRunningStandalone} from "../common/isRunningStandalone";
-import {isOnMobile} from "../common/isOnMobile";
-
-function PlayButtons({setDisplay, setHasSeenWhatsNew}) {
-  if (!isRunningStandalone() && isOnMobile()) {
-    return (
-      <div>
-        <button
-          id="rulesInstall"
-          className="close"
-          onClick={() => {
-            setDisplay("installOverview");
-            setHasSeenWhatsNew(true);
-          }}
-        >
-          {"Install app"}
-        </button>
-        <button
-          id="rulesPlay"
-          className="close"
-          onClick={() => {
-            setDisplay("game");
-            setHasSeenWhatsNew(true);
-          }}
-        >
-          {"Play in browser"}
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <button
-        id="rulesPlay"
-        className="close"
-        onClick={() => {
-          setDisplay("game");
-          setHasSeenWhatsNew(true);
-        }}
-      >
-        {"Go to puzzle"}
-      </button>
-    );
-  }
-}
+import PlayButtons from "@skedwards88/shared-components/src/components/PlayButtons";
 
 export default function Rules({setDisplay, setHasSeenWhatsNew}) {
   return (

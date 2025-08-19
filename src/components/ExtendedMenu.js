@@ -1,7 +1,7 @@
 import React from "react";
 import packageJson from "../../package.json";
 import {handleShare} from "../common/handleShare";
-import {isRunningStandalone} from "../common/isRunningStandalone";
+import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
 
 export default function ExtendedMenu({setDisplay}) {
   return (
