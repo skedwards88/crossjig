@@ -27,9 +27,12 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
           <b>Long press and drag</b> to move a group of touching pieces.
         </p>
         <PlayButtons
-          setDisplay={setDisplay}
-          setHasSeenWhatsNew={setHasSeenWhatsNew}
-        />
+          onClickPlay={() => {
+            setDisplay("game");
+            setHasSeenWhatsNew(true);
+          }}
+          onClickInstall={() => setDisplay("installOverview")}
+        ></PlayButtons>
         <hr></hr>
         <p>
           Click <span id="hintIcon" className="rulesIcon"></span> for a hint. A
@@ -51,9 +54,12 @@ export default function Rules({setDisplay, setHasSeenWhatsNew}) {
         </p>
       </div>
       <PlayButtons
-        setDisplay={setDisplay}
-        setHasSeenWhatsNew={setHasSeenWhatsNew}
-      />
+        onClickPlay={() => {
+          setDisplay("game");
+          setHasSeenWhatsNew(true);
+        }}
+        onClickInstall={() => setDisplay("installOverview")}
+      ></PlayButtons>
       <small id="rulesVersion">version {packageJson.version}</small>
     </div>
   );
