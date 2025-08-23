@@ -1,5 +1,6 @@
 import React from "react";
-import Share from "./Share";
+import Share from "@skedwards88/shared-components/src/components/Share";
+import {assembleShareLink} from "../common/assembleShareLink";
 
 export default function GameOver({dispatchGameState, gameState, setDisplay}) {
   if (gameState.isDaily) {
@@ -30,18 +31,20 @@ export default function GameOver({dispatchGameState, gameState, setDisplay}) {
         New game
       </button>
       <Share
+        origin={gameState.isCustom ? "custom game over" : "game over"}
+        content="Share"
         appName="Crossjig"
         text={
           gameState.isCustom
             ? "Check out this custom crossjig!"
             : "Check out this crossjig!"
         }
-        url="https://crossjig.com"
-        seed={
-          gameState.isCustom
+        url={assembleShareLink({
+          url: "https://crossjig.com",
+          seed: gameState.isCustom
             ? `custom-${gameState.seed}`
-            : `${gameState.seed}_${gameState.numLetters}`
-        }
+            : `${gameState.seed}_${gameState.numLetters}`,
+        })}
       ></Share>
     </div>
   );

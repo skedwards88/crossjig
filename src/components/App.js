@@ -10,6 +10,7 @@ import CustomShare from "./CustomShare";
 import ControlBar from "./ControlBar";
 import InstallOverview from "@skedwards88/shared-components/src/components/InstallOverview";
 import PWAInstall from "@skedwards88/shared-components/src/components/PWAInstall";
+import Share from "@skedwards88/shared-components/src/components/Share";
 import CustomError from "./CustomError";
 import CustomLookup from "./CustomLookup";
 import WhatsNew from "./WhatsNew";
@@ -17,6 +18,7 @@ import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
 } from "@skedwards88/shared-components/src/logic/handleInstall";
+import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
@@ -26,7 +28,7 @@ import {gameReducer} from "../logic/gameReducer";
 import {parseUrlQuery} from "../logic/parseUrlQuery";
 import {getInitialState} from "../common/getInitialState";
 import {hasVisitedSince} from "../common/hasVisitedSince";
-import {handleShare} from "../common/handleShare";
+import {assembleShareLink} from "../common/assembleShareLink";
 import {convertGridToRepresentativeString} from "../logic/convertGridToRepresentativeString";
 import {getGridFromPieces} from "../logic/getGridFromPieces";
 import {crosswordValidQ, pickRandomIntBetween} from "@skedwards88/word_logic";
@@ -312,7 +314,7 @@ export default function App() {
               }}
             ></button>
 
-            <button
+            <Share
               id="shareIcon"
               className="controlButton"
               onClick={() => {
@@ -329,13 +331,18 @@ export default function App() {
                   return;
                 }
 
+                const fullUrl = assembleShareLink({
+                  url: "https://crossjig.com",
+                  seed: `custom-${representativeString}`,
+                });
+
                 // Share (or show the link if sharing is not supported)
                 if (navigator.canShare) {
                   handleShare({
                     appName: "Crossjig",
                     text: "Try this custom crossjig that I created!",
-                    url: "https://crossjig.com",
-                    seed: `custom-${representativeString}`,
+                    url: fullUrl,
+                    origin: "custom creation",
                   });
                 } else {
                   dispatchCustomState({
@@ -345,7 +352,7 @@ export default function App() {
                   setDisplay("customShare");
                 }
               }}
-            ></button>
+            ></Share>
 
             <button
               id="hintIcon"

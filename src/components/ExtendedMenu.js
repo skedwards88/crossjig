@@ -1,7 +1,7 @@
 import React from "react";
 import packageJson from "../../package.json";
-import {handleShare} from "../common/handleShare";
 import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
+import Share from "@skedwards88/shared-components/src/components/Share";
 
 export default function ExtendedMenu({setDisplay}) {
   return (
@@ -22,22 +22,18 @@ export default function ExtendedMenu({setDisplay}) {
         <span>Settings</span>
       </button>
 
-      {navigator.canShare ? (
-        <button
-          onClick={() =>
-            handleShare({
-              appName: "Crossjig",
-              text: "Check out this word game!",
-              url: "https://crossjig.com",
-            })
-          }
-        >
-          <div id="shareIcon" className="extendedMenuIcon"></div>
-          <span>Share</span>
-        </button>
-      ) : (
-        <></>
-      )}
+      <Share
+        appName="Crossjig"
+        text="Check out this word puzzle!"
+        url="https://crossjig.com"
+        origin="extended menu"
+        content={
+          <>
+            <div id="shareIcon" className="extendedMenuIcon"></div>
+            <span>Share</span>
+          </>
+        }
+      ></Share>
 
       {!isRunningStandalone() ? (
         <button onClick={() => setDisplay("installOverview")}>

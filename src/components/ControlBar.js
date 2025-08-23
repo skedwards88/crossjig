@@ -1,5 +1,5 @@
 import React from "react";
-import {handleShare} from "../common/handleShare";
+import Share from "@skedwards88/shared-components/src/components/Share";
 
 function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
   return (
@@ -51,21 +51,14 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
         onClick={() => setDisplay("moreGames")}
       ></button>
 
-      {navigator.canShare ? (
-        <button
-          id="shareIcon"
-          className="controlButton"
-          onClick={() =>
-            handleShare({
-              appName: "Crossjig",
-              text: "Check out this word game!",
-              url: "https://crossjig.com",
-            })
-          }
-        ></button>
-      ) : (
-        <></>
-      )}
+      <Share
+        appName="Crossjig"
+        text="Check out this word puzzle!"
+        url="https://crossjig.com"
+        origin="control bar"
+        id="shareIcon"
+        className="controlButton"
+      ></Share>
 
       <button
         id="menuIcon"
