@@ -1,6 +1,6 @@
 import React from "react";
 import Share from "@skedwards88/shared-components/src/components/Share";
-import {assembleShareLink} from "../common/assembleShareLink";
+import {assembleShareLink} from "@skedwards88/shared-components/src/logic/assembleShareLink";
 
 export default function GameOver({dispatchGameState, gameState, setDisplay}) {
   if (gameState.isDaily) {

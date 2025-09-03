@@ -1,5 +1,5 @@
-import {customDailyPuzzles} from "../logic/customDailyPuzzles";
-import {getSeedFromDate} from "./getSeedFromDate";
+import {customDailyPuzzles} from "./customDailyPuzzles";
+import {getSeedFromDate} from "@skedwards88/shared-components/src/logic/getSeedFromDate";
 
 export default function getDailySeed() {
   const seedFromDate = getSeedFromDate();

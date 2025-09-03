@@ -27,7 +27,7 @@
   "dependencies": {
     "@skedwards88/shared-components": "latest",
     "@skedwards88/word_lists": "latest",
-    "@skedwards88/word_logic": "4.0.1",
+    "@skedwards88/word_logic": "4.0.2",
     "lodash.clonedeep": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

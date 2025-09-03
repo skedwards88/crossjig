@@ -1,4 +1,4 @@
-import {arrayToGrid} from "../common/arrayToGrid";
+import {arrayToGrid} from "@skedwards88/word_logic";
 import {cipherLetter} from "./cipherLetter";
 
 // Converts a string of letters and integers into a square grid of single letters and empty strings.

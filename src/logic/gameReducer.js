@@ -1,10 +1,14 @@
 import cloneDeep from "lodash.clonedeep";
 import {gameInit} from "./gameInit";
-import sendAnalytics from "@skedwards88/shared-components/src/logic/sendAnalytics";
+import {sendAnalytics} from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {gameSolvedQ} from "./gameSolvedQ";
 import {updatePieceDatum} from "./assemblePiece";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
 import {updateDragState} from "./updateDragState";
+import {
+  isYesterday,
+  isToday,
+} from "@skedwards88/shared-components/src/logic/isNDaysAgo";
 
 function updateStateForDragStart({
   currentGameState,
@@ -422,26 +426,6 @@ function giveHint(currentGameState) {
   }
 
   return realignedPieces;
-}
-
-function isYesterday(timestamp) {
-  return isNDaysAgo(timestamp, 1);
-}
-
-function isToday(timestamp) {
-  return isNDaysAgo(timestamp, 0);
-}
-
-function isNDaysAgo(timestamp, numberOfDaysAgo) {
-  const milliSecPerDay = 24 * 60 * 60 * 1000;
-  const previousDay = new Date(Date.now() - numberOfDaysAgo * milliSecPerDay);
-  const dateFromTimestamp = new Date(timestamp);
-
-  return (
-    dateFromTimestamp.getDate() === previousDay.getDate() &&
-    dateFromTimestamp.getMonth() === previousDay.getMonth() &&
-    dateFromTimestamp.getFullYear() === previousDay.getFullYear()
-  );
 }
 
 function getNewDailyStats(currentGameState) {
