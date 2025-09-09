@@ -43,7 +43,7 @@
   justify-content: space-evenly;
   align-items: center;
   grid-area: controls;
-  width: 100vw;
+  width: 100%;
   height: calc(var(--default-box-size) * 1.2);
   border-bottom: 2px solid var(--light-color);
 }

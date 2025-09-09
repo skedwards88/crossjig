@@ -1,6 +1,6 @@
 /* Landscape, small screen */
 
-@media (orientation: landscape) and (max-width: 935px) {
+@media (orientation: landscape) and (max-width: 935px) and (max-height: 600px) {
   #crossjig {
     grid-template-areas: "controls game";
     grid-template-columns: auto 1fr;
@@ -47,14 +47,15 @@
   }
 }
 
-/* Large screen, landscape */
-@media (orientation: landscape) and (min-height: 600px) and (min-width: 936px) {
+/* Large screen */
+@media (min-height: 600px) and (min-width: 936px), (min-width: 600px) and (min-height: 936px) {
   html {
     --default-box-size: min(4vh, 7vw, 1cm);
   }
 
   .App {
     justify-items: center;
+    justify-self: center;
   }
 
   #game,
@@ -70,6 +71,14 @@
   #controls,
   #exitDaily {
     justify-content: center;
+  }
+
+  .info {
+    width: 80%;
+  }
+
+  .settings {
+    width: 50%;
   }
 
   #settings,
@@ -88,28 +97,5 @@
 
   #rulesText {
     width: 50vw;
-  }
-}
-
-/* Large screen, portrait */
-@media (orientation: portrait) and (min-height: 600px) and (min-width: 600px) {
-  html {
-    --default-box-size: min(4vh, 7vw, 1cm);
-  }
-
-  #game,
-  #custom {
-    --box-size:
-      min(
-        calc((48vh - 1px) / var(--grid-rows)),
-        calc((84vw - 1px) / var(--grid-columns)),
-        1cm
-      );
-  }
-
-  #custom > #pool,
-  #lookupLetters {
-    max-width: 80vw;
-    justify-self: center;
   }
 }
