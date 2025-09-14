@@ -433,6 +433,7 @@ export default function App() {
             "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
           }
           appleAppLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
+          pwaLink={"https://crossjig.com"}
         ></PWAInstall>
       );
 
