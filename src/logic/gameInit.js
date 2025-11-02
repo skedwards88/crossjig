@@ -1,4 +1,3 @@
-import {sendAnalytics} from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {generatePuzzle} from "./generatePuzzle";
 import {getRandomSeed} from "@skedwards88/shared-components/src/logic/getRandomSeed";
 import getDailySeed from "../logic/getDailySeed";
@@ -139,8 +138,6 @@ export function gameInit({
     };
   }
 
-  sendAnalytics("new_game");
-
   return {
     seed: seed,
     pieces: pieces,
@@ -159,5 +156,15 @@ export function gameInit({
     dragCount: 0,
     dragState: undefined,
     isCustom,
+    analyticsToLog: [
+      {
+        eventName: "new_game",
+        eventInfo: {
+          isDaily,
+          isCustom,
+          numLetters,
+        },
+      },
+    ],
   };
 }

@@ -1,4 +1,3 @@
-import {sendAnalytics} from "@skedwards88/shared-components/src/logic/sendAnalytics";
 import {updatePieceDatum} from "./assemblePiece";
 
 export function customInit(useSaved = true) {
@@ -50,8 +49,6 @@ export function customInit(useSaved = true) {
       poolIndex: index,
     }),
   );
-
-  sendAnalytics("new_custom");
 
   return {
     pieces,
