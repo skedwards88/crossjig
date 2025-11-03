@@ -58,7 +58,7 @@ export function gameInit({
     // otherwise, don't use the saved state if the game is solved
     !(!isDaily && savedState.gameIsSolved)
   ) {
-    return savedState;
+    return {...savedState, analyticsToLog: []};
   }
 
   let pieces;
