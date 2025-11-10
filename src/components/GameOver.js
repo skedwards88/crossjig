@@ -1,8 +1,11 @@
 import React from "react";
 import Share from "@skedwards88/shared-components/src/components/Share";
 import {assembleShareLink} from "@skedwards88/shared-components/src/logic/assembleShareLink";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 
 export default function GameOver({dispatchGameState, gameState, setDisplay}) {
+  const {userId, sessionId} = useMetadataContext();
+
   if (gameState.isDaily) {
     return (
       <div id="gameOver">
@@ -45,6 +48,8 @@ export default function GameOver({dispatchGameState, gameState, setDisplay}) {
             ? `custom-${gameState.seed}`
             : `${gameState.seed}_${gameState.numLetters}`,
         })}
+        userId={userId}
+        sessionId={sessionId}
       ></Share>
     </div>
   );

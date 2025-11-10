@@ -34,10 +34,9 @@ import {getGridFromPieces} from "../logic/getGridFromPieces";
 import {crosswordValidQ, pickRandomIntBetween} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
 import {resizeGrid} from "../logic/resizeGrid";
-import {getUserId} from "@skedwards88/shared-components/src/logic/getUserId";
-import {v4 as uuidv4} from "uuid";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
-import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
+import {inferEventsToLog} from "../logic/inferEventsToLog";
 
 export default function App() {
   // *****
@@ -233,61 +232,36 @@ export default function App() {
     );
   }, [customState]);
 
-  // ******
-  // Start analytics setup
-  // ******
+  const {userId, sessionId} = useMetadataContext();
 
-  // Store userID so I don't have to read local storage every time
-  const userId = getUserId("crossjig_uid");
-
-  // Store sessionID as a ref so I have the same session ID until app refresh
-  const sessionIdRef = React.useRef(uuidv4());
-  const sessionId = sessionIdRef.current;
-
-  // Send analytics on load
-  React.useEffect(() => {
-    sendAnalyticsCF({
-      userId,
-      sessionId,
-      analyticsToLog: [
-        {
-          eventName: "app_load",
-          // os, browser, and isMobile are parsed on the server from the user agent headers
-          screenWidth: window.screen.width,
-          screenHeight: window.screen.height,
-          isStandalone: isRunningStandalone(),
-          devicePixelRatio: window.devicePixelRatio,
-        },
-      ],
-    });
-    // Just run once on app load
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Store the previous state so that we can infer which analytics events to send
+  const previousGameStateRef = React.useRef(gameState);
+  const previousDailyGameStateRef = React.useRef(dailyGameState);
 
   // Send analytics following reducer updates, if needed
   React.useEffect(() => {
-    const analyticsToLog = gameState.analyticsToLog;
+    const previousState = previousGameStateRef.current;
 
-    if (!analyticsToLog || !analyticsToLog.length) {
-      return;
+    const analyticsToLog = inferEventsToLog(previousState, gameState);
+
+    if (analyticsToLog.length) {
+      sendAnalyticsCF({userId, sessionId, analyticsToLog});
     }
 
-    sendAnalyticsCF({userId, sessionId, analyticsToLog});
-  }, [gameState?.analyticsToLog, sessionId, userId]);
+    previousGameStateRef.current = gameState;
+  }, [gameState, sessionId, userId]);
 
   React.useEffect(() => {
-    const analyticsToLog = dailyGameState.analyticsToLog;
+    const previousState = previousDailyGameStateRef.current;
 
-    if (!analyticsToLog || !analyticsToLog.length) {
-      return;
+    const analyticsToLog = inferEventsToLog(previousState, dailyGameState);
+
+    if (analyticsToLog.length) {
+      sendAnalyticsCF({userId, sessionId, analyticsToLog});
     }
 
-    sendAnalyticsCF({userId, sessionId, analyticsToLog});
-  }, [dailyGameState?.analyticsToLog, sessionId, userId]);
-
-  // ******
-  // End analytics setup
-  // ******
+    previousDailyGameStateRef.current = dailyGameState;
+  }, [dailyGameState, sessionId, userId]);
 
   switch (display) {
     case "rules":
@@ -380,6 +354,8 @@ export default function App() {
             <Share
               id="shareIcon"
               className="controlButton"
+              userId={userId}
+              sessionId={sessionId}
               onClick={() => {
                 let representativeString;
                 try {
@@ -482,6 +458,8 @@ export default function App() {
             "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
           }
           appleAppLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
+          userId={userId}
+          sessionId={sessionId}
         ></InstallOverview>
       );
 

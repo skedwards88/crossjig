@@ -2,8 +2,11 @@ import React from "react";
 import packageJson from "../../package.json";
 import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
 import Share from "@skedwards88/shared-components/src/components/Share";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 
 export default function ExtendedMenu({setDisplay}) {
+  const {userId, sessionId} = useMetadataContext();
+
   return (
     <div className="App" id="extendedMenu">
       <h1>Crossjig</h1>
@@ -33,6 +36,8 @@ export default function ExtendedMenu({setDisplay}) {
             <span>Share</span>
           </>
         }
+        userId={userId}
+        sessionId={sessionId}
       ></Share>
 
       {!isRunningStandalone() ? (

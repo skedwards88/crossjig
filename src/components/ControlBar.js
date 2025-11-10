@@ -1,7 +1,10 @@
 import React from "react";
 import Share from "@skedwards88/shared-components/src/components/Share";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 
 function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
+  const {userId, sessionId} = useMetadataContext();
+
   return (
     <div id="controls">
       <button
@@ -58,6 +61,8 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
         origin="control bar"
         id="shareIcon"
         className="controlButton"
+        userId={userId}
+        sessionId={sessionId}
       ></Share>
 
       <button

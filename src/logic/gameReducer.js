@@ -525,8 +525,6 @@ function updateCompletionState(gameState) {
 }
 
 export function gameReducer(currentGameState, payload) {
-  let analyticsToLog = [];
-
   if (payload.action === "newGame") {
     return gameInit({
       ...payload,
@@ -540,8 +538,6 @@ export function gameReducer(currentGameState, payload) {
       isCustom: true,
     });
   } else if (payload.action === "getHint") {
-    analyticsToLog.push({eventName: "hint"});
-
     const newPieces = giveHint(currentGameState);
 
     const updatedState = updateCompletionState({
@@ -550,19 +546,7 @@ export function gameReducer(currentGameState, payload) {
       hintTally: currentGameState.hintTally + 1,
     });
 
-    if (updatedState.gameIsSolved && !currentGameState.gameIsSolved) {
-      analyticsToLog.push({
-        eventName: "completed_game",
-        eventInfo: {
-          numLetters: updatedState.numLetters,
-          isDaily: updatedState.isDaily,
-          isCustom: updatedState.isCustom,
-          numHints: updatedState.hintTally,
-        },
-      });
-    }
-
-    return {...updatedState, analyticsToLog};
+    return updatedState;
   } else if (payload.action === "dragStart") {
     const {pieceID, pointerID, pointerStartPosition} = payload;
     return updateStateForDragStart({
@@ -572,7 +556,6 @@ export function gameReducer(currentGameState, payload) {
       pointerStartPosition,
       boardIsShifting: false,
       isCustomCreating: currentGameState.isCustomCreating,
-      analyticsToLog,
     });
   } else if (payload.action === "dragNeighbors") {
     // Fired when the timer fires, if `!dragHasMoved`
@@ -592,18 +575,6 @@ export function gameReducer(currentGameState, payload) {
       draggedPieceID: dragState.pieceIDs[0],
     });
 
-    if (droppedGameState.gameIsSolved && !currentGameState.gameIsSolved) {
-      analyticsToLog.push({
-        eventName: "completed_game",
-        eventInfo: {
-          numLetters: droppedGameState.numLetters,
-          isDaily: droppedGameState.isDaily,
-          isCustom: droppedGameState.isCustom,
-          numHints: droppedGameState.hintTally,
-        },
-      });
-    }
-
     return updateStateForDragStart({
       currentGameState: droppedGameState,
       isPartOfCurrentDrag: (piece) => connectedPieceIDs.includes(piece.id),
@@ -612,7 +583,6 @@ export function gameReducer(currentGameState, payload) {
       boardIsShifting: false,
       previousDragState: dragState,
       isCustomCreating: currentGameState.isCustomCreating,
-      analyticsToLog,
     });
   } else if (payload.action === "dragMove") {
     // Fired on pointermove and on lostpointercapture.
@@ -630,7 +600,6 @@ export function gameReducer(currentGameState, payload) {
           prevDrag.dragHasMoved ||
           pointerHasMovedQ(prevDrag.pointerStartPosition, pointer),
       }),
-      analyticsToLog,
     };
   } else if (payload.action === "dragEnd") {
     // Fired on lostpointercapture, after `dragMove`.
@@ -641,19 +610,7 @@ export function gameReducer(currentGameState, payload) {
     } else {
       const updatedState = updateStateForDragEnd(currentGameState);
 
-      if (updatedState.gameIsSolved && !currentGameState.gameIsSolved) {
-        analyticsToLog.push({
-          eventName: "completed_game",
-          eventInfo: {
-            numLetters: updatedState.numLetters,
-            isDaily: updatedState.isDaily,
-            isCustom: updatedState.isCustom,
-            numHints: updatedState.hintTally,
-          },
-        });
-      }
-
-      return {...updatedState, analyticsToLog};
+      return updatedState;
     }
   } else if (payload.action === "shiftStart") {
     // Fired on pointerdown in an empty square on the board.
@@ -668,7 +625,6 @@ export function gameReducer(currentGameState, payload) {
       pointerStartPosition,
       boardIsShifting: true,
       isCustomCreating: currentGameState.isCustomCreating,
-      analyticsToLog,
     });
   } else if (payload.action === "clearStreakIfNeeded") {
     const lastDateWon = currentGameState.stats.lastDateWon;
@@ -690,20 +646,17 @@ export function gameReducer(currentGameState, payload) {
       return {
         ...currentGameState,
         stats: newStats,
-        analyticsToLog,
       };
     }
   } else if (payload.action === "updateInvalidReason") {
     return {
       ...currentGameState,
       invalidReason: payload.invalidReason,
-      analyticsToLog,
     };
   } else if (payload.action === "updateRepresentativeString") {
     return {
       ...currentGameState,
       representativeString: payload.representativeString,
-      analyticsToLog,
     };
   } else {
     console.log(`unknown action: ${payload.action}`);

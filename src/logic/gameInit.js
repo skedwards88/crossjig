@@ -58,7 +58,7 @@ export function gameInit({
     // otherwise, don't use the saved state if the game is solved
     !(!isDaily && savedState.gameIsSolved)
   ) {
-    return {...savedState, analyticsToLog: []};
+    return savedState;
   }
 
   let pieces;
@@ -156,15 +156,5 @@ export function gameInit({
     dragCount: 0,
     dragState: undefined,
     isCustom,
-    analyticsToLog: [
-      {
-        eventName: "new_game",
-        eventInfo: {
-          isDaily,
-          isCustom,
-          numLetters,
-        },
-      },
-    ],
   };
 }
