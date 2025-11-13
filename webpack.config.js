@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 const WorkboxPlugin = require("workbox-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -12,6 +13,11 @@ if (!appName || !issues) {
     "displayName and bugs.url must be populated in package.json for use in the privacy policy.",
   );
 }
+
+// Define app name as an env var for use by the sendAnalyticsCF function
+const definePlugin = new webpack.DefinePlugin({
+  "process.env.APP_NAME": JSON.stringify(packageJson.name),
+});
 
 module.exports = (env, argv) => {
   if (argv.mode === "development") {
@@ -103,8 +109,14 @@ module.exports = (env, argv) => {
 
   const plugins =
     argv.mode === "development"
-      ? [htmlPlugin, privacyHtmlPlugin, copyPlugin]
-      : [htmlPlugin, privacyHtmlPlugin, copyPlugin, serviceWorkerPlugin];
+      ? [definePlugin, htmlPlugin, privacyHtmlPlugin, copyPlugin]
+      : [
+          definePlugin,
+          htmlPlugin,
+          privacyHtmlPlugin,
+          copyPlugin,
+          serviceWorkerPlugin,
+        ];
 
   return {
     entry: "./src/index.js",
