@@ -121,3 +121,37 @@
 #playIcon {
   background-image: url("@skedwards88/shared-components/src/images/icons/play.svg");
 }
+
+#adventureIcon {
+  background-image: url("@skedwards88/shared-components/src/images/icons/play.svg");
+}
+
+#adventureLevel {
+  font-size: calc(var(--default-font-size) * 0.75);
+}
+
+.adventureComplete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.adventureComplete h1 {
+  margin-bottom: 1rem;
+}
+
+.adventureComplete p {
+  margin: 0.5rem 0;
+}
+
+.adventureComplete button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+#adventureBar > * {
+  vertical-align: middle;
+}

@@ -2,9 +2,26 @@ import React from "react";
 import Share from "@skedwards88/shared-components/src/components/Share";
 import {assembleShareLink} from "@skedwards88/shared-components/src/logic/assembleShareLink";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
+import {ADVENTURE_LEVELS} from "../logic/adventure";
 
 export default function GameOver({dispatchGameState, gameState, setDisplay}) {
   const {userId, sessionId} = useMetadataContext();
+
+  if (gameState.isAdventure) {
+    const isLastLevel = gameState.currentLevel >= ADVENTURE_LEVELS.length - 1;
+    return (
+      <div id="gameOver">
+        <div>Level {gameState.currentLevel + 1} Complete!</div>
+        <button
+          onClick={() => {
+            dispatchGameState({action: "nextLevel"});
+          }}
+        >
+          {isLastLevel ? "Finish Adventure" : `Continue to Level ${gameState.currentLevel + 2}`}
+        </button>
+      </div>
+    );
+  }
 
   if (gameState.isDaily) {
     return (

@@ -22,6 +22,7 @@ import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare"
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
+import {adventureInit, adventureReducer, ADVENTURE_LEVELS} from "../logic/adventure";
 import getDailySeed from "../logic/getDailySeed";
 import {getSeedFromDate} from "@skedwards88/shared-components/src/logic/getSeedFromDate";
 import {gameReducer} from "../logic/gameReducer";
@@ -143,6 +144,12 @@ export default function App() {
     customInit,
   );
 
+  const [adventureState, dispatchAdventureState] = React.useReducer(
+    adventureReducer,
+    {useSaved: true},
+    adventureInit,
+  );
+
   const [, setLastVisible] = React.useState(Date.now());
 
   function handleCustomGeneration() {
@@ -231,6 +238,13 @@ export default function App() {
       JSON.stringify(customState),
     );
   }, [customState]);
+
+  React.useEffect(() => {
+    window.localStorage.setItem(
+      "crossjigAdventureState",
+      JSON.stringify(adventureState),
+    );
+  }, [adventureState]);
 
   const {userId, sessionId} = useMetadataContext();
 
@@ -477,6 +491,46 @@ export default function App() {
 
     case "extendedMenu":
       return <ExtendedMenu setDisplay={setDisplay}></ExtendedMenu>;
+
+    case "adventure":
+      return (
+        <div className="App" id="crossjig">
+          <div id="adventureBar">
+            <button
+              id="hintIcon"
+              className="controlButton"
+              disabled={adventureState.gameIsSolved || adventureState.adventureComplete}
+              onClick={() => dispatchAdventureState({action: "getHint"})}
+            ></button>
+            <span id="adventureLevel">
+              Level {adventureState.currentLevel + 1} / {ADVENTURE_LEVELS.length}
+            </span>
+            <button id="exitAdventureIcon" onClick={() => setDisplay("game")}>
+              Exit adventure
+            </button>
+          </div>
+          {adventureState.adventureComplete ? (
+            <div className="adventureComplete">
+              <h1>🎉 Adventure Complete! 🎉</h1>
+              <p>You solved all {ADVENTURE_LEVELS.length} puzzles!</p>
+              <p>Total hints used: {adventureState.totalHints}</p>
+              <button onClick={() => dispatchAdventureState({action: "newAdventure"})}>
+                Start New Adventure
+              </button>
+              <button onClick={() => setDisplay("game")}>
+                Return to Main Game
+              </button>
+            </div>
+          ) : (
+            <Game
+              dispatchGameState={dispatchAdventureState}
+              gameState={adventureState}
+              validityOpacity={validityOpacity}
+              setDisplay={setDisplay}
+            ></Game>
+          )}
+        </div>
+      );
 
     case "whatsNew":
       return (
