@@ -9,10 +9,10 @@ export const ADVENTURE_LEVELS = [20, 25, 30, 35, 40, 50, 60];
 function generateAdventurePuzzle(levelIndex, seed) {
   const minLetters = ADVENTURE_LEVELS[levelIndex];
   return generatePuzzle({
-      gridSize: getGridSizeForLetters(minLetters),
-      minLetters,
-      seed: `${seed}-level${levelIndex}`,
-    });
+    gridSize: getGridSizeForLetters(minLetters),
+    minLetters,
+    seed: `${seed}-level${levelIndex}`,
+  });
 }
 
 function validateSavedAdventureState(savedState, checkPieces = false) {
@@ -36,13 +36,15 @@ function validateSavedAdventureState(savedState, checkPieces = false) {
 
 export function adventureInit({useSaved = true, seed} = {}) {
   if (useSaved) {
-    const savedState = JSON.parse(localStorage.getItem("crossjigAdventureState"));
+    const savedState = JSON.parse(
+      localStorage.getItem("crossjigAdventureState"),
+    );
 
     // If we have valid saved state with the same seed (or any seed if not specified), use it
     if (
       savedState &&
-        validateSavedAdventureState(savedState, true) &&
-        (!seed || savedState.seed === seed)
+      validateSavedAdventureState(savedState, true) &&
+      (!seed || savedState.seed === seed)
     ) {
       return savedState;
     }

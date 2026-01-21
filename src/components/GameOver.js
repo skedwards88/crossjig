@@ -17,7 +17,9 @@ export default function GameOver({dispatchGameState, gameState, setDisplay}) {
             dispatchGameState({action: "nextLevel"});
           }}
         >
-          {isLastLevel ? "Finish Adventure" : `Continue to Level ${gameState.currentLevel + 2}`}
+          {isLastLevel
+            ? "Finish Adventure"
+            : `Continue to Level ${gameState.currentLevel + 2}`}
         </button>
       </div>
     );

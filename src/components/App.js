@@ -22,7 +22,11 @@ import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare"
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customInit} from "../logic/customInit";
-import {adventureInit, adventureReducer, ADVENTURE_LEVELS} from "../logic/adventure";
+import {
+  adventureInit,
+  adventureReducer,
+  ADVENTURE_LEVELS,
+} from "../logic/adventure";
 import getDailySeed from "../logic/getDailySeed";
 import {getSeedFromDate} from "@skedwards88/shared-components/src/logic/getSeedFromDate";
 import {gameReducer} from "../logic/gameReducer";
@@ -499,11 +503,14 @@ export default function App() {
             <button
               id="hintIcon"
               className="controlButton"
-              disabled={adventureState.gameIsSolved || adventureState.adventureComplete}
+              disabled={
+                adventureState.gameIsSolved || adventureState.adventureComplete
+              }
               onClick={() => dispatchAdventureState({action: "getHint"})}
             ></button>
             <span id="adventureLevel">
-              Level {adventureState.currentLevel + 1} / {ADVENTURE_LEVELS.length}
+              Level {adventureState.currentLevel + 1} /{" "}
+              {ADVENTURE_LEVELS.length}
             </span>
             <button id="exitAdventureIcon" onClick={() => setDisplay("game")}>
               Exit adventure
@@ -514,7 +521,9 @@ export default function App() {
               <h1>🎉 Adventure Complete! 🎉</h1>
               <p>You solved all {ADVENTURE_LEVELS.length} puzzles!</p>
               <p>Total hints used: {adventureState.totalHints}</p>
-              <button onClick={() => dispatchAdventureState({action: "newAdventure"})}>
+              <button
+                onClick={() => dispatchAdventureState({action: "newAdventure"})}
+              >
                 Start New Adventure
               </button>
               <button onClick={() => setDisplay("game")}>
