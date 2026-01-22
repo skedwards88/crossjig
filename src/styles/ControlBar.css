@@ -130,7 +130,7 @@
   font-size: calc(var(--default-font-size) * 0.75);
 }
 
-.adventureComplete {
+#adventureComplete {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,15 +139,15 @@
   padding: 2rem;
 }
 
-.adventureComplete h1 {
+#adventureComplete > h1 {
   margin-bottom: 1rem;
 }
 
-.adventureComplete p {
+#adventureComplete > p {
   margin: 0.5rem 0;
 }
 
-.adventureComplete button {
+#adventureComplete > button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
 }

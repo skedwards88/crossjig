@@ -517,7 +517,7 @@ export default function App() {
             </button>
           </div>
           {adventureState.adventureComplete ? (
-            <div className="adventureComplete">
+            <div id="adventureComplete">
               <h1>🎉 Adventure Complete! 🎉</h1>
               <p>You solved all {ADVENTURE_LEVELS.length} puzzles!</p>
               <p>Total hints used: {adventureState.totalHints}</p>
