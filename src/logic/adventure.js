@@ -15,7 +15,7 @@ function generateAdventurePuzzle(levelIndex, seed) {
   });
 }
 
-function validateSavedAdventureState(savedState, checkPieces = false) {
+function validateSavedAdventureState(savedState) {
   if (typeof savedState !== "object" || savedState === null) {
     return false;
   }
@@ -43,7 +43,7 @@ export function adventureInit({useSaved = true, seed} = {}) {
     // If we have valid saved state with the same seed (or any seed if not specified), use it
     if (
       savedState &&
-      validateSavedAdventureState(savedState, true) &&
+      validateSavedAdventureState(savedState) &&
       (!seed || savedState.seed === seed)
     ) {
       return savedState;
