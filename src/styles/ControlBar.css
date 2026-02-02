@@ -38,7 +38,8 @@
   text-align: center;
 }
 
-#controls, #adventureBar {
+#controls,
+#adventureBar {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -151,4 +152,3 @@
   margin-top: 1rem;
   padding: 0.5rem 1rem;
 }
-
