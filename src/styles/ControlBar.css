@@ -38,7 +38,7 @@
   text-align: center;
 }
 
-#controls {
+#controls, #adventureBar {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -123,7 +123,7 @@
 }
 
 #adventureIcon {
-  background-image: url("@skedwards88/shared-components/src/images/icons/play.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/bar_chart.svg");
 }
 
 #adventureLevel {
@@ -152,6 +152,3 @@
   padding: 0.5rem 1rem;
 }
 
-#adventureBar > * {
-  vertical-align: middle;
-}
