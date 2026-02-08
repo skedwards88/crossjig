@@ -20,6 +20,11 @@ export default function ExtendedMenu({setDisplay}) {
         <span>Create a custom crossjig</span>
       </button>
 
+      <button onClick={() => setDisplay("adventure")}>
+        <div id="adventureIcon" className="extendedMenuIcon"></div>
+        <span>Adventure mode</span>
+      </button>
+
       <button onClick={() => setDisplay("settings")}>
         <div id="settingsIcon" className="extendedMenuIcon"></div>
         <span>Settings</span>
