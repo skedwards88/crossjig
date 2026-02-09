@@ -37,7 +37,7 @@
     width: calc(var(--default-box-size) * 1.5);
   }
 
-  #exitDailyButton,
+  #exitDailyIcon,
   #exitAdventureIcon,
   #adventureLevel {
     transform: rotate(270deg);
