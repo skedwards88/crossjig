@@ -12,7 +12,7 @@ export function inferEventsToLog(oldState, newState) {
     });
   }
 
-  if (newState.numHints > oldState.numHints) {
+  if (newState.hintTally > oldState.hintTally) {
     analyticsToLog.push({eventName: "hint"});
   }
 
