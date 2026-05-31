@@ -58,7 +58,7 @@ export function gameInit({
     // otherwise, don't use the saved state if the game is solved
     !(!isDaily && savedState.gameIsSolved)
   ) {
-    return savedState;
+    return {...savedState, isResumedFromSave: true};
   }
 
   let pieces;
@@ -156,5 +156,6 @@ export function gameInit({
     dragCount: 0,
     dragState: undefined,
     isCustom,
+    isResumedFromSave: false,
   };
 }

@@ -256,8 +256,31 @@ export default function App() {
   const previousGameStateRef = React.useRef(gameState);
   const previousDailyGameStateRef = React.useRef(dailyGameState);
 
+  const isFirstRenderRef = React.useRef(true);
+  const isFirstDailyRenderRef = React.useRef(true);
+
   // Send analytics following reducer updates, if needed
   React.useEffect(() => {
+    if (isFirstRenderRef.current) {
+      isFirstRenderRef.current = false;
+      if (!gameState.isResumedFromSave) {
+        sendAnalyticsCF({
+          userId,
+          sessionId,
+          analyticsToLog: [
+            {
+              eventName: "new_game",
+              eventInfo: {
+                isDaily: gameState.isDaily,
+                difficultyLevel: gameState.difficultyLevel,
+              },
+            },
+          ],
+        });
+        return;
+      }
+    }
+
     const previousState = previousGameStateRef.current;
 
     const analyticsToLog = inferEventsToLog(previousState, gameState);
@@ -270,6 +293,26 @@ export default function App() {
   }, [gameState, sessionId, userId]);
 
   React.useEffect(() => {
+    if (isFirstDailyRenderRef.current) {
+      isFirstDailyRenderRef.current = false;
+      if (!dailyGameState.isResumedFromSave) {
+        sendAnalyticsCF({
+          userId,
+          sessionId,
+          analyticsToLog: [
+            {
+              eventName: "new_game",
+              eventInfo: {
+                isDaily: dailyGameState.isDaily,
+                difficultyLevel: dailyGameState.difficultyLevel,
+              },
+            },
+          ],
+        });
+        return;
+      }
+    }
+
     const previousState = previousDailyGameStateRef.current;
 
     const analyticsToLog = inferEventsToLog(previousState, dailyGameState);
