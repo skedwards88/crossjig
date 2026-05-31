@@ -272,7 +272,8 @@ export default function App() {
               eventName: "new_game",
               eventInfo: {
                 isDaily: gameState.isDaily,
-                difficultyLevel: gameState.difficultyLevel,
+                isCustom: gameState.isCustom,
+                numLetters: gameState.numLetters,
               },
             },
           ],
@@ -304,7 +305,8 @@ export default function App() {
               eventName: "new_game",
               eventInfo: {
                 isDaily: dailyGameState.isDaily,
-                difficultyLevel: dailyGameState.difficultyLevel,
+                isCustom: dailyGameState.isCustom,
+                numLetters: dailyGameState.numLetters,
               },
             },
           ],
