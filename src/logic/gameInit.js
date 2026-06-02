@@ -32,7 +32,7 @@ function validateSavedState(savedState) {
   return true;
 }
 
-function applyBaseState({
+export function applyBaseState({
   seed,
   puzzle,
   numLetters,
@@ -239,6 +239,7 @@ function adventureInit({useSaved, seed}) {
     // fields unique to adventure mode:
     currentLevel: levelIndex,
     totalHints: 0,
+    adventureComplete: false,
   };
 }
 

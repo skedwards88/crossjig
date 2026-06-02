@@ -1,4 +1,4 @@
-import {gameInit} from "./gameInit";
+import {applyBaseState, gameInit} from "./gameInit";
 import {gameReducer} from "./gameReducer";
 import {generatePuzzle} from "./generatePuzzle";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
@@ -29,15 +29,16 @@ function advanceAdventureLevel(currentState) {
   const puzzle = generateAdventurePuzzle(nextLevel, currentState.seed);
 
   return {
-    ...currentState,
+    ...applyBaseState({
+      seed: currentState.seed,
+      puzzle,
+      numLetters: ADVENTURE_LEVELS[nextLevel],
+      isAdventure: true,
+    }),
+    // fields unique to adventure mode:
     currentLevel: nextLevel,
-    ...puzzle,
-    allPiecesAreUsed: false,
-    gameIsSolved: false,
-    gameIsSolvedReason: "",
-    hintTally: 0,
-    dragCount: 0,
-    dragState: undefined,
+    totalHints: currentState.totalHints,
+    adventureComplete: false,
   };
 }
 
