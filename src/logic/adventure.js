@@ -55,15 +55,10 @@ export function adventureReducer(currentState, payload) {
     const newState = gameReducer(currentState, payload);
     return {
       ...newState,
-      // Preserve adventure-specific fields
-      isAdventure: true,
-      currentLevel: currentState.currentLevel,
-      seed: currentState.seed,
       totalHints:
         payload.action === "getHint"
           ? currentState.totalHints + 1
           : currentState.totalHints,
-      adventureComplete: currentState.adventureComplete,
     };
   }
 }
