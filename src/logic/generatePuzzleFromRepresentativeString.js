@@ -10,7 +10,6 @@ export function generatePuzzleFromRepresentativeString({representativeString}) {
   const grid = convertRepresentativeStringToGrid(representativeString);
 
   const gridSize = grid.length;
-  const minLetters = grid.flat().filter((i) => i).length;
 
   const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} = getMaxShifts(
     grid,
@@ -32,6 +31,5 @@ export function generatePuzzleFromRepresentativeString({representativeString}) {
     maxShiftUp,
     maxShiftDown,
     gridSize,
-    minLetters,
   };
 }
