@@ -21,7 +21,7 @@ import {
 import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
-import {customInit} from "../logic/customInit";
+import {customCreationInit} from "../logic/customCreationInit";
 import {
   adventureInit,
   adventureReducer,
@@ -145,7 +145,7 @@ export default function App() {
   const [customState, dispatchCustomState] = React.useReducer(
     gameReducer,
     {},
-    customInit,
+    customCreationInit,
   );
 
   const [adventureState, dispatchAdventureState] = React.useReducer(
