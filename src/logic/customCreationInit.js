@@ -1,8 +1,9 @@
 import {updatePieceDatum} from "./assemblePiece";
+import {getFromStorage} from "./safeStorage";
 
 export function customCreationInit(useSaved = true) {
   const savedState = useSaved
-    ? JSON.parse(localStorage.getItem("crossjigCustomCreation"))
+    ? getFromStorage("crossjigCustomCreation")
     : undefined;
 
   if (savedState && savedState.isCustomCreating) {

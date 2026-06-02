@@ -42,6 +42,7 @@ import {resizeGrid} from "../logic/resizeGrid";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
+import {getFromStorage, saveToStorage} from "../logic/safeStorage";
 
 export default function App() {
   // *****
@@ -86,13 +87,11 @@ export default function App() {
 
   // Determine when the player last visited the game
   // This is used to determine whether to show the rules instead of the game
-  const lastVisitedYYYYMMDD = JSON.parse(
-    localStorage.getItem("crossjigLastVisited"),
-  );
+  const lastVisitedYYYYMMDD = getFromStorage("crossjigLastVisited");
   const hasVisitedEver = hasVisitedSince(lastVisitedYYYYMMDD, "20240429");
 
-  const savedHasSeenWhatsNew = JSON.parse(
-    localStorage.getItem("crossjigHasSeenWhatsNew20240909"),
+  const savedHasSeenWhatsNew = getFromStorage(
+    "crossjigHasSeenWhatsNew20240909",
   );
 
   const [hasSeenWhatsNew, setHasSeenWhatsNew] = React.useState(
@@ -100,29 +99,23 @@ export default function App() {
   );
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "crossjigHasSeenWhatsNew20240909",
-      JSON.stringify(hasSeenWhatsNew),
-    );
+    saveToStorage("crossjigHasSeenWhatsNew20240909", hasSeenWhatsNew);
   }, [hasSeenWhatsNew]);
 
   const [lastVisited] = React.useState(getSeedFromDate());
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "crossjigLastVisited",
-      JSON.stringify(lastVisited),
-    );
+    saveToStorage("crossjigLastVisited", lastVisited);
   }, [lastVisited]);
 
   // Determine what view to show the user
-  const savedDisplay = JSON.parse(localStorage.getItem("crossjigDisplay"));
+  const savedDisplay = getFromStorage("crossjigDisplay");
   const [display, setDisplay] = React.useState(
     getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew, isCustom),
   );
 
   // Determine the opacity for the validity indicator
   const savedValidityOpacity =
-    JSON.parse(localStorage.getItem("crossjigValidityOpacity")) ?? 0.15;
+    getFromStorage("crossjigValidityOpacity") ?? 0.15;
   const [validityOpacity, setValidityOpacity] =
     React.useState(savedValidityOpacity);
 
@@ -215,39 +208,27 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    window.localStorage.setItem("crossjigDisplay", JSON.stringify(display));
+    saveToStorage("crossjigDisplay", display);
   }, [display]);
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "crossjigValidityOpacity",
-      JSON.stringify(validityOpacity),
-    );
+    saveToStorage("crossjigValidityOpacity", validityOpacity);
   }, [validityOpacity]);
 
   React.useEffect(() => {
-    window.localStorage.setItem("crossjigState", JSON.stringify(gameState));
+    saveToStorage("crossjigState", gameState);
   }, [gameState]);
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "dailyCrossjigState",
-      JSON.stringify(dailyGameState),
-    );
+    saveToStorage("dailyCrossjigState", dailyGameState);
   }, [dailyGameState]);
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "crossjigCustomCreation",
-      JSON.stringify(customState),
-    );
+    saveToStorage("crossjigCustomCreation", customState);
   }, [customState]);
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      "crossjigAdventureState",
-      JSON.stringify(adventureState),
-    );
+    saveToStorage("crossjigAdventureState", adventureState);
   }, [adventureState]);
 
   const {userId, sessionId} = useMetadataContext();
