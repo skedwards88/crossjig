@@ -22,11 +22,7 @@ import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare"
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
 import {customCreationInit} from "../logic/customCreationInit";
-import {
-  adventureInit,
-  adventureReducer,
-  ADVENTURE_LEVELS,
-} from "../logic/adventure";
+import {adventureReducer, ADVENTURE_LEVELS} from "../logic/adventure";
 import getDailySeed from "../logic/getDailySeed";
 import {getSeedFromDate} from "@skedwards88/shared-components/src/logic/getSeedFromDate";
 import {gameReducer} from "../logic/gameReducer";
@@ -143,8 +139,8 @@ export default function App() {
 
   const [adventureState, dispatchAdventureState] = React.useReducer(
     adventureReducer,
-    {useSaved: true},
-    adventureInit,
+    {isAdventure: true},
+    gameInit,
   );
 
   const [, setLastVisible] = React.useState(Date.now());
