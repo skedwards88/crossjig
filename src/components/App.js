@@ -232,9 +232,11 @@ export default function App() {
   // Store the previous state so that we can infer which analytics events to send
   const previousGameStateRef = React.useRef(gameState);
   const previousDailyGameStateRef = React.useRef(dailyGameState);
+  const previousAdventureStateRef = React.useRef(adventureState);
 
   const isFirstRenderRef = React.useRef(true);
   const isFirstDailyRenderRef = React.useRef(true);
+  const isFirstAdventureRenderRef = React.useRef(true);
 
   // Send analytics following reducer updates, if needed
   React.useEffect(() => {
@@ -250,6 +252,7 @@ export default function App() {
               eventInfo: {
                 isDaily: gameState.isDaily,
                 isCustom: gameState.isCustom,
+                isAdventure: gameState.isAdventure,
                 numLetters: gameState.numLetters,
               },
             },
@@ -283,6 +286,7 @@ export default function App() {
               eventInfo: {
                 isDaily: dailyGameState.isDaily,
                 isCustom: dailyGameState.isCustom,
+                isAdventure: dailyGameState.isAdventure,
                 numLetters: dailyGameState.numLetters,
               },
             },
@@ -302,6 +306,40 @@ export default function App() {
 
     previousDailyGameStateRef.current = dailyGameState;
   }, [dailyGameState, sessionId, userId]);
+
+  React.useEffect(() => {
+    if (isFirstAdventureRenderRef.current) {
+      isFirstAdventureRenderRef.current = false;
+      if (!adventureState.isResumedFromSave) {
+        sendAnalyticsCF({
+          userId,
+          sessionId,
+          analyticsToLog: [
+            {
+              eventName: "new_game",
+              eventInfo: {
+                isDaily: adventureState.isDaily,
+                isCustom: adventureState.isCustom,
+                isAdventure: adventureState.isAdventure,
+                numLetters: adventureState.numLetters,
+              },
+            },
+          ],
+        });
+        return;
+      }
+    }
+
+    const previousState = previousAdventureStateRef.current;
+
+    const analyticsToLog = inferEventsToLog(previousState, adventureState);
+
+    if (analyticsToLog.length) {
+      sendAnalyticsCF({userId, sessionId, analyticsToLog});
+    }
+
+    previousAdventureStateRef.current = adventureState;
+  }, [adventureState, sessionId, userId]);
 
   switch (display) {
     case "rules":

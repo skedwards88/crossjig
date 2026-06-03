@@ -7,6 +7,7 @@ export function inferEventsToLog(oldState, newState) {
       eventInfo: {
         isDaily: newState.isDaily,
         isCustom: newState.isCustom,
+        isAdventure: newState.isAdventure,
         numLetters: newState.numLetters,
       },
     });
@@ -16,13 +17,48 @@ export function inferEventsToLog(oldState, newState) {
     analyticsToLog.push({eventName: "hint"});
   }
 
+  if (
+    newState.isAdventure &&
+    oldState.isAdventure &&
+    newState.currentLevel > oldState.currentLevel
+  ) {
+    analyticsToLog.push({
+      eventName: "adventure_level_complete",
+      eventInfo: {
+        level: oldState.currentLevel + 1, // +1 because level is 0-indexed
+      },
+    });
+  }
+
+  if (
+    newState.isAdventure &&
+    oldState.isAdventure &&
+    newState.adventureComplete &&
+    !oldState.adventureComplete
+  ) {
+    analyticsToLog.push({
+      eventName: "adventure_level_complete",
+      eventInfo: {
+        level: oldState.currentLevel + 1, // +1 because level is 0-indexed
+      },
+    });
+
+    analyticsToLog.push({
+      eventName: "adventure_complete",
+      eventInfo: {
+        totalHints: oldState.totalHints,
+      },
+    });
+  }
+
   if (newState.gameIsSolved && !oldState.gameIsSolved) {
     analyticsToLog.push({
       eventName: "completed_game",
       eventInfo: {
-        numLetters: newState.numLetters,
         isDaily: newState.isDaily,
         isCustom: newState.isCustom,
+        isAdventure: newState.isAdventure,
+        numLetters: newState.numLetters,
         numHints: newState.hintTally,
       },
     });
