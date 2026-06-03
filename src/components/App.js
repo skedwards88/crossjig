@@ -131,7 +131,7 @@ export default function App() {
     gameInit,
   );
 
-  const [customState, dispatchCustomState] = React.useReducer(
+  const [customCreationState, dispatchCustomCreationState] = React.useReducer(
     gameReducer,
     {},
     customCreationInit,
@@ -147,7 +147,7 @@ export default function App() {
 
   function handleCustomGeneration() {
     // If there is nothing to share, display a message with errors
-    if (!customState.pieces.some((piece) => piece.boardTop >= 0)) {
+    if (!customCreationState.pieces.some((piece) => piece.boardTop >= 0)) {
       throw new Error("Add some letters to the board first!");
     }
 
@@ -156,8 +156,8 @@ export default function App() {
     // - Make sure all letters are connected
     // - Make sure all horizontal and vertical words are known
     const grid = getGridFromPieces({
-      pieces: customState.pieces,
-      gridSize: customState.gridSize,
+      pieces: customCreationState.pieces,
+      gridSize: customCreationState.gridSize,
       solution: false,
     });
 
@@ -220,8 +220,8 @@ export default function App() {
   }, [dailyGameState]);
 
   React.useEffect(() => {
-    saveToStorage("crossjigCustomCreation", customState);
-  }, [customState]);
+    saveToStorage("crossjigCustomCreation", customCreationState);
+  }, [customCreationState]);
 
   React.useEffect(() => {
     saveToStorage("crossjigAdventureState", adventureState);
@@ -375,7 +375,7 @@ export default function App() {
                   representativeString = handleCustomGeneration();
                 } catch (error) {
                   const invalidReason = error.message;
-                  dispatchCustomState({
+                  dispatchCustomCreationState({
                     action: "updateInvalidReason",
                     invalidReason: invalidReason,
                   });
@@ -402,7 +402,7 @@ export default function App() {
                   representativeString = handleCustomGeneration();
                 } catch (error) {
                   const invalidReason = error.message;
-                  dispatchCustomState({
+                  dispatchCustomCreationState({
                     action: "updateInvalidReason",
                     invalidReason: invalidReason,
                   });
@@ -424,7 +424,7 @@ export default function App() {
                     origin: "custom creation",
                   });
                 } else {
-                  dispatchCustomState({
+                  dispatchCustomCreationState({
                     action: "updateRepresentativeString",
                     representativeString,
                   });
@@ -446,9 +446,9 @@ export default function App() {
             </button>
           </div>
           <CustomCreation
-            dispatchCustomState={dispatchCustomState}
+            dispatchCustomState={dispatchCustomCreationState}
             validityOpacity={validityOpacity}
-            customState={customState}
+            customState={customCreationState}
             setDisplay={setDisplay}
           ></CustomCreation>
         </div>
@@ -457,8 +457,8 @@ export default function App() {
     case "customError":
       return (
         <CustomError
-          invalidReason={customState.invalidReason}
-          dispatchCustomState={dispatchCustomState}
+          invalidReason={customCreationState.invalidReason}
+          dispatchCustomState={dispatchCustomCreationState}
           setDisplay={setDisplay}
         ></CustomError>
       );
@@ -466,8 +466,8 @@ export default function App() {
     case "customShare":
       return (
         <CustomShare
-          representativeString={customState.representativeString}
-          dispatchCustomState={dispatchCustomState}
+          representativeString={customCreationState.representativeString}
+          dispatchCustomState={dispatchCustomCreationState}
           setDisplay={setDisplay}
         ></CustomShare>
       );
