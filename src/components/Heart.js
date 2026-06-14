@@ -11,7 +11,7 @@ export default function Heart({setDisplay, repoName}) {
           >
             Open an issue
           </a>{" "}
-          on GitHub or email SECTgames@gmail.com.
+          on GitHub or email TwistedTrailGames@gmail.com.
         </p>
         <hr></hr>
         <p>
