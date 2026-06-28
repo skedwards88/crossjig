@@ -8,7 +8,8 @@
         }
       }
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": [
     // required since @skedwards88/word_lists uses
