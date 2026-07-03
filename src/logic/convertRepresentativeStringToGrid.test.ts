@@ -72,7 +72,7 @@ describe("convertRepresentativeStringToGrid", () => {
 
   test("errors if first character is not an integer", () => {
     const input = "ABCDEFGHI";
-    expect(() => convertRepresentativeStringToGrid(input, 3.5)).toThrow(
+    expect(() => convertRepresentativeStringToGrid(input)).toThrow(
       "First character in input string must be an integer that represents the cipher shift",
     );
   });

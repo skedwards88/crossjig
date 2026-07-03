@@ -1,4 +1,6 @@
-export function cipherLetter(letter, shift) {
+import {Letter} from "../Types";
+
+export function cipherLetter(letter: Letter, shift: number): Letter {
   // Error if the letter is not a single uppercase character
   if (!/^[A-Z]$/.test(letter)) {
     throw new Error("Input letter must be a single uppercase character A-Z");
@@ -19,5 +21,5 @@ export function cipherLetter(letter, shift) {
 
   const cipheredLetter = String.fromCharCode(shiftedAscii);
 
-  return cipheredLetter;
+  return cipheredLetter as Letter; // typecasting here since the checks ensure that this is Letter
 }

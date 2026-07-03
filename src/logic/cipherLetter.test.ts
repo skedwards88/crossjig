@@ -1,3 +1,4 @@
+import {Letter} from "../Types";
 import {cipherLetter} from "./cipherLetter";
 
 describe("cipherLetter", () => {
@@ -24,7 +25,7 @@ describe("cipherLetter", () => {
   test("ciphering a letter and then deciphering it with the negative shift returns the original letter", () => {
     const letter = "M";
     const shift = 5;
-    const cipheredLetter = cipherLetter(letter, shift);
+    const cipheredLetter = cipherLetter(letter, shift) as Letter;
     const decipheredLetter = cipherLetter(cipheredLetter, -shift);
     expect(decipheredLetter).toBe(letter);
   });
@@ -38,54 +39,63 @@ describe("cipherLetter", () => {
   });
 
   test("errors for lowercase letters", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter("a", 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for non-alphabetical characters", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter("1", 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for empty strings", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter("", 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for multiple characters", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter("AB", 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for objects", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter({a: 5}, 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for numbers", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter(5, 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for arrays", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter([5], 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for undefined", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter(undefined, 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
   });
 
   test("errors for null", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter(null, 1)).toThrow(
       "Input letter must be a single uppercase character A-Z",
     );
@@ -98,6 +108,7 @@ describe("cipherLetter", () => {
   });
 
   test("errors for non-number shifts", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => cipherLetter("A", "4")).toThrow(
       "Input shift must be an integer",
     );

@@ -1,13 +1,21 @@
-import {generatePuzzle} from "./generatePuzzle";
+import {generatePuzzle, Puzzle} from "./generatePuzzle";
 import {getRandomSeed} from "@skedwards88/shared-components/src/logic/getRandomSeed";
 import getDailySeed from "../logic/getDailySeed";
 import {getNumLettersForDay} from "./getNumLettersForDay";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
 import {generatePuzzleFromRepresentativeString} from "./generatePuzzleFromRepresentativeString";
-import {getFromStorage} from "./safeStorage";
+import {getFromStorage} from "@skedwards88/shared-components/src/logic/safeStorage";
 import {ADVENTURE_LEVELS, generateAdventurePuzzle} from "./adventure";
+import {
+  GameState,
+  GameStateAdventure,
+  GameStateCustom,
+  GameStateDaily,
+  GameStateRandom,
+  Stats,
+} from "../Types";
 
-function validateSavedState(savedState) {
+function validateSavedState(savedState: GameState) {
   if (typeof savedState !== "object" || savedState === null) {
     return false;
   }
@@ -32,7 +40,7 @@ function validateSavedState(savedState) {
   return true;
 }
 
-export function applyBaseState({
+export function applyBaseState<T>({
   seed,
   puzzle,
   numLetters,
@@ -40,7 +48,15 @@ export function applyBaseState({
   isCustom = false,
   isDaily = false,
   isAdventure = false,
-}) {
+}: {
+  seed: string;
+  puzzle: Puzzle;
+  numLetters: number;
+  stats?: Stats;
+  isCustom?: boolean;
+  isDaily?: boolean;
+  isAdventure?: boolean;
+}): T {
   return {
     seed,
     ...puzzle,
@@ -59,12 +75,22 @@ export function applyBaseState({
   };
 }
 
-function randomInit({numLetters, useSaved, seed}) {
+function randomInit({
+  numLetters,
+  useSaved,
+  seed,
+}: {
+  numLetters: number;
+  useSaved: boolean;
+  seed?: string;
+}): GameStateRandom {
   if (!seed) {
     seed = getRandomSeed();
   }
 
-  const savedState = useSaved ? getFromStorage("crossjigState") : undefined;
+  const savedState = useSaved
+    ? getFromStorage<GameStateRandom>("crossjigState")
+    : undefined;
 
   if (
     savedState &&
@@ -92,11 +118,11 @@ function randomInit({numLetters, useSaved, seed}) {
   });
 }
 
-function dailyInit({useSaved}) {
+function dailyInit({useSaved}: {useSaved: boolean}): GameStateDaily {
   const [seed, isCustom] = getDailySeed();
 
   const savedState = useSaved
-    ? getFromStorage("dailyCrossjigState")
+    ? getFromStorage<GameStateDaily>("dailyCrossjigState")
     : undefined;
 
   if (
@@ -119,7 +145,7 @@ function dailyInit({useSaved}) {
   });
 
   // If there are already stats, use those
-  let stats;
+  let stats: Stats;
   if (savedState && savedState.stats) {
     stats = savedState.stats;
   } else {
@@ -157,10 +183,20 @@ function dailyInit({useSaved}) {
   });
 }
 
-function customInit({seed, useSaved, numLetters}) {
+function customInit({
+  seed,
+  useSaved,
+  numLetters,
+}: {
+  seed?: string;
+  useSaved: boolean;
+  numLetters: number;
+}): GameStateCustom | GameStateRandom {
   let isCustom = true;
 
-  const savedState = useSaved ? getFromStorage("crossjigState") : undefined;
+  const savedState = useSaved
+    ? getFromStorage<GameStateCustom | GameStateRandom>("crossjigState")
+    : undefined;
 
   if (
     savedState &&
@@ -172,10 +208,15 @@ function customInit({seed, useSaved, numLetters}) {
     return {...savedState, isResumedFromSave: true};
   }
 
+  if (seed === undefined) {
+    return randomInit({numLetters, useSaved: false});
+  }
+
   // Custom puzzles can exceed the min/max letters used for a randomly generated game. Constrain minLetters in this cases so that future randomly generated games don't use these extreme values.
+
   const minLetters =
     Math.min(Math.max(numLetters, 20), 60) ||
-    Math.min(Math.max(savedState?.numLetters, 20), 60) ||
+    (savedState && Math.min(Math.max(savedState.numLetters, 20), 60)) ||
     30;
   let gridSize = getGridSizeForLetters(minLetters);
 
@@ -208,9 +249,17 @@ function customInit({seed, useSaved, numLetters}) {
   });
 }
 
-function adventureInit({useSaved, seed}) {
+function adventureInit({
+  useSaved,
+  seed,
+}: {
+  useSaved: boolean;
+  seed: string;
+}): GameStateAdventure {
   if (useSaved) {
-    const savedState = getFromStorage("crossjigAdventureState");
+    const savedState = getFromStorage<GameStateAdventure>(
+      "crossjigAdventureState",
+    );
 
     // If we have valid saved state with the same seed (or any seed if not specified), use it
     if (
@@ -250,7 +299,14 @@ export function gameInit({
   isCustom = false,
   isAdventure = false,
   seed,
-}) {
+}: {
+  numLetters: number;
+  useSaved?: boolean;
+  isDaily?: boolean;
+  isCustom?: boolean;
+  isAdventure?: boolean;
+  seed: string;
+}): GameState {
   if (isDaily) {
     return dailyInit({useSaved});
   } else if (isCustom) {

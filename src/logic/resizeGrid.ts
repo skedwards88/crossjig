@@ -1,17 +1,17 @@
-import cloneDeep from "lodash.clonedeep";
 import {getMaxShifts} from "@skedwards88/word_logic";
+import {LetterOrEmpty} from "../Types";
 
 // Remove/add empty edge columns or rows to
 // get as close as possible to one empty row/column on each edge
 // and to center the contents,
 // while still keeping the grid square
 // and not making the grid smaller than 8x8
-export function resizeGrid(grid) {
+export function resizeGrid(grid: LetterOrEmpty[][]) {
   if (grid.some((row) => row.length != grid.length)) {
     throw new Error("Input grid is not square");
   }
 
-  let paddedGrid = cloneDeep(grid);
+  let paddedGrid = structuredClone(grid);
 
   // Get the current maximum number of empty columns/rows that are on the edge of the grid
   const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} = getMaxShifts(

@@ -1,11 +1,11 @@
-import cloneDeep from "lodash.clonedeep";
+import {LetterOrEmpty, PieceWithoutLocation} from "../Types";
 import {assemblePiece} from "./assemblePiece";
 import {getPieceDimension} from "./getPieceDimension";
 
-export function makePieces(grid) {
+export function makePieces(grid: LetterOrEmpty[][]): PieceWithoutLocation[] {
   const maxPieceLetters = 5;
   const maxPieceDimension = 3;
-  const remainingGrid = cloneDeep(grid);
+  const remainingGrid = structuredClone(grid);
   const piecesData = [];
 
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
@@ -90,9 +90,10 @@ export function makePieces(grid) {
       }
     }
   }
-  const pieces = piecesData.map((data) =>
+  const pieces = piecesData.map((data, index) =>
     assemblePiece({
       pieceData: data.pieceData,
+      id: index,
       rowIndex: data.rowIndex,
       colIndex: data.colIndex,
     }),

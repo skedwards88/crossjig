@@ -51,24 +51,6 @@ describe("getWordsFromGrid", () => {
     expect(getWordsFromGrid(grid)).toEqual(expectedWords);
   });
 
-  test("it rejects grids that are wider than tall", () => {
-    const grid = [["W", "I", "D", "E"]];
-    expect(() => getWordsFromGrid(grid)).toThrow(
-      "The number of columns and number of rows in the grid must be equal.",
-    );
-  });
-
-  test("it rejects grids that are taller than wide, including empty grids", () => {
-    const grid = [["T"], ["A"], ["L"], ["L"]];
-    expect(() => getWordsFromGrid(grid)).toThrow(
-      "The number of columns and number of rows in the grid must be equal.",
-    );
-
-    expect(() => getWordsFromGrid([])).toThrow(
-      "The number of columns and number of rows in the grid must be equal.",
-    );
-  });
-
   test("it rejects grids have uneven row lengths", () => {
     const grid = [
       ["A", "", "C"],

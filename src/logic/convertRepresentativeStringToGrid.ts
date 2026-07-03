@@ -1,11 +1,14 @@
 import {arrayToGrid} from "@skedwards88/word_logic";
 import {cipherLetter} from "./cipherLetter";
+import {Letter, LetterOrEmpty} from "../Types";
 
 // Converts a string of letters and integers into a square grid of single letters and empty strings.
 // The first character in the string represents how much the letters in the string have been shifted in the alphabet.
 // Integers (excluding the first character) in the string are expanded into an equivalent number of empty strings.
 // Letters in the string are capitalized and shifted in the alphabet by the amount described by the first character.
-export function convertRepresentativeStringToGrid(string) {
+export function convertRepresentativeStringToGrid(
+  string: string,
+): LetterOrEmpty[][] {
   // error if the string includes anything other than letters and numbers
   if (!/^[a-zA-Z0-9]+$/.test(string)) {
     throw new Error(
@@ -26,14 +29,17 @@ export function convertRepresentativeStringToGrid(string) {
 
   // Convert the string to a list of stringified integers and single letters
   // e.g. "2A11GT1" becomes ['2', 'A', '11','G', 'T', '1','1']
-  const splitString = representativeString.match(/\d+|[a-zA-Z]/gi);
+  const splitString = representativeString.match(/\d+|[a-zA-Z]/gi) ?? [];
 
   // Expand the stringified integers in the list to an equal number of empty strings
   // Also capitalize the letters
-  let list = [];
+  let list: LetterOrEmpty[] = [];
   for (const value of splitString) {
     if (/[a-zA-Z]/.test(value)) {
-      const decipheredLetter = cipherLetter(value.toUpperCase(), cipherShift);
+      const decipheredLetter = cipherLetter(
+        value.toUpperCase() as Letter,
+        cipherShift,
+      ); // typecasting is safe here since the regex test above plus toUpperCase ensure that this is Letter
       list.push(decipheredLetter);
     } else {
       const numSpaces = parseInt(value);
