@@ -1,4 +1,4 @@
-import {Letter} from "../Types";
+import type {Letter} from "../Types";
 
 export function cipherLetter(letter: Letter, shift: number): Letter {
   // Error if the letter is not a single uppercase character

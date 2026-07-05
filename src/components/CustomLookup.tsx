@@ -1,7 +1,9 @@
-import React from "react";
+import type { ReactNode } from "react";
 import {commonWords} from "@skedwards88/word_lists";
+import type {DisplayState, Letter} from "../Types";
+import React from "react";
 
-const alphabet = [
+const alphabet: Letter[] = [
   "A",
   "B",
   "C",
@@ -30,7 +32,7 @@ const alphabet = [
   "Z",
 ];
 
-function getMatches(lookupString) {
+function getMatches(lookupString: string): ReactNode {
   if (lookupString === "") {
     return "Enter some letters to find matching words.";
   }
@@ -51,7 +53,11 @@ function getMatches(lookupString) {
   }
 }
 
-export default function CustomLookup({setDisplay}) {
+export default function CustomLookup({
+  setDisplay,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   const [lookupString, setLookupString] = React.useState("");
 
   const letterElements = alphabet.map((letter) => (

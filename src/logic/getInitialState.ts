@@ -1,9 +1,11 @@
+import {DisplayState} from "../Types";
+
 export function getInitialState(
-  savedDisplay,
-  hasVisitedEver,
-  hasSeenWhatsNew,
-  isCustom,
-) {
+  savedDisplay: DisplayState,
+  hasVisitedEver: boolean,
+  hasSeenWhatsNew: boolean,
+  isCustom: boolean,
+): DisplayState {
   if (!hasVisitedEver) {
     return "rules";
   }

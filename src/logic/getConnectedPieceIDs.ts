@@ -1,8 +1,13 @@
-function getPieceIDGrid(pieces, gridSize) {
+import type {PieceInBoard} from "../Types";
+
+function getPieceIDGrid(
+  pieces: PieceInBoard[],
+  gridSize: number,
+): number[][][] {
   // at each space in the grid, find the IDs of the pieces at that space, if any
 
-  let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill([]))),
+  const grid: number[][][] = Array.from({length: gridSize}, () =>
+    Array.from({length: gridSize}, () => []),
   );
 
   for (let index = 0; index < pieces.length; index++) {
@@ -31,15 +36,24 @@ function getPieceIDGrid(pieces, gridSize) {
   return grid;
 }
 
-export function getConnectedPieceIDs({pieces, gridSize, draggedPieceID}) {
+export function getConnectedPieceIDs({
+  pieces,
+  gridSize,
+  draggedPieceID,
+}: {
+  pieces: PieceInBoard[];
+  gridSize: number;
+  draggedPieceID: number;
+}): number[] {
   // Find all pieces that touch a given piece on the board
 
   const pieceIDGrid = getPieceIDGrid(pieces, gridSize);
 
-  let touchingIDs = new Set([draggedPieceID]);
-  let idsToCheck = [draggedPieceID];
-  while (idsToCheck.length) {
-    const idToCheck = idsToCheck.pop();
+  const touchingIDs = new Set([draggedPieceID]);
+  const idsToCheck = [draggedPieceID];
+  let idToCheck: number | undefined;
+  while ((idToCheck = idsToCheck.pop()) !== undefined) {
+    // const idToCheck = idsToCheck.pop();
     // For each grid entry, check top/bottom/left/right of grid spaces that contain the current ID
     // If we find a surrounding ID that is not the current ID and we haven't already recorded the ID as touching
     // add the new ID to the list of touching IDs and the list of IDs to check

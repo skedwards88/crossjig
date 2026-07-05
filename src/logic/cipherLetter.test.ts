@@ -1,4 +1,4 @@
-import {Letter} from "../Types";
+import type {Letter} from "../Types";
 import {cipherLetter} from "./cipherLetter";
 
 describe("cipherLetter", () => {

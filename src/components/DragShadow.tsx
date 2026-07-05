@@ -1,6 +1,12 @@
-import React from "react";
+import type {CSSPropertiesWithVars} from "../Types";
 
-function DragShadowSquare({rowIndex, colIndex}) {
+function DragShadowSquare({
+  rowIndex,
+  colIndex,
+}: {
+  rowIndex: number;
+  colIndex: number;
+}): React.JSX.Element {
   return (
     <div
       className="shadow-square"
@@ -12,8 +18,16 @@ function DragShadowSquare({rowIndex, colIndex}) {
   );
 }
 
-export default function DragShadow({grid, top, left}) {
-  let squares = [];
+export default function DragShadow({
+  grid,
+  top,
+  left,
+}: {
+  grid: number[][];
+  top: number;
+  left: number;
+}): React.JSX.Element {
+  const squares = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[0].length; colIndex++) {
       if (grid[rowIndex][colIndex] > 0) {
@@ -31,7 +45,7 @@ export default function DragShadow({grid, top, left}) {
   const styles = {
     "--grid-rows": grid.length,
     "--grid-columns": grid[0].length,
-  };
+  } as CSSPropertiesWithVars;
   // For the drag shadow on the board, need to specify the position of shadow on the board
   if (top !== undefined) {
     styles.gridRow = top + 1; // CSS grid coordinates are 1-based

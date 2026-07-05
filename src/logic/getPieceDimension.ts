@@ -1,4 +1,16 @@
-export function getPieceDimension(pieceData) {
+export function getPieceDimension(
+  pieceData: {
+    top: number; // the vertical location of the letter in the piece
+    left: number; // the horizontal location of the letter in the piece
+  }[],
+): {
+  numCols: number;
+  numRows: number;
+  maxTop: number;
+  minTop: number;
+  maxLeft: number;
+  minLeft: number;
+} {
   const maxTop = pieceData
     .map((data) => data.top)
     .reduce(

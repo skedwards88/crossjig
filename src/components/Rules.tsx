@@ -1,8 +1,14 @@
-import React from "react";
 import packageJson from "../../package.json";
 import PlayButtons from "@skedwards88/shared-components/src/components/PlayButtons";
+import type {DisplayState} from "../Types";
 
-export default function Rules({setDisplay, setHasSeenWhatsNew}) {
+export default function Rules({
+  setDisplay,
+  setHasSeenWhatsNew,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  setHasSeenWhatsNew: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.JSX.Element {
   return (
     <div className="App rules">
       <h1 id="rulesHeader">Crossjig: How to play</h1>

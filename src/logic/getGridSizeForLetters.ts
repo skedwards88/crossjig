@@ -1,4 +1,4 @@
-export function getGridSizeForLetters(numLetters) {
+export function getGridSizeForLetters(numLetters: number): number {
   if (numLetters > 50) {
     return 12;
   } else if (numLetters > 30) {

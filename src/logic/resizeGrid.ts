@@ -1,12 +1,12 @@
 import {getMaxShifts} from "@skedwards88/word_logic";
-import {LetterOrEmpty} from "../Types";
+import type {LetterOrEmpty} from "../Types";
 
 // Remove/add empty edge columns or rows to
 // get as close as possible to one empty row/column on each edge
 // and to center the contents,
 // while still keeping the grid square
 // and not making the grid smaller than 8x8
-export function resizeGrid(grid: LetterOrEmpty[][]) {
+export function resizeGrid(grid: LetterOrEmpty[][]): LetterOrEmpty[][] {
   if (grid.some((row) => row.length != grid.length)) {
     throw new Error("Input grid is not square");
   }

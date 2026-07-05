@@ -1,8 +1,21 @@
-import React from "react";
 import Share from "@skedwards88/shared-components/src/components/Share";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
+import type {DisplayState, GameState} from "../Types";
+import type {GameReducerPayload} from "../logic/gameReducer";
 
-function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
+function ControlBar({
+  dispatchGameState,
+  dailyDispatchGameState,
+  gameState,
+  setDisplay,
+  dailyIsSolved,
+}: {
+  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dailyDispatchGameState: React.Dispatch<GameReducerPayload>;
+  gameState: GameState;
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  dailyIsSolved: boolean;
+}): React.JSX.Element {
   const {userId, sessionId} = useMetadataContext();
 
   return (
@@ -12,8 +25,8 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
         className="controlButton"
         onClick={() => {
           dispatchGameState({
-            ...gameState,
             action: "newGame",
+            numLetters: gameState.numLetters,
           });
         }}
       ></button>
@@ -30,7 +43,7 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
           id="calendarIconSolved"
           className="controlButton"
           onClick={() => {
-            dispatchGameState({action: "clearStreakIfNeeded"});
+            dailyDispatchGameState({action: "clearStreakIfNeeded"});
             setDisplay("daily");
           }}
         ></button>
@@ -55,12 +68,13 @@ function ControlBar({dispatchGameState, gameState, setDisplay, dailyIsSolved}) {
       ></button>
 
       <Share
+        id="shareIcon"
+        className="controlButton"
+        content=""
         appName="Crossjig"
         text="Check out this word puzzle!"
         url="https://crossjig.com"
         origin="control bar"
-        id="shareIcon"
-        className="controlButton"
         userId={userId}
         sessionId={sessionId}
       ></Share>

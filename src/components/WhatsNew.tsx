@@ -1,6 +1,12 @@
-import React from "react";
+import type {DisplayState} from "../Types";
 
-export default function WhatsNew({setDisplay, setHasSeenWhatsNew}) {
+export default function WhatsNew({
+  setDisplay,
+  setHasSeenWhatsNew,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  setHasSeenWhatsNew: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.JSX.Element {
   return (
     <div className="App info">
       <div id="rulesText">

@@ -3,8 +3,15 @@ import {getWordsFromPieces} from "../logic/getWordsFromPieces";
 import {transposeGrid} from "@skedwards88/word_logic";
 import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
+import type {LetterOrEmpty, PieceInBoard} from "../Types";
 
-function getHorizontalValidityGrid({grid, originalWords}) {
+function getHorizontalValidityGrid({
+  grid,
+  originalWords,
+}: {
+  grid: LetterOrEmpty[][];
+  originalWords: string[];
+}): boolean[][] {
   // return a 2D array of bools indicating whether
   // the position corresponds to a letter on the board
   // that is part of a valid horizontal word
@@ -63,7 +70,11 @@ export function getWordValidityGrids({
   pieces,
   gridSize,
   includeOriginalSolution = true,
-}) {
+}: {
+  pieces: PieceInBoard[];
+  gridSize: number;
+  includeOriginalSolution?: boolean;
+}): [boolean[][], boolean[][]] {
   const originalWords = includeOriginalSolution
     ? getWordsFromPieces({
         pieces,

@@ -1,8 +1,9 @@
+import type {LetterOrEmpty} from "../Types";
 import {resizeGrid} from "./resizeGrid";
 
 describe("resizeGrid", () => {
   test("trims a grid down to 8x8", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -31,7 +32,7 @@ describe("resizeGrid", () => {
   });
 
   test("expands a grid up to 8x8", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["A", "B", "C", "", "", ""],
       ["A", "B", "C", "", "", ""],
       ["X", "Y", "Z", "", "", ""],
@@ -54,7 +55,7 @@ describe("resizeGrid", () => {
   });
 
   test("pads a grid so that there 1 empty row/col on each edge", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["A", "", "", "", "", "", "", "", "", "", "", "B"],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -89,7 +90,7 @@ describe("resizeGrid", () => {
   });
 
   test("centers content", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "A", "B", "C", "", "", "", "", "", "", "", ""],
       ["", "A", "B", "C", "", "", "", "", "", "", "", ""],
@@ -119,7 +120,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are on the left edge and need padding", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["A", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -154,7 +155,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are on the right edge and need padding", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", "A"],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -189,7 +190,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are on the top edge and need padding", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["A", "", "", "D", "", "", "", "", "", "", "", "C"],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -224,7 +225,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are on the bottom edge and need padding", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -259,7 +260,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are near bottom edge and need trimming on the top and padding on the bottom", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -289,7 +290,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are near top edge and need trimming on the bottom and padding on the top", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -319,7 +320,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are near left edge", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -349,7 +350,7 @@ describe("resizeGrid", () => {
   });
 
   test("works if the grid contents are near right edge", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
@@ -378,7 +379,7 @@ describe("resizeGrid", () => {
   });
 
   test("testing odd number row/cols", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", ""],
@@ -406,7 +407,7 @@ describe("resizeGrid", () => {
   });
 
   test("works on an empty grid", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
@@ -436,7 +437,7 @@ describe("resizeGrid", () => {
   });
 
   test("if the grid does not need adjustment, returns a copy of the grid", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["", "", "A", "B", "C", "", "", ""],
@@ -452,7 +453,7 @@ describe("resizeGrid", () => {
   });
 
   test("errors if grid is taller than wide", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
@@ -468,7 +469,7 @@ describe("resizeGrid", () => {
   });
 
   test("errors if grid is wider than tall", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "", "", "", "", "", ""],
       ["", "", "A", "B", "C", "", "", ""],
       ["", "", "A", "B", "C", "", "", ""],

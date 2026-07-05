@@ -1,4 +1,4 @@
-import {LetterOrEmpty, PieceWithoutLocation} from "../Types";
+import type {LetterOrEmpty, PieceWithoutLocation} from "../Types";
 import {getPieceDimension} from "./getPieceDimension";
 
 export function assemblePiece({
@@ -20,7 +20,7 @@ export function assemblePiece({
   const topAdjust = Math.abs(Math.min(0, minTop));
   const leftAdjust = Math.abs(Math.min(0, minLeft));
 
-  let grid: LetterOrEmpty[][] = Array.from({length: numRows}, () =>
+  const grid: LetterOrEmpty[][] = Array.from({length: numRows}, () =>
     Array.from({length: numCols}, () => ""),
   );
   for (let pieceIndex = 0; pieceIndex < pieceData.length; pieceIndex++) {

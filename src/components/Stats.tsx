@@ -1,6 +1,6 @@
-import React from "react";
+import type {DayNumber, DisplayState, Stats as StatsType} from "../Types";
 
-function dayLetterFromNumber(number) {
+function dayLetterFromNumber(number: number) {
   switch (number) {
     case 0:
       return "S";
@@ -22,7 +22,15 @@ function dayLetterFromNumber(number) {
   }
 }
 
-function StatBar({won, maxDays, dayNumber}) {
+function StatBar({
+  won,
+  maxDays,
+  dayNumber,
+}: {
+  won: number;
+  maxDays: number;
+  dayNumber: number;
+}): React.JSX.Element {
   return (
     <div className="statsBar">
       <div className="statsDay">{dayLetterFromNumber(dayNumber)}</div>
@@ -36,16 +44,28 @@ function StatBar({won, maxDays, dayNumber}) {
   );
 }
 
-function StatsNumber({number, text}) {
+function StatsNumber({
+  number,
+  text,
+}: {
+  number: number;
+  text: string;
+}): React.JSX.Element {
   return (
     <div className="statsNumber">
-      <div className="number">{number}</div>
+      <div className="number">{`${number}%`}</div>
       <div>{text}</div>
     </div>
   );
 }
 
-export default function Stats({stats, setDisplay}) {
+export default function Stats({
+  stats,
+  setDisplay,
+}: {
+  stats: StatsType;
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   const maxDays = Object.values(stats.days).reduce(
     (currentMax, comparison) =>
       currentMax > comparison.won ? currentMax : comparison.won,
@@ -53,9 +73,9 @@ export default function Stats({stats, setDisplay}) {
   );
 
   // Order the day keys so get Mon...Sun
-  const orderedDayKeys = [1, 2, 3, 4, 5, 6, 0];
+  const orderedDayKeys: DayNumber[] = [1, 2, 3, 4, 5, 6, 0];
 
-  let bars = [];
+  const bars = [];
   for (const key of orderedDayKeys) {
     bars.push(
       <StatBar
@@ -76,9 +96,9 @@ export default function Stats({stats, setDisplay}) {
 
         {stats.streak ? (
           <StatsNumber
-            number={`${Math.round(
+            number={Math.round(
               (100 * stats.numHintlessInStreak) / stats.streak,
-            )}%`}
+            )}
             text={"streak without hints"}
           ></StatsNumber>
         ) : (

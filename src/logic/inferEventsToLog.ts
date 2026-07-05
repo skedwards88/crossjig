@@ -1,5 +1,13 @@
-export function inferEventsToLog(oldState, newState) {
-  let analyticsToLog = [];
+import type {GameState} from "../Types";
+
+export function inferEventsToLog(
+  oldState: GameState,
+  newState: GameState,
+): {
+  eventName: string;
+  eventInfo?: object;
+}[] {
+  const analyticsToLog = [];
 
   if (oldState.seed !== newState.seed) {
     analyticsToLog.push({

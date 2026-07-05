@@ -1,10 +1,24 @@
-import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 import {getLetterCountPerSquare} from "../logic/getLetterCountPerSquare";
+import type {GameReducerPayload} from "../logic/gameReducer";
+import type {
+  DragDestination,
+  DragDestinationPool,
+  PieceInGame,
+  Position,
+} from "../Types";
 
-export default function Pool({pieces, dragDestination, dispatchGameState}) {
-  const poolPieces = pieces.filter((piece) => piece.poolIndex >= 0);
+export default function Pool({
+  pieces,
+  dragDestination,
+  dispatchGameState,
+}: {
+  pieces: PieceInGame[];
+  dragDestination: DragDestination;
+  dispatchGameState: React.Dispatch<GameReducerPayload>;
+}): React.JSX.Element {
+  const poolPieces = pieces.filter((piece) => piece.poolIndex != undefined);
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
   const pieceElements = poolPieces.map((piece) => (
@@ -21,11 +35,13 @@ export default function Pool({pieces, dragDestination, dispatchGameState}) {
   ));
 
   if (dragDestination?.where === "pool") {
-    const draggedPieces = pieces.filter((piece) => piece.dragGroupTop >= 0);
+    const draggedPieces = pieces.filter(
+      (piece) => piece.dragGroupTop != undefined,
+    );
     pieceElements.splice(
       dragDestination.index,
       0,
-      draggedPieces.map((piece) => (
+      ...draggedPieces.map((piece) => (
         <div className="pool-slot shadow" key={piece.id}>
           <DragShadow
             key={`shadow-piece-${piece.id}`}
@@ -43,7 +59,9 @@ export default function Pool({pieces, dragDestination, dispatchGameState}) {
   return <div id="pool">{pieceElements}</div>;
 }
 
-export function dragDestinationInPool(pointer) {
+export function dragDestinationInPool(
+  pointer: Position,
+): DragDestinationPool | undefined {
   const poolElement =
     document.getElementById("pool") || document.getElementById("result");
   const poolRect = poolElement.getBoundingClientRect();
@@ -54,7 +72,7 @@ export function dragDestinationInPool(pointer) {
     pointer.y <= poolRect.bottom
   ) {
     let index = 0;
-    for (let element of poolElement.children) {
+    for (const element of poolElement.children) {
       // Note: Exact match on className so we don't count shadows.
       if (element.className === "pool-slot") {
         const slotRect = element.getBoundingClientRect();
@@ -69,7 +87,7 @@ export function dragDestinationInPool(pointer) {
   return undefined;
 }
 
-function positionIsBeforeRectangle(point, rect) {
+function positionIsBeforeRectangle(point: Position, rect: DOMRect): boolean {
   if (rect.bottom < point.y) {
     return false;
   } else if (point.y < rect.top) {

@@ -1,12 +1,13 @@
 import {crosswordValidQ} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
 import {getWordsFromPieces} from "./getWordsFromPieces";
+import type {PieceInGame, PieceInBoard, LetterOrEmpty} from "../Types";
 
-function piecesOverlapQ(boardPieces, gridSize) {
+function getPieceOverlaps(boardPieces: PieceInBoard[], gridSize: number): {piecesOverlap: boolean, grid: LetterOrEmpty[][]} {
   let overlappingPiecesQ = false;
 
-  let grid = JSON.parse(
-    JSON.stringify(Array(gridSize).fill(Array(gridSize).fill(""))),
+  const grid:LetterOrEmpty[][] = Array.from({length: gridSize}, () =>
+    Array.from({length: gridSize}, () => ""),
   );
 
   for (let index = 0; index < boardPieces.length; index++) {
@@ -33,15 +34,18 @@ function piecesOverlapQ(boardPieces, gridSize) {
       break;
     }
   }
-  return {piecesOverlap: overlappingPiecesQ, grid: grid};
+  return {piecesOverlap: overlappingPiecesQ, grid};
 }
 
-export function gameSolvedQ(pieces, gridSize) {
+export function gameSolvedQ(pieces: PieceInGame[], gridSize: number):{
+    gameIsSolved: boolean,
+    reason: string,
+  } {
   const boardPieces = pieces.filter(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
+    (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
   );
 
-  const {piecesOverlap, grid} = piecesOverlapQ(boardPieces, gridSize);
+  const {piecesOverlap, grid} = getPieceOverlaps(boardPieces, gridSize);
   if (piecesOverlap) {
     return {
       gameIsSolved: false,

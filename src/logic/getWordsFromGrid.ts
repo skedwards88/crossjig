@@ -1,7 +1,8 @@
 import {transposeGrid} from "@skedwards88/word_logic";
+import type {LetterOrEmpty} from "../Types";
 
-function getHorizontalWordsFromGrid(grid) {
-  let words = [];
+function getHorizontalWordsFromGrid(grid: LetterOrEmpty[][]): string[] {
+  const words = [];
 
   for (const row of grid) {
     let word = "";
@@ -24,7 +25,7 @@ function getHorizontalWordsFromGrid(grid) {
   return words;
 }
 
-export function getWordsFromGrid(grid) {
+export function getWordsFromGrid(grid: LetterOrEmpty[][]): string[] {
   const transposedGrid = transposeGrid(grid);
 
   return [

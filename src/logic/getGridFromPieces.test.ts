@@ -11,15 +11,12 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 5,
         solutionLeft: 7,
+        id: 0,
       },
-      {
-        letters: [["K"], ["N"], ["O"]],
-        solutionTop: 2,
-        solutionLeft: 10,
-      },
-      {letters: [["N", "S"]], solutionTop: 10, solutionLeft: 9},
-      {letters: [["E", "A"]], solutionTop: 10, solutionLeft: 6},
-      {letters: [["B"], ["S"]], solutionTop: 5, solutionLeft: 10},
+      {letters: [["K"], ["N"], ["O"]], solutionTop: 2, solutionLeft: 10, id: 1},
+      {letters: [["N", "S"]], solutionTop: 10, solutionLeft: 9, id: 2},
+      {letters: [["E", "A"]], solutionTop: 10, solutionLeft: 6, id: 3},
+      {letters: [["B"], ["S"]], solutionTop: 5, solutionLeft: 10, id: 4},
       {
         letters: [
           ["I", "", ""],
@@ -28,8 +25,9 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 3,
         solutionLeft: 3,
+        id: 5,
       },
-      {letters: [["A"], ["W"]], solutionTop: 3, solutionLeft: 5},
+      {letters: [["A"], ["W"]], solutionTop: 3, solutionLeft: 5, id: 6},
       {
         letters: [
           ["S", "P", "A"],
@@ -38,6 +36,7 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 0,
         solutionLeft: 0,
+        id: 7,
       },
       {
         letters: [
@@ -46,6 +45,7 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 10,
         solutionLeft: 2,
+        id: 8,
       },
       {
         letters: [
@@ -55,8 +55,9 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 3,
         solutionLeft: 0,
+        id: 9,
       },
-      {letters: [["V", "I"]], solutionTop: 11, solutionLeft: 0},
+      {letters: [["V", "I"]], solutionTop: 11, solutionLeft: 0, id: 10},
       {
         letters: [
           ["N", "S"],
@@ -65,6 +66,7 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 0,
         solutionLeft: 3,
+        id: 11,
       },
       {
         letters: [
@@ -74,6 +76,7 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 7,
         solutionLeft: 3,
+        id: 12,
       },
       {
         letters: [
@@ -83,10 +86,11 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 0,
         solutionLeft: 5,
+        id: 13,
       },
-      {letters: [["F"]], solutionTop: 1, solutionLeft: 5},
-      {letters: [["P"], ["Y"]], solutionTop: 3, solutionLeft: 7},
-      {letters: [["D", "E"]], solutionTop: 6, solutionLeft: 5},
+      {letters: [["F"]], solutionTop: 1, solutionLeft: 5, id: 14},
+      {letters: [["P"], ["Y"]], solutionTop: 3, solutionLeft: 7, id: 15},
+      {letters: [["D", "E"]], solutionTop: 6, solutionLeft: 5, id: 16},
       {
         letters: [
           ["P", "L", "E"],
@@ -95,6 +99,7 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 8,
         solutionLeft: 6,
+        id: 17,
       },
     ];
 
@@ -127,15 +132,12 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 5,
         boardLeft: 7,
+        id: 0,
       },
-      {
-        letters: [["K"], ["N"], ["O"]],
-        boardTop: 2,
-        boardLeft: 10,
-      },
-      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9},
-      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6},
-      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10},
+      {letters: [["K"], ["N"], ["O"]], boardTop: 2, boardLeft: 10, id: 1},
+      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9, id: 2},
+      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6, id: 3},
+      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10, id: 4},
       {
         letters: [
           ["I", "", ""],
@@ -144,8 +146,9 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 3,
         boardLeft: 3,
+        id: 5,
       },
-      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5},
+      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5, id: 6},
       {
         letters: [
           ["S", "P", "A"],
@@ -154,6 +157,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 0,
+        id: 7,
       },
       {
         letters: [
@@ -162,6 +166,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 10,
         boardLeft: 2,
+        id: 8,
       },
       {
         letters: [
@@ -171,8 +176,9 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 3,
         boardLeft: 0,
+        id: 9,
       },
-      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0},
+      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0, id: 10},
       {
         letters: [
           ["N", "S"],
@@ -181,6 +187,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 3,
+        id: 11,
       },
       {
         letters: [
@@ -190,6 +197,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 7,
         boardLeft: 3,
+        id: 12,
       },
       {
         letters: [
@@ -199,10 +207,11 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 5,
+        id: 13,
       },
-      {letters: [["F"]], boardTop: 1, boardLeft: 5},
-      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7},
-      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5},
+      {letters: [["F"]], boardTop: 1, boardLeft: 5, id: 14},
+      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7, id: 15},
+      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5, id: 16},
       {
         letters: [
           ["P", "L", "E"],
@@ -211,6 +220,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 8,
         boardLeft: 6,
+        id: 17,
       },
     ];
 
@@ -243,25 +253,21 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 5,
         boardLeft: 7,
+        id: 0,
       },
-      {
-        letters: [["K"], ["N"], ["O"]],
-        boardTop: 2,
-        boardLeft: 10,
-      },
-      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9},
-      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6},
-      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10},
+      {letters: [["K"], ["N"], ["O"]], boardTop: 2, boardLeft: 10, id: 1},
+      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9, id: 2},
+      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6, id: 3},
+      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10, id: 4},
       {
         letters: [
           ["I", "", ""],
           ["V", "", ""],
           ["E", "Z", "E"],
         ],
-        boardTop: undefined,
-        boardLeft: undefined,
+        id: 5,
       },
-      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5},
+      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5, id: 6},
       {
         letters: [
           ["S", "P", "A"],
@@ -270,6 +276,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 0,
+        id: 7,
       },
       {
         letters: [
@@ -278,6 +285,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 10,
         boardLeft: 2,
+        id: 8,
       },
       {
         letters: [
@@ -287,8 +295,9 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 3,
         boardLeft: 0,
+        id: 9,
       },
-      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0},
+      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0, id: 10},
       {
         letters: [
           ["N", "S"],
@@ -297,6 +306,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 3,
+        id: 11,
       },
       {
         letters: [
@@ -306,6 +316,7 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 7,
         boardLeft: 3,
+        id: 12,
       },
       {
         letters: [
@@ -315,18 +326,18 @@ describe("getGridFromPieces", () => {
         ],
         boardTop: 0,
         boardLeft: 5,
+        id: 13,
       },
-      {letters: [["F"]], boardTop: 1, boardLeft: 5},
-      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7},
-      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5},
+      {letters: [["F"]], boardTop: 1, boardLeft: 5, id: 14},
+      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7, id: 15},
+      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5, id: 16},
       {
         letters: [
           ["P", "L", "E"],
           ["", "", "E"],
           ["", "", "R"],
         ],
-        boardTop: undefined,
-        boardLeft: undefined,
+        id: 17,
       },
     ];
 
@@ -359,8 +370,9 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 0,
         solutionLeft: 0,
+        id: 0,
       },
-      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0},
+      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0, id: 1},
     ];
     const expectedGrid = [
       ["", "T", "O"],
@@ -394,8 +406,9 @@ describe("getGridFromPieces", () => {
         ],
         solutionTop: 0,
         solutionLeft: 0,
+        id: 0,
       },
-      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0},
+      {letters: [["", "T", "O"]], solutionTop: 0, solutionLeft: 0, id: 1},
     ];
 
     expect(() =>
@@ -422,17 +435,12 @@ test("if `solution` is false, and no pieces are on the board, an empty grid is r
         ["L", "A", "Y"],
         ["", "R", ""],
       ],
-      boardTop: undefined,
-      boardLeft: undefined,
+      id: 0,
     },
-    {
-      letters: [["K"], ["N"], ["O"]],
-      boardTop: undefined,
-      boardLeft: undefined,
-    },
-    {letters: [["N", "S"]], boardTop: undefined, boardLeft: undefined},
-    {letters: [["E", "A"]], boardTop: undefined, boardLeft: undefined},
-    {letters: [["B"], ["S"]], boardTop: undefined, boardLeft: undefined},
+    {letters: [["K"], ["N"], ["O"]], id: 1},
+    {letters: [["N", "S"]], id: 2},
+    {letters: [["E", "A"]], id: 3},
+    {letters: [["B"], ["S"]], id: 4},
   ];
 
   const expectedGrid = [

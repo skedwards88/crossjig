@@ -1,8 +1,14 @@
-export default function getPatternsForRow(grid, rowIndex, minLength) {
+import type {LetterOrEmpty} from "../Types";
+
+export default function getPatternsForRow(
+  grid: LetterOrEmpty[][],
+  rowIndex: number,
+  minLength: number,
+): [string, number][] {
   // For a specified row in the grid,
   // get the regex patterns that could make a new word in that row
   // in the form [[pattern, column index where pattern starts],...]
-  let patterns = [];
+  const patterns: [string, number][] = [];
   const row = grid[rowIndex];
 
   for (

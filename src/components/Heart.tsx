@@ -1,6 +1,12 @@
-import React from "react";
+import {DisplayState} from "../Types";
 
-export default function Heart({setDisplay, repoName}) {
+export default function Heart({
+  setDisplay,
+  repoName,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  repoName: string;
+}) {
   return (
     <div className="App info">
       <div className="infoText">

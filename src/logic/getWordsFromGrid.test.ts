@@ -1,8 +1,9 @@
+import type {LetterOrEmpty} from "../Types";
 import {getWordsFromGrid} from "./getWordsFromGrid";
 
 describe("getWordsFromGrid", () => {
   test("it returns the horizontal and vertical sequences of 2 or more characters from a 2D array of characters", () => {
-    const grid = [
+    const grid: LetterOrEmpty[][] = [
       ["A", "B", "", "", ""],
       ["E", "", "", "F", "I"],
       ["G", "H", "I", "M", ""],
@@ -24,7 +25,7 @@ describe("getWordsFromGrid", () => {
   });
 
   test("it returns an empty array when there are no characters", () => {
-    const grid = [
+    const grid: LetterOrEmpty[][] = [
       ["", "", ""],
       ["", "", ""],
       ["", "", ""],
@@ -33,7 +34,7 @@ describe("getWordsFromGrid", () => {
   });
 
   test("it returns an empty array when there are no sequences longer than 1 character", () => {
-    const grid = [
+    const grid: LetterOrEmpty[][] = [
       ["A", "", "C"],
       ["", "B", ""],
       ["D", "", ""],
@@ -42,7 +43,7 @@ describe("getWordsFromGrid", () => {
   });
 
   test("it works with characters at the borders of the grid", () => {
-    const grid = [
+    const grid: LetterOrEmpty[][] = [
       ["O", "N", "E"],
       ["U", "", "X"],
       ["T", "W", "O"],
@@ -52,7 +53,7 @@ describe("getWordsFromGrid", () => {
   });
 
   test("it rejects grids have uneven row lengths", () => {
-    const grid = [
+    const grid: LetterOrEmpty[][] = [
       ["A", "", "C"],
       ["", "B", "", "E"],
       ["D", "", ""],

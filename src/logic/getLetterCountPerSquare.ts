@@ -1,10 +1,16 @@
+import type {PieceInBoard, PieceInDrag} from "../Types";
+
 // Returns a grid with the number of letters at each location in the grid
-export function getLetterCountPerSquare(height, width, pieces) {
-  let grid = Array(height)
+export function getLetterCountPerSquare(
+  height: number,
+  width: number,
+  pieces: (PieceInBoard | PieceInDrag)[],
+): number[][] {
+  const grid = Array(height)
     .fill(undefined)
     .map(() => Array(width).fill(0));
 
-  for (let piece of pieces) {
+  for (const piece of pieces) {
     const letters = piece.letters;
     let top = piece.boardTop ?? piece.dragGroupTop;
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {

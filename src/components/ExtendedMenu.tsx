@@ -1,10 +1,14 @@
-import React from "react";
 import packageJson from "../../package.json";
 import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
 import Share from "@skedwards88/shared-components/src/components/Share";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
+import type {DisplayState} from "../Types";
 
-export default function ExtendedMenu({setDisplay}) {
+export default function ExtendedMenu({
+  setDisplay,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   const {userId, sessionId} = useMetadataContext();
 
   return (

@@ -1,4 +1,4 @@
-import {LetterOrEmpty, PieceWithoutLocation} from "../Types";
+import type {LetterOrEmpty, PieceWithoutLocation} from "../Types";
 import {assemblePiece} from "./assemblePiece";
 import {getPieceDimension} from "./getPieceDimension";
 
@@ -14,7 +14,7 @@ export function makePieces(grid: LetterOrEmpty[][]): PieceWithoutLocation[] {
       if (remainingGrid[rowIndex][colIndex]) {
         // if there is a letter, remove the letter from the remaining grid and start a piece
         const letter = remainingGrid[rowIndex][colIndex];
-        let pieceData = [
+        const pieceData = [
           {
             letter: letter,
             top: 0,
@@ -38,8 +38,8 @@ export function makePieces(grid: LetterOrEmpty[][]): PieceWithoutLocation[] {
           pieceData.length < maxPieceLetters &&
           pieceLevel < pieceData.length
         ) {
-          let surroundedPieceRow = pieceData[pieceLevel].top;
-          let surroundedPieceCol = pieceData[pieceLevel].left;
+          const surroundedPieceRow = pieceData[pieceLevel].top;
+          const surroundedPieceCol = pieceData[pieceLevel].left;
           for (
             let directionIndex = 0;
             directionIndex < directions.length;
