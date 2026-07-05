@@ -1,6 +1,6 @@
 import {arrayToGrid} from "@skedwards88/word_logic";
 import {cipherLetter} from "./cipherLetter";
-import {Letter, LetterOrEmpty} from "../Types";
+import type {Letter, LetterOrEmpty} from "../Types";
 
 // Converts a string of letters and integers into a square grid of single letters and empty strings.
 // The first character in the string represents how much the letters in the string have been shifted in the alphabet.

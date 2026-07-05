@@ -15,7 +15,7 @@ export default function Pool({
   dispatchGameState,
 }: {
   pieces: PieceInGame[];
-  dragDestination: DragDestination;
+  dragDestination?: DragDestination;
   dispatchGameState: React.Dispatch<GameReducerPayload>;
 }): React.JSX.Element {
   const poolPieces = pieces.filter((piece) => piece.poolIndex != undefined);

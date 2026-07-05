@@ -1,4 +1,4 @@
-import getPatternsForRow from "./getRegexForRow.js";
+import getPatternsForRow from "./getRegexForRow";
 import {shuffleArray, transposeGrid} from "@skedwards88/word_logic";
 import {
   commonWordsLen4,
@@ -6,8 +6,13 @@ import {
   commonWordsLen6,
   commonWordsLen7,
 } from "@skedwards88/word_lists";
+import type {Letter, LetterOrEmpty} from "../Types";
+import type seedrandom from "seedrandom";
 
-function removeWordThatMatches(pattern, wordList) {
+function removeWordThatMatches(
+  pattern: string,
+  wordList: string[],
+): [string, string[]] | [undefined, string[]] {
   // Given a patten and a list of words, finds a word that matches the pattern
   // and returns the word and the list with the word deleted
   // If no match was found, returns undefined and the unchanged wordlist
@@ -27,13 +32,21 @@ function removeWordThatMatches(pattern, wordList) {
   }
 }
 
-export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
+export function generateGrid({
+  gridSize,
+  minLetters,
+  pseudoRandomGenerator,
+}: {
+  gridSize: number;
+  minLetters: number;
+  pseudoRandomGenerator: seedrandom.PRNG;
+}): LetterOrEmpty[][] {
   // Generates an interconnected grid of words
   // that fits within the specified gridSize.
   // The total number of letters used will be minLetters or slightly higher.
 
   const minWordLength = 4;
-  let wordList = shuffleArray(
+  let wordList: string[] = shuffleArray(
     [
       ...commonWordsLen4,
       ...commonWordsLen5,
@@ -44,10 +57,13 @@ export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
   );
 
   let letterCount = 0;
-  let grid;
+  let grid: LetterOrEmpty[][] = Array.from({length: gridSize}, () =>
+    Array.from({length: gridSize}, () => ""),
+  );
   let orientationIsRows;
 
   while (letterCount < minLetters) {
+    // Reinitialize everything in this outer loop in the event that the inner loop short circuited
     let count = 0;
     grid = Array.from({length: gridSize}, () =>
       Array.from({length: gridSize}, () => ""),
@@ -55,10 +71,13 @@ export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
     orientationIsRows = true;
 
     //
-    // Initialize the grid with a random word at a random position
+    // Initialize the grid with a random word (i.e. the first word from the randomly shuffled word list) at a random position
     //
-    let startingWord;
-    [startingWord, wordList] = removeWordThatMatches(".+", wordList);
+    let startingWord: string;
+    [startingWord, wordList] = [
+      wordList[0],
+      wordList.slice(1, wordList.length),
+    ];
     letterCount = startingWord.length;
     const startingRowIndex = Math.floor(pseudoRandomGenerator() * gridSize);
     const startingColIndex = Math.floor(
@@ -69,7 +88,9 @@ export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
       index < startingColIndex + startingWord.length;
       index++
     ) {
-      grid[startingRowIndex][index] = startingWord[index - startingColIndex];
+      grid[startingRowIndex][index] = startingWord[
+        index - startingColIndex
+      ] as Letter;
     }
 
     //
@@ -82,7 +103,7 @@ export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
 
       // to keep the puzzle spread out and to be more likely to find a match,
       // prefer to add a word to a row that has fewer letters
-      let rowIndexesByCounts = grid
+      const rowIndexesByCounts = grid
         .map((row, index) => [row.filter((i) => i).length, index]) // get array like [[letterCount, rowIndex],...]
         .filter((i) => i[0]) // toss out the rows with letterCount of 0
         .sort((a, b) => a[0] - b[0]) // sort in order of lowest to highest letter count
@@ -118,8 +139,9 @@ export function generateGrid({gridSize, minLetters, pseudoRandomGenerator}) {
               index < startPosition + matchingWord.length;
               index++
             ) {
-              grid[rowIndexesByCounts[metaIndex]][index] =
-                matchingWord[index - startPosition];
+              grid[rowIndexesByCounts[metaIndex]][index] = matchingWord[
+                index - startPosition
+              ] as Letter;
             }
             break;
           }

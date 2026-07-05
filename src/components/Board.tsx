@@ -1,8 +1,9 @@
-import React from "react";
 import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 import {getLetterCountPerSquare} from "../logic/getLetterCountPerSquare";
 import {getWordValidityGrids} from "../logic/getWordValidityGrids";
+import type {DragDestination, DragDestinationBoard, GameState, PieceInGame, Position} from "../Types";
+import type {GameReducerPayload} from "../logic/gameReducer";
 
 export default function Board({
   pieces,
@@ -13,9 +14,18 @@ export default function Board({
   dispatchGameState,
   indicateValidity,
   customCreation = false,
-}) {
+}: {
+  pieces: PieceInGame[];
+  gridSize: number;
+  dragPieceIDs?: number[];
+  dragDestination?: DragDestination;
+  gameIsSolved: boolean;
+  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  indicateValidity: boolean;
+  customCreation?: boolean;
+}): React.JSX.Element {
   const boardPieces = pieces.filter(
-    (piece) => piece.boardTop >= 0 && piece.boardLeft >= 0,
+    (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
   );
 
   const overlapGrid = customCreation
@@ -77,10 +87,13 @@ export default function Board({
   );
 }
 
-export function dragDestinationOnBoard(gameState, pointer) {
+export function dragDestinationOnBoard(
+  gameState: GameState,
+  pointer: Position,
+): DragDestinationBoard|undefined {
   const boardRect = document.getElementById("board").getBoundingClientRect();
   if (
-    gameState.dragState.destination.where === "board" ||
+    gameState.dragState?.destination.where === "board" ||
     (boardRect.left <= pointer.x &&
       pointer.x <= boardRect.right &&
       boardRect.top <= pointer.y &&

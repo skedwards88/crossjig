@@ -3,10 +3,13 @@ import {trie} from "../logic/trie";
 import {getWordsFromPieces} from "./getWordsFromPieces";
 import type {PieceInGame, PieceInBoard, LetterOrEmpty} from "../Types";
 
-function getPieceOverlaps(boardPieces: PieceInBoard[], gridSize: number): {piecesOverlap: boolean, grid: LetterOrEmpty[][]} {
+function getPieceOverlaps(
+  boardPieces: PieceInBoard[],
+  gridSize: number,
+): {piecesOverlap: boolean; grid: LetterOrEmpty[][]} {
   let overlappingPiecesQ = false;
 
-  const grid:LetterOrEmpty[][] = Array.from({length: gridSize}, () =>
+  const grid: LetterOrEmpty[][] = Array.from({length: gridSize}, () =>
     Array.from({length: gridSize}, () => ""),
   );
 
@@ -37,10 +40,13 @@ function getPieceOverlaps(boardPieces: PieceInBoard[], gridSize: number): {piece
   return {piecesOverlap: overlappingPiecesQ, grid};
 }
 
-export function gameSolvedQ(pieces: PieceInGame[], gridSize: number):{
-    gameIsSolved: boolean,
-    reason: string,
-  } {
+export function gameSolvedQ(
+  pieces: PieceInGame[],
+  gridSize: number,
+): {
+  gameIsSolved: boolean;
+  reason: string;
+} {
   const boardPieces = pieces.filter(
     (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
   );

@@ -1,8 +1,9 @@
+import type {LetterOrEmpty} from "../Types";
 import {convertGridToRepresentativeString} from "./convertGridToRepresentativeString";
 
 describe("convertGridToRepresentativeString", () => {
   test("converts a 2D grid of single characters and empty strings into a representative string with consecutive empty strings represented by a the number of empty strings. Row breaks are ignored. The shift amount is prepended to the string.", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "L", "U", "M", "P", "Y", "", "", ""],
       ["", "", "", "L", "", "I", "", "", "", ""],
       ["", "F", "A", "T", "T", "E", "R", "", "", ""],
@@ -23,7 +24,7 @@ describe("convertGridToRepresentativeString", () => {
   });
 
   test("shifts the letters by the negative of the amount indicated", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "L", "U", "M", "P", "Y", "", "", ""],
       ["", "", "", "L", "", "I", "", "", "", ""],
       ["", "F", "A", "T", "T", "E", "R", "", "", ""],
@@ -44,7 +45,7 @@ describe("convertGridToRepresentativeString", () => {
   });
 
   test("if no shift is indicated, the letters are not shifted, and 0 is prepended to the string", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "L", "U", "M", "P", "Y", "", "", ""],
       ["", "", "", "L", "", "I", "", "", "", ""],
       ["", "F", "A", "T", "T", "E", "R", "", "", ""],
@@ -65,7 +66,7 @@ describe("convertGridToRepresentativeString", () => {
   });
 
   test("errors if the cipher shift is not an integer", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "L", "U", "M", "P", "Y", "", "", ""],
       ["", "", "", "L", "", "I", "", "", "", ""],
       ["", "F", "A", "T", "T", "E", "R", "", "", ""],
@@ -84,7 +85,7 @@ describe("convertGridToRepresentativeString", () => {
   });
 
   test("errors if the cipher shift is not between 0 and 9", () => {
-    const input = [
+    const input: LetterOrEmpty[][] = [
       ["", "", "L", "U", "M", "P", "Y", "", "", ""],
       ["", "", "", "L", "", "I", "", "", "", ""],
       ["", "F", "A", "T", "T", "E", "R", "", "", ""],

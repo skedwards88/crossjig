@@ -4,17 +4,18 @@ import {
   isYesterday,
   isToday,
 } from "@skedwards88/shared-components/src/logic/isNDaysAgo";
-import {
+import type {
   DragDestination,
   GameState,
   GameStateDaily,
   Position,
-  Piece,
+  PieceInGame,
   PieceInBoard,
   PieceInDrag,
   PieceInPool,
   DragState,
   Stats,
+  DayNumber,
 } from "../Types";
 import {gameSolvedQ} from "./gameSolvedQ";
 
@@ -53,7 +54,7 @@ function updateStateForDragStart({
   isCustomCreating = false,
 }: {
   currentGameState: GameState;
-  isPartOfCurrentDrag: (piece: Piece) => boolean; // function that takes a piece and returns a bool indicating whether the piece is being dragged
+  isPartOfCurrentDrag: (piece: PieceInGame) => boolean; // function that takes a piece and returns a bool indicating whether the piece is being dragged
   pointerID: number; // the ID of the pointer, as captured by the pointer down event
   pointerStartPosition: Position; // the x and y position of the pointer, as captured by the pointer down event
   boardIsShifting: boolean; // whether the whole board is being dragged
@@ -146,7 +147,7 @@ function applyDragToPiecesBeingDragged({
   dragGroupBoardTop,
   dragGroupBoardLeft,
 }: {
-  piecesBeingDragged: Piece[];
+  piecesBeingDragged: PieceInGame[];
   dragGroupBoardTop: number | undefined;
   dragGroupBoardLeft: number | undefined;
 }): PieceInDrag[] {
@@ -175,11 +176,11 @@ function updatePiecesForDragNotInCustomCreating({
   dragGroupBoardTop,
   dragGroupBoardLeft,
 }: {
-  piecesBeingDragged: Piece[];
-  piecesNotBeingDragged: Piece[];
+  piecesBeingDragged: PieceInGame[];
+  piecesNotBeingDragged: PieceInGame[];
   dragGroupBoardTop: number | undefined;
   dragGroupBoardLeft: number | undefined;
-}): Piece[] {
+}): PieceInGame[] {
   let newPieces = piecesNotBeingDragged.concat(
     applyDragToPiecesBeingDragged({
       piecesBeingDragged,
@@ -191,11 +192,11 @@ function updatePiecesForDragNotInCustomCreating({
   // Only for game (Don't bother updating the pool index for custom creation since the pool will never be depleted)
   if (piecesBeingDragged.some((piece) => piece.poolIndex !== undefined)) {
     // A piece was removed from the pool, so recompute poolIndex for the other pieces.
-    let remainingPoolPieces = newPieces.filter(
+    const remainingPoolPieces = newPieces.filter(
       (piece) => piece.poolIndex !== undefined,
     );
     remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
-    let poolIndices = Array(newPieces.length).fill(-1);
+    const poolIndices = Array(newPieces.length).fill(-1);
     remainingPoolPieces.forEach((piece, index) => {
       poolIndices[piece.id] = index;
     });
@@ -216,15 +217,15 @@ function updatePiecesForDragInCustomCreating({
   dragGroupBoardLeft,
   isDraggingFromPool,
 }: {
-  piecesBeingDragged: Piece[];
-  piecesNotBeingDragged: Piece[];
+  piecesBeingDragged: PieceInGame[];
+  piecesNotBeingDragged: PieceInGame[];
   dragGroupBoardTop: number | undefined;
   dragGroupBoardLeft: number | undefined;
   isDraggingFromPool: boolean;
-}): Piece[] {
+}): PieceInGame[] {
   // (For custom creation only)
   // If dragging from the pool, add a dummy placeholder
-  const placeholderPoolPieces: Piece[] = isDraggingFromPool
+  const placeholderPoolPieces: PieceInGame[] = isDraggingFromPool
     ? piecesBeingDragged.map((piece) => {
         return {...piece, letters: [[""]], id: (piece.id + 1) * -1};
       })
@@ -246,19 +247,19 @@ function getPiecesBeingDragged({
   gridSize,
   isPartOfCurrentDrag,
 }: {
-  currentPieces: Piece[];
+  currentPieces: PieceInGame[];
   gridSize: number;
-  isPartOfCurrentDrag: (piece: Piece) => boolean; // function that takes a piece and returns a bool indicating whether the piece is being dragged
+  isPartOfCurrentDrag: (piece: PieceInGame) => boolean; // function that takes a piece and returns a bool indicating whether the piece is being dragged
 }): {
-  piecesNotBeingDragged: Piece[];
-  piecesBeingDragged: Piece[];
+  piecesNotBeingDragged: PieceInGame[];
+  piecesBeingDragged: PieceInGame[];
   dragGroupBoardTop: number | undefined;
   dragGroupBoardLeft: number | undefined;
   dragPoolIndex: number;
 } {
   // Find which pieces are selected, which are not, and the top left of the group (in board squares).
-  let piecesBeingDragged = [];
-  let piecesNotBeingDragged = [];
+  const piecesBeingDragged = [];
+  const piecesNotBeingDragged = [];
   let dragGroupBoardTop: number | undefined = gridSize;
   let dragGroupBoardLeft: number | undefined = gridSize;
   const poolPieces = currentPieces.filter(
@@ -314,15 +315,14 @@ function getDragPointerOffset({
   previousDragState?: DragState | undefined;
   dragGroupBoardTop: number | undefined;
   dragGroupBoardLeft: number | undefined;
-  currentPieces: Piece[];
+  currentPieces: PieceInGame[];
   gridSize: number;
-  piecesBeingDragged: Piece[];
+  piecesBeingDragged: PieceInGame[];
   pointerStartPosition: Position; // the x and y position of the pointer, as captured by the pointer down event
 }): Position | null {
   let pointerOffset: Position;
   if (
-    previousDragState &&
-    previousDragState.pieceIDs.length == 1 &&
+    previousDragState?.pieceIDs.length == 1 &&
     dragGroupBoardTop !== undefined &&
     dragGroupBoardLeft !== undefined
   ) {
@@ -382,7 +382,7 @@ function updateStateForDragEnd(currentGameState: GameState): GameState {
   const draggedPieceIDs = currentGameState.dragState.pieceIDs;
   let mapper;
   if (destination.where === "board") {
-    mapper = (piece: Piece) =>
+    mapper = (piece: PieceInGame): PieceInGame =>
       draggedPieceIDs.includes(piece.id)
         ? ({
             ...piece,
@@ -394,7 +394,7 @@ function updateStateForDragEnd(currentGameState: GameState): GameState {
         : piece;
   } else {
     let poolIndex = destination.index;
-    mapper = (piece: Piece) =>
+    mapper = (piece: PieceInGame): PieceInGame =>
       draggedPieceIDs.includes(piece.id)
         ? ({
             ...piece,
@@ -422,13 +422,13 @@ function updateStateForCustomDragEnd(currentGameState: GameState): GameState {
   const destination = currentGameState.dragState.destination;
   const origin = currentGameState.dragState.origin;
   const draggedPieceIDs = currentGameState.dragState.pieceIDs;
-  let newPieces: Piece[] = [];
+  const newPieces: PieceInGame[] = [];
   if (destination.where === "board") {
     let maxID = Math.max(...currentGameState.pieces.map((piece) => piece.id));
 
     // Any letters dropped on the board will overwrite anything at that position
     // (this is a deviation from the standard game)
-    let overwrittenPositions: [number, number][] = [];
+    const overwrittenPositions: [number, number][] = [];
     for (const piece of currentGameState.pieces) {
       if (draggedPieceIDs.includes(piece.id)) {
         overwrittenPositions.push([
@@ -509,7 +509,7 @@ function updateStateForCustomDragEnd(currentGameState: GameState): GameState {
   };
 }
 
-function giveHint(currentGameState: GameState): Piece[] {
+function giveHint(currentGameState: GameState): PieceInGame[] {
   const pieces = structuredClone(currentGameState.pieces);
   const {maxShiftLeft, maxShiftRight, maxShiftUp, maxShiftDown} =
     currentGameState;
@@ -539,7 +539,7 @@ function giveHint(currentGameState: GameState): Piece[] {
     }
   }
 
-  let realignedPieces: Piece[] = [];
+  let realignedPieces: PieceInGame[] = [];
   let numRealigned = 0;
   // if we found a piece on the board that is within the shift range, realign all other pieces on the board to match if they don't already
   if (shiftLeft != undefined && shiftUp != undefined) {
@@ -643,7 +643,7 @@ function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
   const newNumHintsInStreak = prevNumHintsInStreak + hintsUsedToday;
 
   // Update the number of games won for this weekday
-  const dayNumber = today.getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6; // typecase since ts doesn't know that getDay only returns these numbers
+  const dayNumber = today.getDay() as DayNumber; // typecast since ts doesn't know that getDay only returns these numbers
 
   const numWeekdayWon = currentGameState.stats.days[dayNumber].won + 1;
 
@@ -667,7 +667,12 @@ function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
   };
 }
 
-function getCompletionData(currentGameState: GameState) {
+function getCompletionData(currentGameState: GameState): {
+  allPiecesAreUsed: boolean;
+  gameIsSolved: boolean;
+  gameIsSolvedReason: string;
+  stats?: Stats;
+} {
   const allPiecesAreUsed = currentGameState.pieces.every(
     (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
   );
@@ -753,7 +758,7 @@ export function gameReducer(
     // Fired when the timer fires, if `!dragHasMoved`
     // Drop the current piece, then pick up it and all connected pieces
     const {dragState} = currentGameState;
-    if (dragState === undefined || dragState.pieceIDs.length !== 1) {
+    if (dragState?.pieceIDs.length !== 1) {
       return currentGameState;
     }
 

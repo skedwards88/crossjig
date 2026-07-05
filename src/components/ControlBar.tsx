@@ -70,7 +70,6 @@ function ControlBar({
       <Share
         id="shareIcon"
         className="controlButton"
-        content=""
         appName="Crossjig"
         text="Check out this word puzzle!"
         url="https://crossjig.com"

@@ -1,4 +1,4 @@
-import {DisplayState} from "../Types";
+import type {DisplayState} from "../Types";
 
 export default function Heart({
   setDisplay,
@@ -6,7 +6,7 @@ export default function Heart({
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
   repoName: string;
-}) {
+}): React.JSX.Element {
   return (
     <div className="App info">
       <div className="infoText">

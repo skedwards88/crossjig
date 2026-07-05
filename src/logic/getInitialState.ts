@@ -1,4 +1,4 @@
-import {DisplayState} from "../Types";
+import type {DisplayState} from "../Types";
 
 export function getInitialState(
   savedDisplay: DisplayState,

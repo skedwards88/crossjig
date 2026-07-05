@@ -1,4 +1,4 @@
-import {LetterOrEmpty} from "../Types";
+import type {LetterOrEmpty} from "../Types";
 import {cipherLetter} from "./cipherLetter";
 
 // Converts a 2D grid of letters and spaces into a representative string.
@@ -9,7 +9,7 @@ import {cipherLetter} from "./cipherLetter";
 export function convertGridToRepresentativeString(
   grid: LetterOrEmpty[][],
   cipherShift = 0,
-) {
+): string {
   // Error if cipherShift is not an int between 0 and 9
   if (!Number.isInteger(cipherShift) || cipherShift < 0 || cipherShift > 9) {
     throw new Error("Input cipherShift must be a single digit integer");

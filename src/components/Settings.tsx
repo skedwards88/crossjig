@@ -83,7 +83,8 @@ export default function Settings({
               max={100}
               defaultValue={originalValidityOpacity * 100 || 15}
               onChange={(event) => {
-                const newValidityOpacity = parseInt(event.currentTarget.value) / 100;
+                const newValidityOpacity =
+                  parseInt(event.currentTarget.value) / 100;
                 setValidityOpacity(newValidityOpacity);
               }}
             />
