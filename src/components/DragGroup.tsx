@@ -2,12 +2,30 @@ import Piece from "./Piece";
 import React from "react";
 import {dragDestinationOnBoard} from "./Board";
 import {dragDestinationInPool} from "./Pool";
+import type {GameReducerPayload} from "../logic/gameReducer";
+import type {
+  CSSPropertiesWithVars,
+  DragDestination,
+  DragState,
+  PieceInDrag,
+  PieceInGame,
+  Position,
+} from "../Types";
 
 // This component is mounted each time a drag starts.
-export default function DragGroup({dispatchGameState, gameState}) {
-  const dragState = gameState.dragState;
+export default function DragGroup({
+  dispatchGameState,
+  dragState,
+  pieces,
+  gridSize,
+}: {
+  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dragState: DragState;
+  pieces: PieceInGame[];
+  gridSize: number;
+}): React.JSX.Element {
   const boardIsShifting = dragState.boardIsShifting;
-  const draggedPieces = gameState.pieces.filter((piece) =>
+  const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
     dragState.pieceIDs.includes(piece.id),
   );
 
@@ -55,7 +73,7 @@ export default function DragGroup({dispatchGameState, gameState}) {
       dispatchGameState({action: "dragNeighbors"});
       timerID = undefined;
     }, 500);
-    return () => {
+    return (): void => {
       if (timerID !== undefined) {
         clearTimeout(timerID);
       }
@@ -84,25 +102,25 @@ export default function DragGroup({dispatchGameState, gameState}) {
     if (board) {
       const minLeft = board.left;
       const minTop = board.top;
-      const boxWidth = board.width / gameState.gridSize;
-      const boxHeight = board.height / gameState.gridSize;
-      const maxLeft = minLeft + boxWidth * (gameState.gridSize - groupColumns);
-      const maxTop = minTop + boxHeight * (gameState.gridSize - groupRows);
+      const boxWidth = board.width / gridSize;
+      const boxHeight = board.height / gridSize;
+      const maxLeft = minLeft + boxWidth * (gridSize - groupColumns);
+      const maxTop = minTop + boxHeight * (gridSize - groupRows);
       left = Math.max(minLeft, Math.min(left, maxLeft));
       top = Math.max(minTop, Math.min(top, maxTop));
     }
   }
 
-  const onPointerMove = (event) => {
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();
     const pointer = {x: event.clientX, y: event.clientY};
     dispatchGameState({
       action: "dragMove",
       pointer,
-      destination: getDragDestination(gameState, pointer),
+      destination: getDragDestination({dragState, pointer, gridSize, pieces}),
     });
   };
-  const onLostPointerCapture = (event) => {
+  const onLostPointerCapture = (event: React.PointerEvent<HTMLDivElement>) => {
     // On iOS Safari, apparently the coordinates are (0, 0) when the pointer is lost,
     // not the pointer-up location.
     if (event.clientX != 0 || event.clientY != 0) {
@@ -115,13 +133,15 @@ export default function DragGroup({dispatchGameState, gameState}) {
     <div
       id="drag-group"
       ref={dragGroup}
-      style={{
-        position: "absolute",
-        top,
-        left,
-        "--grid-rows": groupRows,
-        "--grid-columns": groupColumns,
-      }}
+      style={
+        {
+          position: "absolute",
+          top,
+          left,
+          "--grid-rows": groupRows,
+          "--grid-columns": groupColumns,
+        } as CSSPropertiesWithVars
+      }
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
     >
@@ -139,11 +159,26 @@ export default function DragGroup({dispatchGameState, gameState}) {
   );
 }
 
-function getDragDestination(gameState, pointer) {
+function getDragDestination({
+  dragState,
+  pointer,
+  gridSize,
+  pieces,
+}: {
+  dragState: DragState;
+  pointer: Position;
+  gridSize: number;
+  pieces: PieceInGame[];
+}): DragDestination | undefined {
   let destination = undefined;
-  if (!gameState.dragState.boardIsShifting) {
+  if (!dragState.boardIsShifting) {
     destination = dragDestinationInPool(pointer);
   }
-  destination ??= dragDestinationOnBoard(gameState, pointer);
+  destination ??= dragDestinationOnBoard({
+    dragState,
+    pointer,
+    gridSize,
+    pieces,
+  });
   return destination;
 }

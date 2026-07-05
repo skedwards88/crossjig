@@ -3,7 +3,7 @@ import {useMetadataContext} from "@skedwards88/shared-components/src/components/
 import type {DisplayState, GameState} from "../Types";
 import type {GameReducerPayload} from "../logic/gameReducer";
 
-function ControlBar({
+export default function ControlBar({
   dispatchGameState,
   dailyDispatchGameState,
   gameState,
@@ -86,5 +86,3 @@ function ControlBar({
     </div>
   );
 }
-
-export default ControlBar;

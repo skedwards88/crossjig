@@ -5,7 +5,7 @@ import DragGroup from "./DragGroup";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {CSSPropertiesWithVars, DisplayState, GameState} from "../Types";
 
-function Game({
+export default function Game({
   dispatchGameState,
   gameState,
   setDisplay,
@@ -22,7 +22,9 @@ function Game({
     <DragGroup
       key={gameState.dragCount}
       dispatchGameState={dispatchGameState}
-      gameState={gameState}
+      dragState={gameState.dragState}
+      pieces={gameState.pieces}
+      gridSize={gameState.gridSize}
     />
   ) : null;
   return (
@@ -68,5 +70,3 @@ function Game({
     </div>
   );
 }
-
-export default Game;

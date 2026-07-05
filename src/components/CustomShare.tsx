@@ -1,5 +1,5 @@
-import {GameReducerPayload} from "../logic/gameReducer";
-import {DisplayState} from "../Types";
+import type {GameReducerPayload} from "../logic/gameReducer";
+import type {DisplayState} from "../Types";
 
 export default function CustomShare({
   representativeString,

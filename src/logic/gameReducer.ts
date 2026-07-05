@@ -37,7 +37,11 @@ export type GameReducerPayload =
       pointerStartPosition: Position;
     }
   | {action: "dragNeighbors"}
-  | {action: "dragMove"; pointer: Position; destination: DragDestination}
+  | {
+      action: "dragMove";
+      pointer: Position;
+      destination: DragDestination | undefined;
+    }
   | {action: "dragEnd"}
   | {action: "shiftStart"; pointerID: number; pointerStartPosition: Position}
   | {action: "clearStreakIfNeeded"}

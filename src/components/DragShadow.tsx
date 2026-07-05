@@ -22,11 +22,17 @@ export default function DragShadow({
   grid,
   top,
   left,
-}: {
-  grid: number[][];
-  top: number;
-  left: number;
-}): React.JSX.Element {
+}:
+  | {
+      grid: number[][];
+      top?: never;
+      left?: never;
+    }
+  | {
+      grid: number[][];
+      top: number;
+      left: number;
+    }): React.JSX.Element {
   const squares = [];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     for (let colIndex = 0; colIndex < grid[0].length; colIndex++) {

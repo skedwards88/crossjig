@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type {ReactNode} from "react";
 import {commonWords} from "@skedwards88/word_lists";
 import type {DisplayState, Letter} from "../Types";
 import React from "react";

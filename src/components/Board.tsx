@@ -2,7 +2,13 @@ import Piece from "./Piece";
 import DragShadow from "./DragShadow";
 import {getLetterCountPerSquare} from "../logic/getLetterCountPerSquare";
 import {getWordValidityGrids} from "../logic/getWordValidityGrids";
-import type {DragDestination, DragDestinationBoard, GameState, PieceInGame, Position} from "../Types";
+import type {
+  DragDestination,
+  DragDestinationBoard,
+  DragState,
+  PieceInGame,
+  Position,
+} from "../Types";
 import type {GameReducerPayload} from "../logic/gameReducer";
 
 export default function Board({
@@ -87,20 +93,27 @@ export default function Board({
   );
 }
 
-export function dragDestinationOnBoard(
-  gameState: GameState,
-  pointer: Position,
-): DragDestinationBoard|undefined {
+export function dragDestinationOnBoard({
+  dragState,
+  pointer,
+  gridSize,
+  pieces,
+}: {
+  dragState: DragState;
+  pointer: Position;
+  gridSize: number;
+  pieces: PieceInGame[];
+}): DragDestinationBoard | undefined {
   const boardRect = document.getElementById("board").getBoundingClientRect();
   if (
-    gameState.dragState?.destination.where === "board" ||
+    dragState?.destination.where === "board" ||
     (boardRect.left <= pointer.x &&
       pointer.x <= boardRect.right &&
       boardRect.top <= pointer.y &&
       pointer.y <= boardRect.bottom)
   ) {
-    const draggedPieceIDs = gameState.dragState.pieceIDs;
-    const draggedPieces = gameState.pieces.filter((piece) =>
+    const draggedPieceIDs = dragState.pieceIDs;
+    const draggedPieces = pieces.filter((piece) =>
       draggedPieceIDs.includes(piece.id),
     );
 
@@ -114,14 +127,14 @@ export function dragDestinationOnBoard(
         (piece) => piece.dragGroupLeft + piece.letters[0].length,
       ),
     );
-    const maxTop = gameState.gridSize - groupHeight;
-    const maxLeft = gameState.gridSize - groupWidth;
+    const maxTop = gridSize - groupHeight;
+    const maxLeft = gridSize - groupWidth;
 
     // Subtract 1 before dividing because the board is n squares wide, but has n+1 1px borders.
     // (It's admittedly silly to care about this, since the impact is only 1/n of a pixel!)
-    const squareWidth = (boardRect.width - 1) / gameState.gridSize;
-    const squareHeight = (boardRect.height - 1) / gameState.gridSize;
-    const pointerOffset = gameState.dragState.pointerOffset;
+    const squareWidth = (boardRect.width - 1) / gridSize;
+    const squareHeight = (boardRect.height - 1) / gridSize;
+    const pointerOffset = dragState.pointerOffset;
     const unclampedLeft = Math.round(
       (pointer.x - pointerOffset.x - boardRect.left) / squareWidth,
     );
