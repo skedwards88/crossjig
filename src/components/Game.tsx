@@ -4,6 +4,7 @@ import Board from "./Board";
 import DragGroup from "./DragGroup";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {CSSPropertiesWithVars, DisplayState, GameState} from "../Types";
+import type {AdventureReducerPayload} from "../logic/adventure";
 
 export default function Game({
   dispatchGameState,
@@ -11,7 +12,9 @@ export default function Game({
   setDisplay,
   validityOpacity,
 }: {
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState: React.Dispatch<
+    GameReducerPayload | AdventureReducerPayload
+  >;
   gameState: GameState;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
   validityOpacity: number;

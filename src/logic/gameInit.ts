@@ -160,7 +160,7 @@ function dailyInit({useSaved}: {useSaved: boolean}): GameStateDaily {
     stats = savedState.stats;
   } else {
     stats = {
-      // last puzzle index won (to calculate streak)
+      // last date won (to calculate streak)
       lastDateWon: undefined,
       // consecutive games won
       streak: 0,
@@ -302,6 +302,70 @@ function adventureInit({
 
 export function gameInit({
   numLetters,
+  useSaved,
+  isDaily,
+  isCustom,
+  isAdventure,
+  seed,
+}: {
+  isDaily: true;
+  useSaved?: boolean | undefined;
+  isAdventure?: never;
+  isCustom?: never;
+  numLetters?: never;
+  seed?: never;
+}): GameStateDaily;
+
+export function gameInit({
+  numLetters,
+  useSaved,
+  isDaily,
+  isCustom,
+  isAdventure,
+  seed,
+}: {
+  isCustom: true;
+  useSaved?: boolean | undefined;
+  seed?: string | undefined;
+  numLetters?: number | undefined;
+  isAdventure?: never;
+  isDaily?: never;
+}): GameStateCustom;
+
+export function gameInit({
+  numLetters,
+  useSaved,
+  isDaily,
+  isCustom,
+  isAdventure,
+  seed,
+}: {
+  isAdventure: true;
+  useSaved?: boolean | undefined;
+  seed?: string | undefined;
+  isDaily?: never;
+  isCustom?: never;
+  numLetters?: never;
+}): GameStateAdventure;
+
+export function gameInit({
+  numLetters,
+  useSaved,
+  isDaily,
+  isCustom,
+  isAdventure,
+  seed,
+}: {
+  isDaily?: false | undefined;
+  isCustom?: false | undefined;
+  isAdventure?: false | undefined;
+  numLetters?: number | undefined;
+  useSaved?: boolean | undefined;
+  seed?: string | undefined;
+}): GameStateRandom;
+
+export function gameInit({
+  numLetters,
   useSaved = true,
   isDaily = false,
   isCustom = false,
@@ -310,7 +374,7 @@ export function gameInit({
 }:
   | {
       isDaily: true;
-      useSaved?: boolean;
+      useSaved?: boolean | undefined;
       isAdventure?: never;
       isCustom?: never;
       numLetters?: never;
@@ -318,16 +382,16 @@ export function gameInit({
     }
   | {
       isCustom: true;
-      useSaved?: boolean;
-      seed?: string;
-      numLetters?: number;
+      useSaved?: boolean | undefined;
+      seed?: string | undefined;
+      numLetters?: number | undefined;
       isAdventure?: never;
       isDaily?: never;
     }
   | {
       isAdventure: true;
-      useSaved?: boolean;
-      seed?: string;
+      useSaved?: boolean | undefined;
+      seed?: string | undefined;
       isDaily?: never;
       isCustom?: never;
       numLetters?: never;
@@ -336,9 +400,9 @@ export function gameInit({
       isDaily?: false | undefined;
       isCustom?: false | undefined;
       isAdventure?: false | undefined;
-      numLetters?: number;
-      useSaved?: boolean;
-      seed?: string;
+      numLetters?: number | undefined;
+      useSaved?: boolean | undefined;
+      seed?: string | undefined;
     }): GameState {
   if (isDaily) {
     return dailyInit({useSaved});

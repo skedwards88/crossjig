@@ -1,7 +1,7 @@
 import {customDailyPuzzles} from "./customDailyPuzzles";
 import {getSeedFromDate} from "@skedwards88/shared-components/src/logic/getSeedFromDate";
 
-export default function getDailySeed() {
+export default function getDailySeed(): [string, boolean] {
   const seedFromDate = getSeedFromDate();
 
   // Check if there is a custom puzzle for today

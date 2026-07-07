@@ -1,8 +1,9 @@
+import type {PieceInGame, PieceWithoutLocation} from "../Types";
 import {getGridFromPieces} from "./getGridFromPieces";
 
 describe("getGridFromPieces", () => {
   test("if `solution` is true, it returns a 2D array representing the placement of the pieces in a grid based on the solution", () => {
-    const pieces = [
+    const pieces: PieceWithoutLocation[] = [
       {
         letters: [
           ["", "C", ""],
@@ -123,7 +124,7 @@ describe("getGridFromPieces", () => {
   });
 
   test("if `solution` is false, it returns a 2D array representing the placement of the pieces in a grid", () => {
-    const pieces = [
+    const pieces: PieceInGame[] = [
       {
         letters: [
           ["", "C", ""],
@@ -133,11 +134,56 @@ describe("getGridFromPieces", () => {
         boardTop: 5,
         boardLeft: 7,
         id: 0,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["K"], ["N"], ["O"]], boardTop: 2, boardLeft: 10, id: 1},
-      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9, id: 2},
-      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6, id: 3},
-      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10, id: 4},
+      {
+        letters: [["K"], ["N"], ["O"]],
+        boardTop: 2,
+        boardLeft: 10,
+        id: 1,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["N", "S"]],
+        boardTop: 10,
+        boardLeft: 9,
+        id: 2,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["E", "A"]],
+        boardTop: 10,
+        boardLeft: 6,
+        id: 3,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["B"], ["S"]],
+        boardTop: 5,
+        boardLeft: 10,
+        id: 4,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["I", "", ""],
@@ -147,8 +193,23 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 3,
         id: 5,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5, id: 6},
+      {
+        letters: [["A"], ["W"]],
+        boardTop: 3,
+        boardLeft: 5,
+        id: 6,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["S", "P", "A"],
@@ -158,6 +219,11 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 0,
         id: 7,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -167,6 +233,11 @@ describe("getGridFromPieces", () => {
         boardTop: 10,
         boardLeft: 2,
         id: 8,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -177,8 +248,23 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 0,
         id: 9,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0, id: 10},
+      {
+        letters: [["V", "I"]],
+        boardTop: 11,
+        boardLeft: 0,
+        id: 10,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["N", "S"],
@@ -188,6 +274,11 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 3,
         id: 11,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -198,6 +289,11 @@ describe("getGridFromPieces", () => {
         boardTop: 7,
         boardLeft: 3,
         id: 12,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -208,10 +304,45 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 5,
         id: 13,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["F"]], boardTop: 1, boardLeft: 5, id: 14},
-      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7, id: 15},
-      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5, id: 16},
+      {
+        letters: [["F"]],
+        boardTop: 1,
+        boardLeft: 5,
+        id: 14,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["P"], ["Y"]],
+        boardTop: 3,
+        boardLeft: 7,
+        id: 15,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["D", "E"]],
+        boardTop: 6,
+        boardLeft: 5,
+        id: 16,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["P", "L", "E"],
@@ -221,6 +352,11 @@ describe("getGridFromPieces", () => {
         boardTop: 8,
         boardLeft: 6,
         id: 17,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
     ];
 
@@ -244,7 +380,7 @@ describe("getGridFromPieces", () => {
   });
 
   test("if `solution` is false, any pieces that are not on the board are excluded", () => {
-    const pieces = [
+    const pieces: PieceInGame[] = [
       {
         letters: [
           ["", "C", ""],
@@ -254,11 +390,56 @@ describe("getGridFromPieces", () => {
         boardTop: 5,
         boardLeft: 7,
         id: 0,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["K"], ["N"], ["O"]], boardTop: 2, boardLeft: 10, id: 1},
-      {letters: [["N", "S"]], boardTop: 10, boardLeft: 9, id: 2},
-      {letters: [["E", "A"]], boardTop: 10, boardLeft: 6, id: 3},
-      {letters: [["B"], ["S"]], boardTop: 5, boardLeft: 10, id: 4},
+      {
+        letters: [["K"], ["N"], ["O"]],
+        boardTop: 2,
+        boardLeft: 10,
+        id: 1,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["N", "S"]],
+        boardTop: 10,
+        boardLeft: 9,
+        id: 2,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["E", "A"]],
+        boardTop: 10,
+        boardLeft: 6,
+        id: 3,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["B"], ["S"]],
+        boardTop: 5,
+        boardLeft: 10,
+        id: 4,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["I", "", ""],
@@ -266,8 +447,25 @@ describe("getGridFromPieces", () => {
           ["E", "Z", "E"],
         ],
         id: 5,
+        poolIndex: 5,
+        boardTop: undefined,
+        boardLeft: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionLeft: 0,
+        solutionTop: 0,
       },
-      {letters: [["A"], ["W"]], boardTop: 3, boardLeft: 5, id: 6},
+      {
+        letters: [["A"], ["W"]],
+        boardTop: 3,
+        boardLeft: 5,
+        id: 6,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["S", "P", "A"],
@@ -277,6 +475,11 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 0,
         id: 7,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -286,6 +489,11 @@ describe("getGridFromPieces", () => {
         boardTop: 10,
         boardLeft: 2,
         id: 8,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -296,8 +504,23 @@ describe("getGridFromPieces", () => {
         boardTop: 3,
         boardLeft: 0,
         id: 9,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["V", "I"]], boardTop: 11, boardLeft: 0, id: 10},
+      {
+        letters: [["V", "I"]],
+        boardTop: 11,
+        boardLeft: 0,
+        id: 10,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["N", "S"],
@@ -307,6 +530,11 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 3,
         id: 11,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -317,6 +545,11 @@ describe("getGridFromPieces", () => {
         boardTop: 7,
         boardLeft: 3,
         id: 12,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
       {
         letters: [
@@ -327,10 +560,45 @@ describe("getGridFromPieces", () => {
         boardTop: 0,
         boardLeft: 5,
         id: 13,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
       },
-      {letters: [["F"]], boardTop: 1, boardLeft: 5, id: 14},
-      {letters: [["P"], ["Y"]], boardTop: 3, boardLeft: 7, id: 15},
-      {letters: [["D", "E"]], boardTop: 6, boardLeft: 5, id: 16},
+      {
+        letters: [["F"]],
+        boardTop: 1,
+        boardLeft: 5,
+        id: 14,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["P"], ["Y"]],
+        boardTop: 3,
+        boardLeft: 7,
+        id: 15,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
+      {
+        letters: [["D", "E"]],
+        boardTop: 6,
+        boardLeft: 5,
+        id: 16,
+        poolIndex: undefined,
+        dragGroupTop: undefined,
+        dragGroupLeft: undefined,
+        solutionTop: 0,
+        solutionLeft: 0,
+      },
       {
         letters: [
           ["P", "L", "E"],
@@ -338,6 +606,13 @@ describe("getGridFromPieces", () => {
           ["", "", "R"],
         ],
         id: 17,
+        poolIndex: undefined,
+        boardTop: undefined,
+        boardLeft: undefined,
+        dragGroupTop: 1,
+        dragGroupLeft: 1,
+        solutionLeft: 0,
+        solutionTop: 0,
       },
     ];
 
@@ -361,7 +636,7 @@ describe("getGridFromPieces", () => {
   });
 
   test("any overlapping positions are overwritten", () => {
-    const pieces = [
+    const pieces: PieceWithoutLocation[] = [
       {
         letters: [
           ["", "C", ""],
@@ -385,7 +660,7 @@ describe("getGridFromPieces", () => {
   });
 
   test("an empty array of pieces results in an empty grid", () => {
-    const pieces = [];
+    const pieces: PieceWithoutLocation[] = [];
     const expectedGrid = [
       ["", "", ""],
       ["", "", ""],
@@ -397,7 +672,7 @@ describe("getGridFromPieces", () => {
   });
 
   test("an error is thrown if a piece does not fit on the grid", () => {
-    const pieces = [
+    const pieces: PieceWithoutLocation[] = [
       {
         letters: [
           ["", "C", ""],
@@ -417,10 +692,12 @@ describe("getGridFromPieces", () => {
   });
 
   test("an error is thrown if either pieces or gridSize is undefined", () => {
+    // @ts-expect-error intentionally testing invalid input
     expect(() => getGridFromPieces({gridSize: 2})).toThrow(
       "Pieces must be defined.",
     );
 
+    // @ts-expect-error intentionally testing invalid input
     expect(() => getGridFromPieces({pieces: []})).toThrow(
       "Grid size must be defined.",
     );
@@ -428,7 +705,7 @@ describe("getGridFromPieces", () => {
 });
 
 test("if `solution` is false, and no pieces are on the board, an empty grid is returned", () => {
-  const pieces = [
+  const pieces: PieceInGame[] = [
     {
       letters: [
         ["", "C", ""],
@@ -436,11 +713,58 @@ test("if `solution` is false, and no pieces are on the board, an empty grid is r
         ["", "R", ""],
       ],
       id: 0,
+      poolIndex: 1,
+      boardTop: undefined,
+      boardLeft: undefined,
+      dragGroupTop: undefined,
+      dragGroupLeft: undefined,
+      solutionLeft: 0,
+      solutionTop: 0,
     },
-    {letters: [["K"], ["N"], ["O"]], id: 1},
-    {letters: [["N", "S"]], id: 2},
-    {letters: [["E", "A"]], id: 3},
-    {letters: [["B"], ["S"]], id: 4},
+    {
+      letters: [["K"], ["N"], ["O"]],
+      id: 1,
+      poolIndex: 1,
+      boardTop: undefined,
+      boardLeft: undefined,
+      dragGroupTop: undefined,
+      dragGroupLeft: undefined,
+      solutionLeft: 0,
+      solutionTop: 0,
+    },
+    {
+      letters: [["N", "S"]],
+      id: 2,
+      poolIndex: undefined,
+      boardTop: undefined,
+      boardLeft: undefined,
+      dragGroupTop: 1,
+      dragGroupLeft: 1,
+      solutionLeft: 0,
+      solutionTop: 0,
+    },
+    {
+      letters: [["E", "A"]],
+      id: 3,
+      poolIndex: undefined,
+      boardTop: undefined,
+      boardLeft: undefined,
+      dragGroupTop: 1,
+      dragGroupLeft: 1,
+      solutionLeft: 0,
+      solutionTop: 0,
+    },
+    {
+      letters: [["B"], ["S"]],
+      id: 4,
+      poolIndex: 1,
+      boardTop: undefined,
+      boardLeft: undefined,
+      dragGroupTop: undefined,
+      dragGroupLeft: undefined,
+      solutionLeft: 0,
+      solutionTop: 0,
+    },
   ];
 
   const expectedGrid = [

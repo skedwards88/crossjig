@@ -58,7 +58,7 @@ export default function CustomLookup({
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
-  const [lookupString, setLookupString] = React.useState("");
+  const [lookupString, setLookupString] = React.useState<string>("");
 
   const letterElements = alphabet.map((letter) => (
     <button

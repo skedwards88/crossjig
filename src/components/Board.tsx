@@ -6,6 +6,7 @@ import type {
   DragDestination,
   DragDestinationBoard,
   DragState,
+  PieceInDrag,
   PieceInGame,
   Position,
 } from "../Types";
@@ -61,8 +62,8 @@ export default function Board({
 
   // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
   let dragShadow;
-  if (dragDestination?.where === "board") {
-    const draggedPieces = pieces.filter((piece) =>
+  if (dragDestination?.where === "board" && dragPieceIDs) {
+    const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
       dragPieceIDs.includes(piece.id),
     );
     const grid = getLetterCountPerSquare(gridSize, gridSize, draggedPieces);
@@ -113,7 +114,7 @@ export function dragDestinationOnBoard({
       pointer.y <= boardRect.bottom)
   ) {
     const draggedPieceIDs = dragState.pieceIDs;
-    const draggedPieces = pieces.filter((piece) =>
+    const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
       draggedPieceIDs.includes(piece.id),
     );
 

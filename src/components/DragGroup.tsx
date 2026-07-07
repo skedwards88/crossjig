@@ -30,9 +30,12 @@ export default function DragGroup({
   );
 
   // Capture the pointer. If the pointer could not be captured successfully, end the drag.
-  const dragGroup = React.useRef(null);
+  const dragGroup = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
     const element = dragGroup.current;
+    if (!element) {
+      return;
+    }
     let ok = true;
     try {
       element.setPointerCapture(dragState.pointerID);
@@ -45,11 +48,11 @@ export default function DragGroup({
       dispatchGameState({action: "dragEnd"});
     }
     // Cleanup function to release the pointer.
-    return () => {
+    return (): void => {
       if (ok) {
         try {
           element.releasePointerCapture(dragState.pointerID);
-        } catch (exc) {
+        } catch {
           // The pointer is invalid. Normal on touch screens. Ignore it.
         }
       }
@@ -69,7 +72,7 @@ export default function DragGroup({
     ) {
       return undefined;
     }
-    let timerID = setTimeout(() => {
+    let timerID: NodeJS.Timeout | undefined = setTimeout(() => {
       dispatchGameState({action: "dragNeighbors"});
       timerID = undefined;
     }, 500);
@@ -111,7 +114,7 @@ export default function DragGroup({
     }
   }
 
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>): void => {
     event.preventDefault();
     const pointer = {x: event.clientX, y: event.clientY};
     dispatchGameState({
@@ -120,7 +123,9 @@ export default function DragGroup({
       destination: getDragDestination({dragState, pointer, gridSize, pieces}),
     });
   };
-  const onLostPointerCapture = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onLostPointerCapture = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ): void => {
     // On iOS Safari, apparently the coordinates are (0, 0) when the pointer is lost,
     // not the pointer-up location.
     if (event.clientX != 0 || event.clientY != 0) {

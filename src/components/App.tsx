@@ -18,6 +18,7 @@ import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
 } from "@skedwards88/shared-components/src/logic/handleInstall";
+import type {BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
@@ -38,20 +39,26 @@ import {resizeGrid} from "../logic/resizeGrid";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
-import {getFromStorage, saveToStorage} from "../logic/safeStorage";
+import {
+  getFromStorage,
+  saveToStorage,
+} from "@skedwards88/shared-components/src/logic/safeStorage";
+import {type DisplayState} from "../Types";
 
-export default function App() {
+export default function App(): React.JSX.Element {
   // *****
   // Install handling setup
   // *****
   // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
-  const [installPromptEvent, setInstallPromptEvent] = React.useState();
-  const [showInstallButton, setShowInstallButton] = React.useState(true);
+  const [installPromptEvent, setInstallPromptEvent] =
+    React.useState<BeforeInstallPromptEvent | null>(null);
+  const [showInstallButton, setShowInstallButton] =
+    React.useState<boolean>(true);
 
   React.useEffect(() => {
     // Need to store the function in a variable so that
     // the add and remove actions can reference the same function
-    const listener = (event) =>
+    const listener = (event: BeforeInstallPromptEvent): void =>
       handleBeforeInstallPrompt(
         event,
         setInstallPromptEvent,
@@ -60,18 +67,19 @@ export default function App() {
 
     window.addEventListener("beforeinstallprompt", listener);
 
-    return () => window.removeEventListener("beforeinstallprompt", listener);
+    return (): void =>
+      window.removeEventListener("beforeinstallprompt", listener);
   }, []);
 
   React.useEffect(() => {
     // Need to store the function in a variable so that
     // the add and remove actions can reference the same function
-    const listener = () =>
+    const listener = (): void =>
       handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
 
     window.addEventListener("appinstalled", listener);
 
-    return () => window.removeEventListener("appinstalled", listener);
+    return (): void => window.removeEventListener("appinstalled", listener);
   }, []);
   // *****
   // End install handling setup
@@ -79,18 +87,18 @@ export default function App() {
 
   // If a query string was passed,
   // parse it to get the data to regenerate the game described by the query string
-  const [isCustom, seed, numLetters] = parseUrlQuery();
+  const {isCustom, seed, numLetters} = parseUrlQuery();
 
   // Determine when the player last visited the game
   // This is used to determine whether to show the rules instead of the game
-  const lastVisitedYYYYMMDD = getFromStorage("crossjigLastVisited");
+  const lastVisitedYYYYMMDD = getFromStorage<string>("crossjigLastVisited");
   const hasVisitedEver = hasVisitedSince(lastVisitedYYYYMMDD, "20240429");
 
-  const savedHasSeenWhatsNew = getFromStorage(
+  const savedHasSeenWhatsNew = getFromStorage<boolean>(
     "crossjigHasSeenWhatsNew20240909",
   );
 
-  const [hasSeenWhatsNew, setHasSeenWhatsNew] = React.useState(
+  const [hasSeenWhatsNew, setHasSeenWhatsNew] = React.useState<boolean>(
     savedHasSeenWhatsNew ?? false,
   );
 
@@ -98,37 +106,35 @@ export default function App() {
     saveToStorage("crossjigHasSeenWhatsNew20240909", hasSeenWhatsNew);
   }, [hasSeenWhatsNew]);
 
-  const [lastVisited] = React.useState(getSeedFromDate());
+  const [lastVisited] = React.useState<string>(getSeedFromDate());
   React.useEffect(() => {
     saveToStorage("crossjigLastVisited", lastVisited);
   }, [lastVisited]);
 
   // Determine what view to show the user
-  const savedDisplay = getFromStorage("crossjigDisplay");
-  const [display, setDisplay] = React.useState(
+  const savedDisplay = getFromStorage<DisplayState>("crossjigDisplay");
+  const [display, setDisplay] = React.useState<DisplayState>(
     getInitialState(savedDisplay, hasVisitedEver, hasSeenWhatsNew, isCustom),
   );
 
   // Determine the opacity for the validity indicator
   const savedValidityOpacity =
-    getFromStorage("crossjigValidityOpacity") ?? 0.15;
+    getFromStorage<number>("crossjigValidityOpacity") ?? 0.15;
   const [validityOpacity, setValidityOpacity] =
-    React.useState(savedValidityOpacity);
+    React.useState<number>(savedValidityOpacity);
 
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
-    {
-      seed,
-      numLetters,
-      isCustom,
-    },
-    gameInit,
+    isCustom
+      ? ({isCustom: true, seed, numLetters} as const)
+      : ({seed, numLetters, isCustom: false} as const),
+    (arg) => (arg.isCustom ? gameInit(arg) : gameInit(arg)), // yes these branches take the same action. This grossness is required for ts to correctly resolve the overloads; the other options I found felt even messier
   );
 
-  let [dailyGameState, dailyDispatchGameState] = React.useReducer(
+  const [dailyGameState, dailyDispatchGameState] = React.useReducer(
     gameReducer,
-    {isDaily: true},
-    gameInit,
+    {isDaily: true} as const,
+    (arg) => gameInit(arg), // this syntax (instead of just gameInit) is required for TS to correctly interpret the overloads
   );
 
   const [customCreationState, dispatchCustomCreationState] = React.useReducer(
@@ -139,15 +145,17 @@ export default function App() {
 
   const [adventureState, dispatchAdventureState] = React.useReducer(
     adventureReducer,
-    {isAdventure: true},
-    gameInit,
+    {isAdventure: true} as const,
+    (arg) => gameInit(arg), // this syntax (instead of just gameInit) is required for TS to correctly interpret the overloads
   );
 
-  const [, setLastVisible] = React.useState(Date.now());
+  const [, setLastVisible] = React.useState<number>(Date.now());
 
-  function handleCustomGeneration() {
+  function handleCustomGeneration(): string {
     // If there is nothing to share, display a message with errors
-    if (!customCreationState.pieces.some((piece) => piece.boardTop >= 0)) {
+    if (
+      !customCreationState.pieces.some((piece) => piece.boardTop === undefined)
+    ) {
       throw new Error("Add some letters to the board first!");
     }
 
@@ -183,7 +191,7 @@ export default function App() {
     return representativeString;
   }
 
-  function handleVisibilityChange() {
+  function handleVisibilityChange(): void {
     // If the visibility of the app changes to become visible,
     // update the state to force the app to re-render.
     // This is to help the daily challenge refresh if the app has
@@ -198,7 +206,7 @@ export default function App() {
     // (and remove the event listener when the component is unmounted).
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    return () => {
+    return (): void => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
@@ -369,8 +377,6 @@ export default function App() {
       if (dailyGameState.seed != getDailySeed()[0]) {
         dailyDispatchGameState({
           action: "newGame",
-          isDaily: true,
-          useSaved: false,
         });
       }
       return (
@@ -412,7 +418,9 @@ export default function App() {
                 try {
                   representativeString = handleCustomGeneration();
                 } catch (error) {
-                  const invalidReason = error.message;
+                  // ts doesn't let you type the thing caught from error, hence this syntax:
+                  const invalidReason =
+                    error instanceof Error ? error.message : String(error);
                   dispatchCustomCreationState({
                     action: "updateInvalidReason",
                     invalidReason: invalidReason,
@@ -432,14 +440,14 @@ export default function App() {
             <Share
               id="shareIcon"
               className="controlButton"
-              userId={userId}
-              sessionId={sessionId}
               onClick={() => {
                 let representativeString;
                 try {
                   representativeString = handleCustomGeneration();
                 } catch (error) {
-                  const invalidReason = error.message;
+                  // ts doesn't let you type the thing caught from error, hence this syntax:
+                  const invalidReason =
+                    error instanceof Error ? error.message : String(error);
                   dispatchCustomCreationState({
                     action: "updateInvalidReason",
                     invalidReason: invalidReason,
@@ -454,12 +462,14 @@ export default function App() {
                 });
 
                 // Share (or show the link if sharing is not supported)
-                if (navigator.canShare) {
+                if ("canShare" in navigator) {
                   handleShare({
                     appName: "Crossjig",
                     text: "Try this custom crossjig that I created!",
                     url: fullUrl,
                     origin: "custom creation",
+                    userId: userId,
+                    sessionId: sessionId,
                   });
                 } else {
                   dispatchCustomCreationState({
@@ -550,6 +560,8 @@ export default function App() {
           }
           appleAppLink={"https://apps.apple.com/us/app/crossjig/id6749487838"}
           pwaLink={"https://crossjig.com"}
+          userId={userId}
+          sessionId={sessionId}
         ></PWAInstall>
       );
 
@@ -615,6 +627,7 @@ export default function App() {
           <ControlBar
             setDisplay={setDisplay}
             dispatchGameState={dispatchGameState}
+            dailyDispatchGameState={dailyDispatchGameState}
             gameState={gameState}
             dailyIsSolved={dailyGameState.gameIsSolved}
           ></ControlBar>
@@ -622,6 +635,7 @@ export default function App() {
             dispatchGameState={dispatchGameState}
             gameState={gameState}
             validityOpacity={validityOpacity}
+            setDisplay={setDisplay}
           ></Game>
         </div>
       );

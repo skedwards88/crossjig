@@ -662,7 +662,7 @@ function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
 
   return {
     ...currentGameState.stats,
-    lastDateWon: today,
+    lastDateWon: today.toISOString(),
     streak: newStreak,
     maxStreak: newMaxStreak,
     numHintlessInStreak: newNumHintlessInStreak,

@@ -1,10 +1,10 @@
 import type {DisplayState} from "../Types";
 
 export function getInitialState(
-  savedDisplay: DisplayState,
+  savedDisplay: DisplayState | undefined,
   hasVisitedEver: boolean,
   hasSeenWhatsNew: boolean,
-  isCustom: boolean,
+  isCustom: boolean | undefined,
 ): DisplayState {
   if (!hasVisitedEver) {
     return "rules";

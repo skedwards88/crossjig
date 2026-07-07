@@ -1,3 +1,4 @@
+import type {AdventureReducerPayload} from "../logic/adventure";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {DisplayState, GameState} from "../Types";
 import GameOver from "./GameOver";
@@ -7,7 +8,9 @@ export default function Result({
   gameState,
   setDisplay,
 }: {
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState: React.Dispatch<
+    GameReducerPayload | AdventureReducerPayload
+  >;
   gameState: GameState;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {

@@ -1,4 +1,9 @@
-import type {LetterOrEmpty, PieceInBoard, PieceWithoutLocation} from "../Types";
+import type {
+  LetterOrEmpty,
+  PieceInBoard,
+  PieceInGame,
+  PieceWithoutLocation,
+} from "../Types";
 
 export function getGridFromPieces({
   pieces,
@@ -7,7 +12,7 @@ export function getGridFromPieces({
 }:
   | {pieces: PieceWithoutLocation[]; gridSize: number; solution: true}
   | {
-      pieces: PieceInBoard[];
+      pieces: PieceInGame[];
       gridSize: number;
       solution: false;
     }): LetterOrEmpty[][] {
@@ -29,17 +34,19 @@ export function getGridFromPieces({
   for (const piece of pieces) {
     if (
       !solution &&
-      ((piece as PieceInBoard).boardTop == undefined ||
-        (piece as PieceInBoard).boardLeft == undefined) // ts doesn't remember that piece is PieceInBoard if solution is false, so have to typecast here. (Alternatively could not destructure the args until here, but I don't want to deviate from my coding style to satisfy a ts shortcoming.)
+      (!("boardTop" in piece) ||
+        piece.boardTop == undefined ||
+        !("boardLeft" in piece) ||
+        piece.boardLeft == undefined)
     ) {
       continue;
     }
     const letters = piece.letters;
-    let top = solution ? piece.solutionTop : (piece as PieceInBoard).boardTop; // same typecasting reason as above
+    let top = solution ? piece.solutionTop : (piece as PieceInBoard).boardTop;
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = solution
         ? piece.solutionLeft
-        : (piece as PieceInBoard).boardLeft; // same typecasting reason as above
+        : (piece as PieceInBoard).boardLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         if (letters[rowIndex][colIndex]) {
           if (grid[top][left] == undefined) {

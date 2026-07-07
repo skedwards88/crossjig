@@ -6,6 +6,7 @@ import type {
   DragDestination,
   DragDestinationPool,
   PieceInGame,
+  PieceInPool,
   Position,
 } from "../Types";
 
@@ -18,7 +19,9 @@ export default function Pool({
   dragDestination?: DragDestination;
   dispatchGameState: React.Dispatch<GameReducerPayload>;
 }): React.JSX.Element {
-  const poolPieces = pieces.filter((piece) => piece.poolIndex != undefined);
+  const poolPieces = pieces.filter(
+    (piece): piece is PieceInPool => piece.poolIndex != undefined,
+  );
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
   const pieceElements = poolPieces.map((piece) => (

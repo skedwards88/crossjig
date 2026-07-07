@@ -3,6 +3,7 @@ import Share from "@skedwards88/shared-components/src/components/Share";
 import {assembleShareLink} from "@skedwards88/shared-components/src/logic/assembleShareLink";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {ADVENTURE_LEVELS} from "../logic/adventure";
+import type {AdventureReducerPayload} from "../logic/adventure";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {DisplayState, GameState} from "../Types";
 
@@ -11,7 +12,9 @@ export default function GameOver({
   gameState,
   setDisplay,
 }: {
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState: React.Dispatch<
+    GameReducerPayload | AdventureReducerPayload
+  >;
   gameState: GameState;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {

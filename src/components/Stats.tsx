@@ -1,6 +1,8 @@
 import type {DayNumber, DisplayState, Stats as StatsType} from "../Types";
 
-function dayLetterFromNumber(number: number) {
+function dayLetterFromNumber(
+  number: number,
+): "S" | "M" | "T" | "W" | "R" | "F" {
   switch (number) {
     case 0:
       return "S";

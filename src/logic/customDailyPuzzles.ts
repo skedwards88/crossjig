@@ -1,4 +1,4 @@
-export const customDailyPuzzles = {
+export const customDailyPuzzles: Record<string, string> = {
   // Sneak preview of custom daily puzzles
   20241021: "610L6NYMNYX3P1I1Y3C1O1G2HYUL1I3Q3M9",
   // Halloween themed (Thursday, 66 letters)

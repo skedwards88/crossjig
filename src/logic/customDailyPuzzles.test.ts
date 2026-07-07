@@ -4,6 +4,7 @@ import {getWordsFromGrid} from "./getWordsFromGrid";
 import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
 import {getNumLettersForDay} from "./getNumLettersForDay";
+import type {DayNumber} from "../Types";
 
 describe("customDailyPuzzles", () => {
   test("All words in the custom daily puzzle must be valid", () => {
@@ -33,7 +34,7 @@ describe("customDailyPuzzles", () => {
       const dayOfMonth = parseInt(dateString.substring(6, 8), 10);
 
       const date = new Date(year, month, dayOfMonth);
-      const dayNumber = date.getDay();
+      const dayNumber = date.getDay() as DayNumber;
 
       const expectedNumberLetters = getNumLettersForDay(dayNumber);
 

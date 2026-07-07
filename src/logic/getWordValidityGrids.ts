@@ -3,7 +3,7 @@ import {getWordsFromPieces} from "../logic/getWordsFromPieces";
 import {transposeGrid} from "@skedwards88/word_logic";
 import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
-import type {LetterOrEmpty, PieceInBoard} from "../Types";
+import type {LetterOrEmpty, PieceInGame} from "../Types";
 
 function getHorizontalValidityGrid({
   grid,
@@ -71,7 +71,7 @@ export function getWordValidityGrids({
   gridSize,
   includeOriginalSolution = true,
 }: {
-  pieces: PieceInBoard[];
+  pieces: PieceInGame[];
   gridSize: number;
   includeOriginalSolution?: boolean;
 }): [boolean[][], boolean[][]] {

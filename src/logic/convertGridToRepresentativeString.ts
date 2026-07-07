@@ -1,4 +1,4 @@
-import type {LetterOrEmpty} from "../Types";
+import type {Letter, LetterOrEmpty} from "../Types";
 import {cipherLetter} from "./cipherLetter";
 
 // Converts a 2D grid of letters and spaces into a representative string.
@@ -31,7 +31,7 @@ export function convertGridToRepresentativeString(
           spaceCount = 0;
         }
         const cipheredCharacter = cipherLetter(
-          character.toUpperCase(),
+          character.toUpperCase() as Letter, // running toUpperCase to be safe, but then have to narrow back to Letter
           -cipherShift,
         );
         stringifiedGrid += cipheredCharacter;
