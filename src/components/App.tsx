@@ -17,8 +17,8 @@ import WhatsNew from "./WhatsNew";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
+  type BeforeInstallPromptEvent,
 } from "@skedwards88/shared-components/src/logic/handleInstall";
-import type {BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";

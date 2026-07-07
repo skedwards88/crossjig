@@ -1,7 +1,6 @@
 import type {GameStateAdventure, Puzzle} from "../Types";
 import {applyBaseState, gameInit} from "./gameInit";
-import {gameReducer} from "./gameReducer";
-import type {GameReducerPayload} from "./gameReducer";
+import {gameReducer, type GameReducerPayload} from "./gameReducer";
 import {generatePuzzle} from "./generatePuzzle";
 import {getGridSizeForLetters} from "./getGridSizeForLetters";
 

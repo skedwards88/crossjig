@@ -1,7 +1,6 @@
 import type {DayNumber, GameStateDaily, Stats} from "../Types";
 import {gameInit} from "./gameInit";
-import {gameReducer} from "./gameReducer";
-import type {GameReducerPayload} from "./gameReducer";
+import {gameReducer, type GameReducerPayload} from "./gameReducer";
 import {
   isYesterday,
   isToday,
