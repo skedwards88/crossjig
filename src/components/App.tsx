@@ -44,6 +44,7 @@ import {
   saveToStorage,
 } from "@skedwards88/shared-components/src/logic/safeStorage";
 import {type DisplayState} from "../Types";
+import {dailyReducer} from "../logic/dailyReducer";
 
 export default function App(): React.JSX.Element {
   // *****
@@ -132,7 +133,7 @@ export default function App(): React.JSX.Element {
   );
 
   const [dailyGameState, dailyDispatchGameState] = React.useReducer(
-    gameReducer,
+    dailyReducer,
     {isDaily: true} as const,
     (arg) => gameInit(arg), // this syntax (instead of just gameInit) is required for TS to correctly interpret the overloads
   );

@@ -6,15 +6,17 @@ import {ADVENTURE_LEVELS} from "../logic/adventure";
 import type {AdventureReducerPayload} from "../logic/adventure";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {DisplayState, GameState} from "../Types";
+import {type DailyReducerPayload} from "../logic/dailyReducer";
 
 export default function GameOver({
   dispatchGameState,
   gameState,
   setDisplay,
 }: {
-  dispatchGameState: React.Dispatch<
-    GameReducerPayload | AdventureReducerPayload
-  >;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>;
   gameState: GameState;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
@@ -27,7 +29,9 @@ export default function GameOver({
         <div>Level {gameState.currentLevel + 1} Complete!</div>
         <button
           onClick={() => {
-            dispatchGameState({action: "nextLevel"});
+            (dispatchGameState as React.Dispatch<AdventureReducerPayload>)({
+              action: "nextLevel",
+            });
           }}
         >
           {isLastLevel

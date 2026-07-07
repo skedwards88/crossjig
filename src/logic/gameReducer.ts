@@ -1,29 +1,18 @@
 import {gameInit} from "./gameInit";
 import {getConnectedPieceIDs} from "./getConnectedPieceIDs";
-import {
-  isYesterday,
-  isToday,
-} from "@skedwards88/shared-components/src/logic/isNDaysAgo";
 import type {
   DragDestination,
   GameState,
-  GameStateDaily,
   Position,
   PieceInGame,
   PieceInBoard,
   PieceInDrag,
   PieceInPool,
   DragState,
-  Stats,
-  DayNumber,
 } from "../Types";
 import {gameSolvedQ} from "./gameSolvedQ";
 
 export type GameReducerPayload =
-  | {
-      action: "newGame";
-      isDaily: boolean;
-    }
   | {
       action: "newGame";
       numLetters: number;
@@ -44,7 +33,6 @@ export type GameReducerPayload =
     }
   | {action: "dragEnd"}
   | {action: "shiftStart"; pointerID: number; pointerStartPosition: Position}
-  | {action: "clearStreakIfNeeded"}
   | {action: "updateInvalidReason"; invalidReason: string}
   | {action: "updateRepresentativeString"; representativeString: string};
 
@@ -614,68 +602,10 @@ function giveHint(currentGameState: GameState): PieceInGame[] {
   return realignedPieces;
 }
 
-function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
-  const today = new Date();
-  const lastDateWon = currentGameState.stats.lastDateWon;
-  const wonYesterday = lastDateWon && isYesterday(lastDateWon);
-
-  // exit early if we already recorded stats for today
-  const wonToday = lastDateWon && isToday(lastDateWon);
-  if (wonToday) {
-    return;
-  }
-
-  // If won yesterday, add 1 to the streak
-  // Otherwise, reset the streak to 1
-  const newStreak = wonYesterday ? currentGameState.stats.streak + 1 : 1;
-
-  const newMaxStreak = Math.max(newStreak, currentGameState.stats.maxStreak);
-
-  // If didn't use any hints today, increment number of wins in the streak without hints
-  const hintsUsedToday = currentGameState.hintTally;
-  const prevNumHintlessInStreak = wonYesterday
-    ? currentGameState.stats.numHintlessInStreak
-    : 0;
-  const newNumHintlessInStreak = hintsUsedToday
-    ? prevNumHintlessInStreak
-    : prevNumHintlessInStreak + 1;
-
-  // Tally the number of hints used in the streak
-  const prevNumHintsInStreak = wonYesterday
-    ? currentGameState.stats.numHintsInStreak
-    : 0;
-  const newNumHintsInStreak = prevNumHintsInStreak + hintsUsedToday;
-
-  // Update the number of games won for this weekday
-  const dayNumber = today.getDay() as DayNumber; // typecast since ts doesn't know that getDay only returns these numbers
-
-  const numWeekdayWon = currentGameState.stats.days[dayNumber].won + 1;
-
-  const numWeekdayWonWithoutHints = hintsUsedToday
-    ? currentGameState.stats.days[dayNumber].noHints
-    : currentGameState.stats.days[dayNumber].noHints + 1;
-
-  const newDays = {
-    ...currentGameState.stats.days,
-    [dayNumber]: {won: numWeekdayWon, noHints: numWeekdayWonWithoutHints},
-  };
-
-  return {
-    ...currentGameState.stats,
-    lastDateWon: today.toISOString(),
-    streak: newStreak,
-    maxStreak: newMaxStreak,
-    numHintlessInStreak: newNumHintlessInStreak,
-    numHintsInStreak: newNumHintsInStreak,
-    days: newDays,
-  };
-}
-
 function getCompletionData(currentGameState: GameState): {
   allPiecesAreUsed: boolean;
   gameIsSolved: boolean;
   gameIsSolvedReason: string;
-  stats?: Stats;
 } {
   const allPiecesAreUsed = currentGameState.pieces.every(
     (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
@@ -694,18 +624,10 @@ function getCompletionData(currentGameState: GameState): {
     currentGameState.gridSize,
   );
 
-  let newStats;
-  if (gameIsSolved && !currentGameState.gameIsSolved) {
-    if (currentGameState.isDaily) {
-      newStats = getNewDailyStats(currentGameState);
-    }
-  }
-
   return {
     allPiecesAreUsed: true,
     gameIsSolved: gameIsSolved,
     gameIsSolvedReason: gameIsSolvedReason,
-    ...(newStats && {stats: newStats}),
   };
 }
 
@@ -721,18 +643,10 @@ export function gameReducer(
   payload: GameReducerPayload,
 ): GameState {
   if (payload.action === "newGame") {
-    if ("isDaily" in payload && payload.isDaily) {
-      // overly verbose checking for TS
-      return gameInit({
-        isDaily: true,
-        useSaved: false,
-      });
-    } else {
-      return gameInit({
-        ...("numLetters" in payload && {numLetters: payload.numLetters}), // overly verbose checking for TS
-        useSaved: false,
-      });
-    }
+    return gameInit({
+      numLetters: payload.numLetters,
+      useSaved: false,
+    });
   } else if (payload.action === "playCustom") {
     return gameInit({
       seed: payload.representativeString,
@@ -828,32 +742,6 @@ export function gameReducer(
       boardIsShifting: true,
       isCustomCreating: currentGameState.isCustomCreating,
     });
-  } else if (payload.action === "clearStreakIfNeeded") {
-    if (!currentGameState.isDaily) {
-      return currentGameState;
-    }
-
-    const lastDateWon = currentGameState.stats.lastDateWon;
-    const wonYesterday = lastDateWon && isYesterday(lastDateWon);
-    const wonToday = lastDateWon && isToday(lastDateWon);
-
-    if (wonYesterday || wonToday) {
-      // if won in the past day, don't need to clear the streak
-      return currentGameState;
-    } else {
-      // otherwise clear the streak but leave other stats intact
-      const newStats = {
-        ...currentGameState.stats,
-        streak: 0,
-        numHintlessInStreak: 0,
-        numHintsInStreak: 0,
-      };
-
-      return {
-        ...currentGameState,
-        stats: newStats,
-      };
-    }
   } else if (payload.action === "updateInvalidReason") {
     return {
       ...currentGameState,

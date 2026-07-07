@@ -2,6 +2,7 @@ import Share from "@skedwards88/shared-components/src/components/Share";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import type {DisplayState, GameState} from "../Types";
 import type {GameReducerPayload} from "../logic/gameReducer";
+import type {DailyReducerPayload} from "../logic/dailyReducer";
 
 export default function ControlBar({
   dispatchGameState,
@@ -11,7 +12,7 @@ export default function ControlBar({
   dailyIsSolved,
 }: {
   dispatchGameState: React.Dispatch<GameReducerPayload>;
-  dailyDispatchGameState: React.Dispatch<GameReducerPayload>;
+  dailyDispatchGameState: React.Dispatch<DailyReducerPayload>;
   gameState: GameState;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
   dailyIsSolved: boolean;
