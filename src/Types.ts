@@ -83,9 +83,11 @@ export type DragState = {
 };
 
 export type BaseGameState = {
-  seed: string;
-  gridSize: number;
   pieces: PieceInGame[];
+  gridSize: number;
+  dragCount: number;
+  dragState?: DragState | undefined;
+  seed: string;
   maxShiftLeft: number;
   maxShiftRight: number;
   maxShiftUp: number;
@@ -95,9 +97,8 @@ export type BaseGameState = {
   gameIsSolved: boolean;
   gameIsSolvedReason: string;
   hintTally: number;
-  dragCount: number;
-  dragState?: DragState | undefined;
   isResumedFromSave: boolean;
+  isCustomCreating?: false;
 };
 
 export type GameStateRandom = BaseGameState & {

@@ -1,4 +1,4 @@
-import type {GameReducerPayload} from "../logic/gameReducer";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
 import type {DisplayState} from "../Types";
 
 export default function CustomShare({
@@ -7,7 +7,7 @@ export default function CustomShare({
   setDisplay,
 }: {
   representativeString: string;
-  dispatchCustomState: React.Dispatch<GameReducerPayload>;
+  dispatchCustomState: React.Dispatch<CustomCreationReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
   const link = `https://crossjig.com?id=custom-${representativeString}`;

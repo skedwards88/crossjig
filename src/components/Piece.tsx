@@ -1,3 +1,7 @@
+import {type AdventureReducerPayload} from "../logic/adventure";
+import type {PieceInCustom} from "../logic/customCreationInit";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
+import {type DailyReducerPayload} from "../logic/dailyReducer";
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {
   Letter as LetterType,
@@ -26,7 +30,11 @@ function Letter({
   isHorizontallyValid: boolean | undefined;
   isVerticallyValid: boolean | undefined;
   gameIsSolved: boolean;
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>
+    | React.Dispatch<CustomCreationReducerPayload>;
 }): React.JSX.Element {
   let className = "letter";
   if (gameIsSolved) {
@@ -107,7 +115,7 @@ function LetterBorder({
   );
 }
 
-export default function Piece({
+export default function Piece<T extends PieceInGame | PieceInCustom>({
   piece,
   where,
   overlapGrid,
@@ -116,13 +124,17 @@ export default function Piece({
   gameIsSolved,
   dispatchGameState,
 }: {
-  piece: PieceInGame;
+  piece: T;
   where: "pool" | "board" | "drag";
   overlapGrid?: number[][] | undefined;
   horizontalValidityGrid?: boolean[][] | undefined;
   verticalValidityGrid?: boolean[][] | undefined;
   gameIsSolved: boolean;
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>
+    | React.Dispatch<CustomCreationReducerPayload>;
 }): React.JSX.Element {
   const isOnBoard = where == "board";
   const isDragging = where == "drag";

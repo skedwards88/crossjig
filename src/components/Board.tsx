@@ -6,13 +6,22 @@ import type {
   DragDestination,
   DragDestinationBoard,
   DragState,
+  PieceInBoard,
   PieceInDrag,
   PieceInGame,
   Position,
 } from "../Types";
 import type {GameReducerPayload} from "../logic/gameReducer";
+import type {
+  PieceInCustomBoard,
+  PieceInCustomDrag,
+  PieceInCustom,
+} from "../logic/customCreationInit";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
+import {type DailyReducerPayload} from "../logic/dailyReducer";
+import {type AdventureReducerPayload} from "../logic/adventure";
 
-export default function Board({
+export default function Board<T extends PieceInGame | PieceInCustom>({
   pieces,
   gridSize,
   dragPieceIDs,
@@ -22,17 +31,22 @@ export default function Board({
   indicateValidity,
   customCreation = false,
 }: {
-  pieces: PieceInGame[];
+  pieces: T[];
   gridSize: number;
   dragPieceIDs?: number[];
   dragDestination?: DragDestination;
   gameIsSolved: boolean;
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>
+    | React.Dispatch<CustomCreationReducerPayload>;
   indicateValidity: boolean;
   customCreation?: boolean;
 }): React.JSX.Element {
   const boardPieces = pieces.filter(
-    (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
+    (piece): piece is T & (PieceInBoard | PieceInCustomBoard) =>
+      piece.boardTop != undefined && piece.boardLeft != undefined,
   );
 
   const overlapGrid = customCreation
@@ -63,8 +77,9 @@ export default function Board({
   // Any pieces that are currently being dragged over the board will render on the board as a single drag shadow
   let dragShadow;
   if (dragDestination?.where === "board" && dragPieceIDs) {
-    const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
-      dragPieceIDs.includes(piece.id),
+    const draggedPieces = pieces.filter(
+      (piece): piece is T & (PieceInDrag | PieceInCustomDrag) =>
+        dragPieceIDs.includes(piece.id),
     );
     const grid = getLetterCountPerSquare(gridSize, gridSize, draggedPieces);
     dragShadow = (
@@ -94,7 +109,7 @@ export default function Board({
   );
 }
 
-export function dragDestinationOnBoard({
+export function dragDestinationOnBoard<T extends PieceInGame | PieceInCustom>({
   dragState,
   pointer,
   gridSize,
@@ -103,7 +118,7 @@ export function dragDestinationOnBoard({
   dragState: DragState;
   pointer: Position;
   gridSize: number;
-  pieces: PieceInGame[];
+  pieces: T[];
 }): DragDestinationBoard | undefined {
   const boardRect = document.getElementById("board").getBoundingClientRect();
   if (
@@ -114,8 +129,9 @@ export function dragDestinationOnBoard({
       pointer.y <= boardRect.bottom)
   ) {
     const draggedPieceIDs = dragState.pieceIDs;
-    const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
-      draggedPieceIDs.includes(piece.id),
+    const draggedPieces = pieces.filter(
+      (piece): piece is T & (PieceInDrag | PieceInCustomDrag) =>
+        draggedPieceIDs.includes(piece.id),
     );
 
     const groupHeight = Math.max(

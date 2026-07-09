@@ -4,6 +4,7 @@ import type {
   PieceInGame,
   PieceWithoutLocation,
 } from "../Types";
+import type {PieceInCustom, PieceInCustomBoard} from "./customCreationInit";
 
 export function getGridFromPieces({
   pieces,
@@ -12,7 +13,7 @@ export function getGridFromPieces({
 }:
   | {pieces: PieceWithoutLocation[]; gridSize: number; solution: true}
   | {
-      pieces: PieceInGame[];
+      pieces: (PieceInGame | PieceInCustom)[];
       gridSize: number;
       solution: false;
     }): LetterOrEmpty[][] {
@@ -42,10 +43,12 @@ export function getGridFromPieces({
       continue;
     }
     const letters = piece.letters;
-    let top = solution ? piece.solutionTop : (piece as PieceInBoard).boardTop;
+    let top = solution
+      ? (piece as PieceWithoutLocation).solutionTop
+      : (piece as PieceInBoard | PieceInCustomBoard).boardTop;
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
       let left = solution
-        ? piece.solutionLeft
+        ? (piece as PieceWithoutLocation).solutionLeft
         : (piece as PieceInBoard).boardLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         if (letters[rowIndex][colIndex]) {

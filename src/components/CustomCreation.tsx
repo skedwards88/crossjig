@@ -2,15 +2,15 @@ import Pool from "./Pool";
 import Board from "./Board";
 import DragGroup from "./DragGroup";
 import type {CustomCreationState} from "../logic/customCreationInit";
-import type {GameReducerPayload} from "../logic/gameReducer";
 import type {CSSPropertiesWithVars} from "../Types";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
 
 export default function CustomCreation({
   dispatchCustomState,
   customState,
   validityOpacity,
 }: {
-  dispatchCustomState: React.Dispatch<GameReducerPayload>;
+  dispatchCustomState: React.Dispatch<CustomCreationReducerPayload>;
   customState: CustomCreationState;
   validityOpacity: number;
 }): React.JSX.Element {
@@ -42,8 +42,12 @@ export default function CustomCreation({
         gameIsSolved={false}
         dispatchGameState={dispatchCustomState}
         indicateValidity={validityOpacity > 0}
-        dragPieceIDs={customState.dragState?.pieceIDs}
-        dragDestination={customState.dragState?.destination}
+        {...(customState.dragState && {
+          dragPieceIDs: customState.dragState.pieceIDs,
+        })}
+        {...(customState.dragState && {
+          dragDestination: customState.dragState.destination,
+        })}
         gridSize={customState.gridSize}
         customCreation={true}
       ></Board>

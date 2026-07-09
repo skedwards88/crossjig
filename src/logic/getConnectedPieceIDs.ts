@@ -1,7 +1,8 @@
-import type {PieceInBoard} from "../Types";
+import type {PieceInGame} from "../Types";
+import {type PieceInCustom} from "./customCreationInit";
 
 function getPieceIDGrid(
-  pieces: PieceInBoard[],
+  pieces: PieceInCustom[] | PieceInGame[],
   gridSize: number,
 ): number[][][] {
   // at each space in the grid, find the IDs of the pieces at that space, if any
@@ -11,18 +12,16 @@ function getPieceIDGrid(
   );
 
   for (let index = 0; index < pieces.length; index++) {
-    if (
-      pieces[index].boardTop === undefined &&
-      pieces[index].boardLeft === undefined
-    ) {
+    const piece = pieces[index];
+    if (piece.boardTop === undefined || piece.boardLeft === undefined) {
       continue;
     }
 
-    const letters = pieces[index].letters;
-    const id = pieces[index].id;
-    let top = pieces[index].boardTop;
+    const letters = piece.letters;
+    const id = piece.id;
+    let top = piece.boardTop;
     for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
-      let left = pieces[index].boardLeft;
+      let left = piece.boardLeft;
       for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
         if (letters[rowIndex][colIndex]) {
           // to account for overlapping pieces, use array if IDs instead of singleton ID
@@ -41,7 +40,7 @@ export function getConnectedPieceIDs({
   gridSize,
   draggedPieceID,
 }: {
-  pieces: PieceInBoard[];
+  pieces: PieceInCustom[] | PieceInGame[];
   gridSize: number;
   draggedPieceID: number;
 }): number[] {
@@ -53,7 +52,6 @@ export function getConnectedPieceIDs({
   const idsToCheck = [draggedPieceID];
   let idToCheck: number | undefined;
   while ((idToCheck = idsToCheck.pop()) !== undefined) {
-    // const idToCheck = idsToCheck.pop();
     // For each grid entry, check top/bottom/left/right of grid spaces that contain the current ID
     // If we find a surrounding ID that is not the current ID and we haven't already recorded the ID as touching
     // add the new ID to the list of touching IDs and the list of IDs to check

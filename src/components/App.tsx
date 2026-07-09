@@ -45,6 +45,7 @@ import {
 } from "@skedwards88/shared-components/src/logic/safeStorage";
 import {type DisplayState} from "../Types";
 import {dailyReducer} from "../logic/dailyReducer";
+import {customCreationReducer} from "../logic/customCreationReducer";
 
 export default function App(): React.JSX.Element {
   // *****
@@ -139,7 +140,7 @@ export default function App(): React.JSX.Element {
   );
 
   const [customCreationState, dispatchCustomCreationState] = React.useReducer(
-    gameReducer,
+    customCreationReducer,
     {},
     customCreationInit,
   );
@@ -431,8 +432,9 @@ export default function App(): React.JSX.Element {
                 }
 
                 dispatchGameState({
-                  action: "playCustom",
-                  representativeString,
+                  action: "newGame",
+                  isCustom: true,
+                  seed: representativeString,
                 });
                 setDisplay("game");
               }}
@@ -498,7 +500,6 @@ export default function App(): React.JSX.Element {
             dispatchCustomState={dispatchCustomCreationState}
             validityOpacity={validityOpacity}
             customState={customCreationState}
-            setDisplay={setDisplay}
           ></CustomCreation>
         </div>
       );

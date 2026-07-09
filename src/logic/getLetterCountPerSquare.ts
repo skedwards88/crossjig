@@ -1,11 +1,13 @@
 import type {PieceInBoard, PieceInDrag} from "../Types";
+import {
+  type PieceInCustomBoard,
+  type PieceInCustomDrag,
+} from "./customCreationInit";
 
 // Returns a grid with the number of letters at each location in the grid
-export function getLetterCountPerSquare(
-  height: number,
-  width: number,
-  pieces: (PieceInBoard | PieceInDrag)[],
-): number[][] {
+export function getLetterCountPerSquare<
+  T extends PieceInBoard | PieceInDrag | PieceInCustomBoard | PieceInCustomDrag,
+>(height: number, width: number, pieces: T[]): number[][] {
   const grid = Array(height)
     .fill(undefined)
     .map(() => Array(width).fill(0));

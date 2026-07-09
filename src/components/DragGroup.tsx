@@ -11,22 +11,34 @@ import type {
   PieceInGame,
   Position,
 } from "../Types";
+import type {
+  PieceInCustom,
+  PieceInCustomDrag,
+} from "../logic/customCreationInit";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
+import {type DailyReducerPayload} from "../logic/dailyReducer";
+import {type AdventureReducerPayload} from "../logic/adventure";
 
 // This component is mounted each time a drag starts.
-export default function DragGroup({
+export default function DragGroup<T extends PieceInGame | PieceInCustom>({
   dispatchGameState,
   dragState,
   pieces,
   gridSize,
 }: {
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>
+    | React.Dispatch<CustomCreationReducerPayload>;
   dragState: DragState;
-  pieces: PieceInGame[];
+  pieces: T[];
   gridSize: number;
 }): React.JSX.Element {
   const boardIsShifting = dragState.boardIsShifting;
-  const draggedPieces = pieces.filter((piece): piece is PieceInDrag =>
-    dragState.pieceIDs.includes(piece.id),
+  const draggedPieces = pieces.filter(
+    (piece): piece is T & (PieceInDrag | PieceInCustomDrag) =>
+      dragState.pieceIDs.includes(piece.id),
   );
 
   // Capture the pointer. If the pointer could not be captured successfully, end the drag.
@@ -164,7 +176,7 @@ export default function DragGroup({
   );
 }
 
-function getDragDestination({
+function getDragDestination<T extends PieceInGame | PieceInCustom>({
   dragState,
   pointer,
   gridSize,
@@ -173,7 +185,7 @@ function getDragDestination({
   dragState: DragState;
   pointer: Position;
   gridSize: number;
-  pieces: PieceInGame[];
+  pieces: T[];
 }): DragDestination | undefined {
   let destination = undefined;
   if (!dragState.boardIsShifting) {

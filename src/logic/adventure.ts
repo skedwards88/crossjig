@@ -76,6 +76,6 @@ export function adventureReducer(
         payload.action === "getHint"
           ? currentState.totalHints + 1
           : currentState.totalHints,
-    } as GameStateAdventure;
+    };
   }
 }

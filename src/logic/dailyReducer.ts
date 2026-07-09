@@ -1,14 +1,14 @@
 import type {DayNumber, GameStateDaily, Stats} from "../Types";
 import {gameInit} from "./gameInit";
-import {gameReducer, type GameReducerPayload} from "./gameReducer";
 import {
   isYesterday,
   isToday,
 } from "@skedwards88/shared-components/src/logic/isNDaysAgo";
+import {gameReducer, type GameReducerPayload} from "./gameReducer";
 
-function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
+function getNewDailyStats(currentState: GameStateDaily): Stats | undefined {
   const today = new Date();
-  const lastDateWon = currentGameState.stats.lastDateWon;
+  const lastDateWon = currentState.stats.lastDateWon;
   const wonYesterday = lastDateWon && isYesterday(lastDateWon);
 
   // exit early if we already recorded stats for today
@@ -19,14 +19,14 @@ function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
 
   // If won yesterday, add 1 to the streak
   // Otherwise, reset the streak to 1
-  const newStreak = wonYesterday ? currentGameState.stats.streak + 1 : 1;
+  const newStreak = wonYesterday ? currentState.stats.streak + 1 : 1;
 
-  const newMaxStreak = Math.max(newStreak, currentGameState.stats.maxStreak);
+  const newMaxStreak = Math.max(newStreak, currentState.stats.maxStreak);
 
   // If didn't use any hints today, increment number of wins in the streak without hints
-  const hintsUsedToday = currentGameState.hintTally;
+  const hintsUsedToday = currentState.hintTally;
   const prevNumHintlessInStreak = wonYesterday
-    ? currentGameState.stats.numHintlessInStreak
+    ? currentState.stats.numHintlessInStreak
     : 0;
   const newNumHintlessInStreak = hintsUsedToday
     ? prevNumHintlessInStreak
@@ -34,26 +34,26 @@ function getNewDailyStats(currentGameState: GameStateDaily): Stats | undefined {
 
   // Tally the number of hints used in the streak
   const prevNumHintsInStreak = wonYesterday
-    ? currentGameState.stats.numHintsInStreak
+    ? currentState.stats.numHintsInStreak
     : 0;
   const newNumHintsInStreak = prevNumHintsInStreak + hintsUsedToday;
 
   // Update the number of games won for this weekday
   const dayNumber = today.getDay() as DayNumber; // typecast since ts doesn't know that getDay only returns these numbers
 
-  const numWeekdayWon = currentGameState.stats.days[dayNumber].won + 1;
+  const numWeekdayWon = currentState.stats.days[dayNumber].won + 1;
 
   const numWeekdayWonWithoutHints = hintsUsedToday
-    ? currentGameState.stats.days[dayNumber].noHints
-    : currentGameState.stats.days[dayNumber].noHints + 1;
+    ? currentState.stats.days[dayNumber].noHints
+    : currentState.stats.days[dayNumber].noHints + 1;
 
   const newDays = {
-    ...currentGameState.stats.days,
+    ...currentState.stats.days,
     [dayNumber]: {won: numWeekdayWon, noHints: numWeekdayWonWithoutHints},
   };
 
   return {
-    ...currentGameState.stats,
+    ...currentState.stats,
     lastDateWon: today.toISOString(),
     streak: newStreak,
     maxStreak: newMaxStreak,
@@ -71,7 +71,7 @@ export type DailyReducerPayload =
   | {action: "clearStreakIfNeeded"};
 
 export function dailyReducer(
-  currentGameState: GameStateDaily,
+  currentState: GameStateDaily,
   payload: DailyReducerPayload,
 ): GameStateDaily {
   if (payload.action === "newGame") {
@@ -80,38 +80,38 @@ export function dailyReducer(
       isDaily: true,
     });
   } else if (payload.action === "clearStreakIfNeeded") {
-    const lastDateWon = currentGameState.stats.lastDateWon;
+    const lastDateWon = currentState.stats.lastDateWon;
     const wonYesterday = lastDateWon && isYesterday(lastDateWon);
     const wonToday = lastDateWon && isToday(lastDateWon);
 
     if (wonYesterday || wonToday) {
       // if won in the past day, don't need to clear the streak
-      return currentGameState;
+      return currentState;
     } else {
       // otherwise clear the streak but leave other stats intact
       const newStats = {
-        ...currentGameState.stats,
+        ...currentState.stats,
         streak: 0,
         numHintlessInStreak: 0,
         numHintsInStreak: 0,
       };
 
       return {
-        ...currentGameState,
+        ...currentState,
         stats: newStats,
       };
     }
   } else {
-    const updatedState = gameReducer(currentGameState, payload);
+    const updatedState = gameReducer(currentState, payload);
 
-    if (updatedState.gameIsSolved && !currentGameState.gameIsSolved) {
-      const newStats = getNewDailyStats(currentGameState);
+    if (updatedState.gameIsSolved && !currentState.gameIsSolved) {
+      const newStats = getNewDailyStats(currentState);
       return {
         ...updatedState,
         ...(newStats && {stats: newStats}),
-      } as GameStateDaily;
+      };
     } else {
-      return updatedState as GameStateDaily;
+      return updatedState;
     }
   }
 }

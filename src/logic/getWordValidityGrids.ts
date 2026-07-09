@@ -4,6 +4,7 @@ import {transposeGrid} from "@skedwards88/word_logic";
 import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
 import type {LetterOrEmpty, PieceInGame} from "../Types";
+import type {PieceInCustom} from "./customCreationInit";
 
 function getHorizontalValidityGrid({
   grid,
@@ -66,18 +67,18 @@ function getHorizontalValidityGrid({
   return horizontalValidityGrid;
 }
 
-export function getWordValidityGrids({
+export function getWordValidityGrids<T extends PieceInGame | PieceInCustom>({
   pieces,
   gridSize,
   includeOriginalSolution = true,
 }: {
-  pieces: PieceInGame[];
+  pieces: T[];
   gridSize: number;
   includeOriginalSolution?: boolean;
 }): [boolean[][], boolean[][]] {
   const originalWords = includeOriginalSolution
     ? getWordsFromPieces({
-        pieces,
+        pieces: pieces as PieceInGame[],
         gridSize,
         solution: true,
       })

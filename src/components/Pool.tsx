@@ -5,22 +5,36 @@ import type {GameReducerPayload} from "../logic/gameReducer";
 import type {
   DragDestination,
   DragDestinationPool,
+  PieceInDrag,
   PieceInGame,
   PieceInPool,
   Position,
 } from "../Types";
+import type {
+  PieceInCustom,
+  PieceInCustomDrag,
+  PieceInCustomPool,
+} from "../logic/customCreationInit";
+import {type CustomCreationReducerPayload} from "../logic/customCreationReducer";
+import {type DailyReducerPayload} from "../logic/dailyReducer";
+import {type AdventureReducerPayload} from "../logic/adventure";
 
-export default function Pool({
+export default function Pool<T extends PieceInGame | PieceInCustom>({
   pieces,
   dragDestination,
   dispatchGameState,
 }: {
-  pieces: PieceInGame[];
+  pieces: T[];
   dragDestination?: DragDestination;
-  dispatchGameState: React.Dispatch<GameReducerPayload>;
+  dispatchGameState:
+    | React.Dispatch<GameReducerPayload>
+    | React.Dispatch<AdventureReducerPayload>
+    | React.Dispatch<DailyReducerPayload>
+    | React.Dispatch<CustomCreationReducerPayload>;
 }): React.JSX.Element {
   const poolPieces = pieces.filter(
-    (piece): piece is PieceInPool => piece.poolIndex != undefined,
+    (piece): piece is T & (PieceInPool | PieceInCustomPool) =>
+      piece.poolIndex != undefined,
   );
   poolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
 
@@ -39,7 +53,8 @@ export default function Pool({
 
   if (dragDestination?.where === "pool") {
     const draggedPieces = pieces.filter(
-      (piece) => piece.dragGroupTop != undefined,
+      (piece): piece is T & (PieceInDrag | PieceInCustomDrag) =>
+        piece.dragGroupTop != undefined,
     );
     pieceElements.splice(
       dragDestination.index,
