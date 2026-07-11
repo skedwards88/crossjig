@@ -1,0 +1,423 @@
+import type {PieceInGame} from "../Types";
+import {gameSolvedQ} from "./gameSolvedQ";
+
+describe("gameSolvedQ", () => {
+  test("false if not all pieces used", () => {
+    const pieces: PieceInGame[] = [
+      {
+        letters: [["E"], ["D"]],
+        id: 3,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 4,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 4,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["M", "A", "L"],
+          ["U", "", ""],
+          ["S", "", ""],
+        ],
+        id: 0,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["L", "E", "T"]],
+        id: 1,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 5,
+        boardLeft: 5,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["I"], ["B"], ["R"]],
+        id: 2,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 2,
+        solutionLeft: 4,
+        poolIndex: 0,
+        boardLeft: undefined,
+        boardTop: undefined,
+      },
+      {
+        letters: [["P", "T"]],
+        id: 5,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 6,
+        solutionLeft: 6,
+        poolIndex: 1,
+        boardLeft: undefined,
+        boardTop: undefined,
+      },
+      {
+        letters: [
+          ["", "A", ""],
+          ["C", "R", "Y"],
+          ["", "Y", ""],
+        ],
+        id: 4,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 5,
+        solutionLeft: 3,
+        poolIndex: 2,
+        boardLeft: undefined,
+        boardTop: undefined,
+      },
+    ];
+
+    expect(gameSolvedQ(pieces, 10)).toEqual({
+      gameIsSolved: false,
+      reason: "All pieces must be used",
+    });
+  });
+
+  test("false if pieces overlap", () => {
+    const pieces: PieceInGame[] = [
+      {
+        letters: [["E"], ["D"]],
+        id: 3,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 4,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 4,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["M", "A", "L"],
+          ["U", "", ""],
+          ["S", "", ""],
+        ],
+        id: 0,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["L", "E", "T"]],
+        id: 1,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 5,
+        boardLeft: 5,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["P", "T"]],
+        id: 5,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 6,
+        solutionLeft: 6,
+        boardLeft: 7,
+        boardTop: 7,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["", "A", ""],
+          ["C", "R", "Y"],
+          ["", "Y", ""],
+        ],
+        id: 4,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 5,
+        solutionLeft: 3,
+        boardLeft: 4,
+        boardTop: 6,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["I"], ["B"], ["R"]],
+        id: 2,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 2,
+        solutionLeft: 4,
+        boardTop: 7,
+        poolIndex: undefined,
+        boardLeft: 4,
+      },
+    ];
+
+    expect(gameSolvedQ(pieces, 10)).toEqual({
+      gameIsSolved: false,
+      reason: "No pieces may overlap",
+    });
+  });
+
+  test("false if not all letters are connected", () => {
+    const pieces: PieceInGame[] = [
+      {
+        letters: [["E"], ["D"]],
+        id: 3,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 4,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 4,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["M", "A", "L"],
+          ["U", "", ""],
+          ["S", "", ""],
+        ],
+        id: 0,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["L", "E", "T"]],
+        id: 1,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 5,
+        boardLeft: 5,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["P", "T"]],
+        id: 5,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 6,
+        solutionLeft: 6,
+        boardLeft: 7,
+        boardTop: 7,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["", "A", ""],
+          ["C", "R", "Y"],
+          ["", "Y", ""],
+        ],
+        id: 4,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 5,
+        solutionLeft: 3,
+        boardLeft: 4,
+        boardTop: 6,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["I"], ["B"], ["R"]],
+        id: 2,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 2,
+        solutionLeft: 4,
+        boardTop: 7,
+        poolIndex: undefined,
+        boardLeft: 3,
+      },
+    ];
+
+    expect(gameSolvedQ(pieces, 10)).toEqual({
+      gameIsSolved: false,
+      reason: "All of the letters must connect",
+    });
+  });
+
+  test("false if unknown word", () => {
+    const pieces: PieceInGame[] = [
+      {
+        letters: [["E"], ["D"]],
+        id: 3,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 4,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 4,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["M", "A", "L"],
+          ["U", "", ""],
+          ["S", "", ""],
+        ],
+        id: 0,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["L", "E", "T"]],
+        id: 1,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 5,
+        boardLeft: 5,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["", "A", ""],
+          ["C", "R", "Y"],
+          ["", "Y", ""],
+        ],
+        id: 4,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 5,
+        solutionLeft: 3,
+        boardLeft: 3,
+        boardTop: 5,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["I"], ["B"], ["R"]],
+        id: 2,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 2,
+        solutionLeft: 4,
+        boardTop: 2,
+        poolIndex: undefined,
+        boardLeft: 4,
+      },
+      {
+        letters: [["P", "T"]],
+        id: 5,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 6,
+        solutionLeft: 6,
+        boardLeft: 4,
+        boardTop: 8,
+        poolIndex: undefined,
+      },
+    ];
+
+    expect(gameSolvedQ(pieces, 10)).toEqual({
+      gameIsSolved: false,
+      reason: "Unknown word PT",
+    });
+  });
+  test("true if known words and all connected", () => {
+    const pieces: PieceInGame[] = [
+      {
+        letters: [["E"], ["D"]],
+        id: 3,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 4,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 4,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["M", "A", "L"],
+          ["U", "", ""],
+          ["S", "", ""],
+        ],
+        id: 0,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 2,
+        boardLeft: 2,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["L", "E", "T"]],
+        id: 1,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 1,
+        solutionLeft: 5,
+        boardLeft: 5,
+        boardTop: 1,
+        poolIndex: undefined,
+      },
+      {
+        letters: [
+          ["", "A", ""],
+          ["C", "R", "Y"],
+          ["", "Y", ""],
+        ],
+        id: 4,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 5,
+        solutionLeft: 3,
+        boardLeft: 3,
+        boardTop: 5,
+        poolIndex: undefined,
+      },
+      {
+        letters: [["I"], ["B"], ["R"]],
+        id: 2,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 2,
+        solutionLeft: 4,
+        boardTop: 2,
+        poolIndex: undefined,
+        boardLeft: 4,
+      },
+      {
+        letters: [["P", "T"]],
+        id: 5,
+        dragGroupLeft: undefined,
+        dragGroupTop: undefined,
+        solutionTop: 6,
+        solutionLeft: 6,
+        boardLeft: 6,
+        boardTop: 6,
+        poolIndex: undefined,
+      },
+    ];
+
+    expect(gameSolvedQ(pieces, 10)).toEqual({
+      gameIsSolved: true,
+      reason: "",
+    });
+  });
+});

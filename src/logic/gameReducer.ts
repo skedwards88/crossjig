@@ -121,25 +121,13 @@ function getCompletionData(currentState: GameState): {
   gameIsSolved: boolean;
   gameIsSolvedReason: string;
 } {
-  const allPiecesAreUsed = currentState.pieces.every(
-    (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
-  );
-
-  if (!allPiecesAreUsed) {
-    return {
-      allPiecesAreUsed: false,
-      gameIsSolved: false,
-      gameIsSolvedReason: "",
-    };
-  }
-
   const {gameIsSolved, reason: gameIsSolvedReason} = gameSolvedQ(
     currentState.pieces,
     currentState.gridSize,
   );
 
   return {
-    allPiecesAreUsed: true,
+    allPiecesAreUsed: gameIsSolvedReason != "All pieces must be used",
     gameIsSolved: gameIsSolved,
     gameIsSolvedReason: gameIsSolvedReason,
   };

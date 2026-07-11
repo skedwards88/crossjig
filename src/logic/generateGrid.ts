@@ -1,4 +1,4 @@
-import getPatternsForRow from "./getRegexForRow";
+import getPatternsForRow from "./getPatternsForRow";
 import {shuffleArray, transposeGrid} from "@skedwards88/word_logic";
 import {
   commonWordsLen4,

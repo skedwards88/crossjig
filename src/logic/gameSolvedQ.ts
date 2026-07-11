@@ -47,15 +47,23 @@ export function gameSolvedQ(
   gameIsSolved: boolean;
   reason: string;
 } {
-  const boardPieces = pieces.filter(
+  const allPiecesAreUsed = pieces.every(
     (piece) => piece.boardTop != undefined && piece.boardLeft != undefined,
   );
 
-  const {piecesOverlap, grid} = getPieceOverlaps(boardPieces, gridSize);
+  if (!allPiecesAreUsed) {
+    return {
+      gameIsSolved: false,
+      reason: "All pieces must be used",
+    };
+  }
+
+  const {piecesOverlap, grid} = getPieceOverlaps(pieces, gridSize);
+
   if (piecesOverlap) {
     return {
       gameIsSolved: false,
-      reason: `No letters may overlap`,
+      reason: "No pieces may overlap",
     };
   }
 
