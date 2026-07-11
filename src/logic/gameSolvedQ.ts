@@ -1,6 +1,6 @@
 import {crosswordValidQ} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
-import {getWordsFromPieces} from "./getWordsFromPieces";
+import {getStringsFromPieces} from "./getStringsFromPieces";
 import type {PieceInGame, PieceInBoard, LetterOrEmpty} from "../Types";
 
 function getPieceOverlaps(
@@ -59,7 +59,7 @@ export function gameSolvedQ(
     };
   }
 
-  const originalWords = getWordsFromPieces({
+  const originalWords = getStringsFromPieces({
     pieces,
     gridSize,
     solution: true,

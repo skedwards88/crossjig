@@ -1,5 +1,5 @@
 import {getGridFromPieces} from "../logic/getGridFromPieces";
-import {getWordsFromPieces} from "../logic/getWordsFromPieces";
+import {getStringsFromPieces} from "../logic/getStringsFromPieces";
 import {transposeGrid} from "@skedwards88/word_logic";
 import {isKnown} from "@skedwards88/word_logic";
 import {trie} from "../logic/trie";
@@ -77,7 +77,7 @@ export function getWordValidityGrids<T extends PieceInGame | PieceInCustom>({
   includeOriginalSolution?: boolean;
 }): [boolean[][], boolean[][]] {
   const originalWords = includeOriginalSolution
-    ? getWordsFromPieces({
+    ? getStringsFromPieces({
         pieces: pieces as PieceInGame[],
         gridSize,
         solution: true,

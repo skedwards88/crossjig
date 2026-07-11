@@ -9,6 +9,7 @@ export function assemblePiece({
 }: {
   pieceData: {
     letter: LetterOrEmpty;
+    // top and left are relative. One letter will have top/left as 0/0. The rest will be relative to that position, with positive numbers indicating to down/right and negative numbers indicating to up/left
     top: number; // the vertical location of the letter in the piece
     left: number; // the horizontal location of the letter in the piece
   }[];
