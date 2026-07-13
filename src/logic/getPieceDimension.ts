@@ -1,15 +1,16 @@
 export function getPieceDimension(
   pieceData: {
+    // top and left are relative. One letter will have top/left as 0/0. The rest will be relative to that position, with positive numbers indicating to down/right and negative numbers indicating to up/left
     top: number; // the vertical location of the letter in the piece
     left: number; // the horizontal location of the letter in the piece
   }[],
 ): {
-  numCols: number;
-  numRows: number;
-  maxTop: number;
-  minTop: number;
-  maxLeft: number;
-  minLeft: number;
+  numCols: number; // width of the piece
+  numRows: number; // height of the piece
+  maxTop: number; // the highest "top" value of the incoming pieceData
+  minTop: number; // the lowest "top" value of the incoming pieceData
+  maxLeft: number; // the highest "left" value of the incoming pieceData
+  minLeft: number; // the lowest "left" value of the incoming pieceData
 } {
   const maxTop = pieceData
     .map((data) => data.top)

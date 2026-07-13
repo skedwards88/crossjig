@@ -22,43 +22,49 @@ export default function getPatternsForRow(
     }
     let pattern = "";
     let includesLetter = false;
+    let includesWild = false;
     for (
       let currentPosition = startPosition;
       currentPosition < row.length;
       currentPosition++
     ) {
       if (
-        !row[currentPosition].match("^[A-Z]$") &&
-        grid?.[rowIndex - 1]?.[currentPosition]
+        // If there isn't a letter at this position
+        // and there is a letter above or below this position,
+        // stop building the pattern
+        !row[currentPosition].match("^[A-Za-z]$") &&
+        (grid?.[rowIndex - 1]?.[currentPosition] ||
+          grid?.[rowIndex + 1]?.[currentPosition])
       ) {
         break;
       }
-      if (
-        !row[currentPosition].match("^[A-Z]$") &&
-        grid?.[rowIndex + 1]?.[currentPosition]
-      ) {
-        break;
-      }
+
       // Add the element to the pattern
-      const element = row[currentPosition].match("^[A-Z]$")
+      // (the current letter if there is one, otherwise any letter)
+      const element = row[currentPosition].match("^[A-Za-z]$")
         ? row[currentPosition]
-        : "[A-Z]";
+        : "[A-Za-z]";
       pattern += element;
 
-      if (row[currentPosition].match("^[A-Z]$")) {
+      // Record whether the pattern includes a letter or wild
+      if (element === "[A-Za-z]") {
+        includesWild = true;
+      } else {
         includesLetter = true;
       }
 
       if (
         !(
-          // don't push the pattern if any of these cases are true
-          // no letters
+          // don't push the pattern if any of these cases are true:
+          // no letters in the pattern
           (
             !includesLetter ||
+            // no wild in the pattern
+            !includesWild ||
             // less than minLength
-            currentPosition - startPosition < minLength ||
+            currentPosition - startPosition + 1 < minLength ||
             // the next element is a letter
-            row[currentPosition + 1]?.match("^[A-Z]$")
+            row[currentPosition + 1]?.match("^[A-Za-z]$")
           )
         )
       ) {

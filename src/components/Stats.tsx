@@ -1,7 +1,7 @@
 import type {DayNumber, DisplayState, Stats as StatsType} from "../Types";
 
 function dayLetterFromNumber(
-  number: number,
+  number: DayNumber,
 ): "S" | "M" | "T" | "W" | "R" | "F" {
   switch (number) {
     case 0:
@@ -31,7 +31,7 @@ function StatBar({
 }: {
   won: number;
   maxDays: number;
-  dayNumber: number;
+  dayNumber: DayNumber;
 }): React.JSX.Element {
   return (
     <div className="statsBar">
@@ -47,15 +47,15 @@ function StatBar({
 }
 
 function StatsNumber({
-  number,
+  formattedNumber,
   text,
 }: {
-  number: number;
+  formattedNumber: string;
   text: string;
 }): React.JSX.Element {
   return (
     <div className="statsNumber">
-      <div className="number">{`${number}%`}</div>
+      <div className="number">{formattedNumber}</div>
       <div>{text}</div>
     </div>
   );
@@ -92,22 +92,25 @@ export default function Stats({
     <div className="App stats">
       <div>
         <StatsNumber
-          number={stats.streak}
+          formattedNumber={`${stats.streak}`}
           text={"daily challenge streak"}
         ></StatsNumber>
 
         {stats.streak ? (
           <StatsNumber
-            number={Math.round(
+            formattedNumber={`${Math.round(
               (100 * stats.numHintlessInStreak) / stats.streak,
-            )}
+            )}%`}
             text={"streak without hints"}
           ></StatsNumber>
         ) : (
           <></>
         )}
 
-        <StatsNumber number={stats.maxStreak} text={"max streak"}></StatsNumber>
+        <StatsNumber
+          formattedNumber={`${stats.maxStreak}`}
+          text={"max streak"}
+        ></StatsNumber>
       </div>
 
       <div id="statsDistribution">
