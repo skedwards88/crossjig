@@ -96,20 +96,22 @@ function randomInit({
   useSaved?: boolean;
   seed?: string;
 }): GameStateRandom {
-  if (!seed) {
-    seed = getRandomSeed();
-  }
-
   const savedState = useSaved
     ? getFromStorage<GameStateRandom>("crossjigState")
     : undefined;
 
   if (
-    savedState?.seed &&
+    savedState &&
+    // If a seed was given, it must match the saved seed in order to use saved state
+    (!seed || savedState.seed === seed) &&
     validateSavedState(savedState) &&
     !savedState.gameIsSolved
   ) {
     return {...savedState, isResumedFromSave: true};
+  }
+
+  if (!seed) {
+    seed = getRandomSeed();
   }
 
   const minLetters = numLetters || savedState?.numLetters || 30;
@@ -209,8 +211,9 @@ function customInit({
     : undefined;
 
   if (
-    savedState?.seed &&
-    savedState.seed === seed &&
+    savedState &&
+    // If a seed was given, it must match the saved seed in order to use saved state
+    (!seed || savedState.seed === seed) &&
     validateSavedState(savedState) &&
     !savedState.gameIsSolved
   ) {
