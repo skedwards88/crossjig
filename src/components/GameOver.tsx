@@ -60,7 +60,7 @@ export default function GameOver({
   }
   return (
     <div id="gameOver">
-      <div>Complete!</div>
+      <div>{gameState.isCustom ? "Custom Crossjig solved!" : "Complete!"}</div>
       <button
         onClick={() => {
           dispatchGameState({
@@ -89,6 +89,7 @@ export default function GameOver({
         userId={userId}
         sessionId={sessionId}
       ></Share>
+      <button onClick={() => setDisplay("custom")}>Create a Crossjig</button>
     </div>
   );
 }
