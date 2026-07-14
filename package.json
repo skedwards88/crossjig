@@ -10,9 +10,10 @@
     "dev": "webpack-dev-server --mode development",
     "start": "webpack-dev-server",
     "eslint": "npx eslint --ignore-path .gitignore . --fix",
+    "tslint": "npx tsc --noEmit",
     "prettier": "npx prettier --write .",
     "style": "npx stylelint '**/*.css' --fix",
-    "lint": "npm run eslint && npm run prettier && npm run style"
+    "lint": "npm run eslint && npm run tslint && npm run prettier && npm run style"
   },
   "repository": {
     "type": "git",
@@ -28,8 +29,7 @@
   "dependencies": {
     "@skedwards88/shared-components": "latest",
     "@skedwards88/word_lists": "latest",
-    "@skedwards88/word_logic": "4.0.2",
-    "lodash.clonedeep": "^4.5.0",
+    "@skedwards88/word_logic": "4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "seedrandom": "3.0.5"
@@ -39,6 +39,13 @@
     "@babel/plugin-syntax-import-assertions": "^7.22.5",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.29.7",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/seedrandom": "^3.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.62.0",
+    "@typescript-eslint/parser": "^8.62.0",
     "babel-jest": "^29.7.0",
     "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^10.2.4",
@@ -53,6 +60,7 @@
     "style-loader": "^3.3.1",
     "stylelint": "^14.6.0",
     "stylelint-config-standard": "^25.0.0",
+    "typescript": "^6.0.3",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",

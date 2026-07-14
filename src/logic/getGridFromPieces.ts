@@ -1,0 +1,66 @@
+import type {
+  LetterOrEmpty,
+  PieceInBoard,
+  PieceInGame,
+  PieceWithoutLocation,
+} from "../Types";
+import type {PieceInCustom, PieceInCustomBoard} from "./customCreationInit";
+
+export function getGridFromPieces({
+  pieces,
+  gridSize,
+  solution,
+}:
+  | {pieces: PieceWithoutLocation[]; gridSize: number; solution: true}
+  | {
+      pieces: (PieceInGame | PieceInCustom)[];
+      gridSize: number;
+      solution: false;
+    }): LetterOrEmpty[][] {
+  // Compiles a 2D array representing the letter locations on the board
+  // If solution is true, uses the solutionTop/solutionLeft value of each piece
+  // otherwise, uses the boardTop/boardLeft value
+  if (pieces === undefined) {
+    throw new Error("Pieces must be defined.");
+  }
+
+  if (gridSize === undefined) {
+    throw new Error("Grid size must be defined.");
+  }
+
+  const grid: LetterOrEmpty[][] = Array.from({length: gridSize}, () =>
+    Array.from({length: gridSize}, () => ""),
+  );
+
+  for (const piece of pieces) {
+    if (
+      !solution &&
+      (!("boardTop" in piece) ||
+        piece.boardTop == undefined ||
+        !("boardLeft" in piece) ||
+        piece.boardLeft == undefined)
+    ) {
+      continue;
+    }
+    const letters = piece.letters;
+    let top = solution
+      ? (piece as PieceWithoutLocation).solutionTop
+      : (piece as PieceInBoard | PieceInCustomBoard).boardTop;
+    for (let rowIndex = 0; rowIndex < letters.length; rowIndex++) {
+      let left = solution
+        ? (piece as PieceWithoutLocation).solutionLeft
+        : (piece as PieceInBoard).boardLeft;
+      for (let colIndex = 0; colIndex < letters[rowIndex].length; colIndex++) {
+        if (letters[rowIndex][colIndex]) {
+          if (grid[top][left] == undefined) {
+            throw new Error("A piece falls outside of the grid boundary.");
+          }
+          grid[top][left] = letters[rowIndex][colIndex];
+        }
+        left += 1;
+      }
+      top += 1;
+    }
+  }
+  return grid;
+}
