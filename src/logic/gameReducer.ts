@@ -1,5 +1,5 @@
 import {gameInit} from "./gameInit";
-import type {GameState, PieceInGame, PieceInBoard, PieceInPool} from "../Types";
+import type {GameState, PieceInGame} from "../Types";
 import {gameSolvedQ} from "./gameSolvedQ";
 import {dragReducer, type DragReducerPayload} from "./dragReducer";
 
@@ -29,7 +29,9 @@ function giveHint(currentState: GameState): PieceInGame[] {
     if (boardLeft === undefined || boardTop === undefined) {
       continue;
     }
+
     // if the piece is on the board, check whether it is within the shift range
+    // (i.e. if the diff between the piece's actual position and its official solution position is <= the maximum amount that the official solution can shift)
     //   if yes, set the shift and break loop
     const actualShiftLeft = solutionLeft - boardLeft;
     const actualShiftUp = solutionTop - boardTop;
@@ -45,68 +47,59 @@ function giveHint(currentState: GameState): PieceInGame[] {
     }
   }
 
-  let realignedPieces: PieceInGame[] = [];
+  // Correctly align the pieces on the board
+  const realignedPieces: PieceInGame[] = [];
   let numRealigned = 0;
-  // if we found a piece on the board that is within the shift range, realign all other pieces on the board to match if they don't already
-  if (shiftLeft != undefined && shiftUp != undefined) {
-    for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      const {boardLeft, boardTop, solutionLeft, solutionTop} =
-        pieces[pieceIndex];
-      // if the piece is not on the board, skip to the next piece
-      if (boardLeft === undefined || boardTop === undefined) {
-        realignedPieces.push(pieces[pieceIndex]);
-        continue;
-      }
-      const newLeft = solutionLeft - shiftLeft;
-      const newTop = solutionTop - shiftUp;
-      const realignedPiece = {
-        ...(pieces[pieceIndex] as PieceInBoard),
-        boardLeft: newLeft,
-        boardTop: newTop,
-        poolIndex: undefined,
-      };
-      realignedPieces.push(realignedPiece);
-      if (boardLeft != newLeft || boardTop != newTop) {
-        numRealigned++;
-      }
+
+  for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
+    const {boardLeft, boardTop, solutionLeft, solutionTop} = pieces[pieceIndex];
+
+    // if the piece is not on the board, skip to the next piece
+    if (boardLeft === undefined || boardTop === undefined) {
+      realignedPieces.push(pieces[pieceIndex]);
+      continue;
     }
-  } else {
+
+    // if we found a piece on the board that is within the shift range,
+    //   realign all other pieces on the board to match if they don't already.
     // if didn't find any pieces on the board within the shift range,
-    //   move all pieces on the board into place
-    for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
-      const {boardLeft, boardTop, solutionLeft, solutionTop} =
-        pieces[pieceIndex];
-      // if the piece is not on the board, skip to the next piece
-      if (boardLeft === undefined || boardTop === undefined) {
-        realignedPieces = [...realignedPieces, pieces[pieceIndex]];
-        continue;
-      }
-      const realignedPiece = {
-        ...(pieces[pieceIndex] as PieceInBoard),
-        boardLeft: solutionLeft,
-        boardTop: solutionTop,
-        poolIndex: undefined,
-      };
-      realignedPieces.push(realignedPiece);
-      if (boardLeft != solutionLeft || boardTop != solutionTop) {
-        numRealigned++;
-      }
+    //   move all pieces on the board into place based on the official solution
+    const newLeft = solutionLeft - (shiftLeft ?? 0);
+    const newTop = solutionTop - (shiftUp ?? 0);
+    const realignedPiece = {
+      ...pieces[pieceIndex],
+      boardLeft: newLeft,
+      boardTop: newTop,
+      poolIndex: undefined,
+      dragGroupTop: undefined,
+      dragGroupLeft: undefined,
+    };
+    realignedPieces.push(realignedPiece);
+
+    // Record whether we shifted the piece
+    if (boardLeft != newLeft || boardTop != newTop) {
+      numRealigned++;
     }
   }
 
   // if we didn't need to move any pieces that are already on the board, move one new piece onto the board
   if (!numRealigned) {
-    realignedPieces = [...pieces];
-    for (let pieceIndex = 0; pieceIndex < pieces.length; pieceIndex++) {
+    for (
+      let pieceIndex = 0;
+      pieceIndex < realignedPieces.length;
+      pieceIndex++
+    ) {
       const {boardLeft, boardTop, solutionLeft, solutionTop} =
-        pieces[pieceIndex];
+        realignedPieces[pieceIndex];
       // if the piece is not on the board, add it to the board and break the loop
       if (boardLeft === undefined || boardTop === undefined) {
         realignedPieces[pieceIndex] = {
-          ...(pieces[pieceIndex] as PieceInPool),
-          boardLeft: shiftLeft ? solutionLeft - shiftLeft : solutionLeft,
-          boardTop: shiftUp ? solutionTop - shiftUp : solutionTop,
+          ...realignedPieces[pieceIndex],
+          boardLeft: solutionLeft - (shiftLeft ?? 0),
+          boardTop: solutionTop - (shiftUp ?? 0),
           poolIndex: undefined,
+          dragGroupTop: undefined,
+          dragGroupLeft: undefined,
         };
         break;
       }
