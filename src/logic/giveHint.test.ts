@@ -1,11 +1,48 @@
 import {giveHint} from "./giveHint";
-import type {GameStateRandom, PieceInGame} from "../Types";
+import type {
+  GameStateRandom,
+  Letter,
+  LetterOrEmpty,
+  PieceInGame,
+} from "../Types";
 
+function numberToLetter(number: number): Letter {
+  const letters: Letter[] = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+  return letters[number % letters.length];
+}
 function fillInUndefinedPieceFields(
   partialPiece: {
     id: number;
     solutionTop: number;
     solutionLeft: number;
+    letters?: LetterOrEmpty[][];
   } & ({poolIndex: number} | {boardTop: number; boardLeft: number}),
 ): PieceInGame {
   return {
@@ -64,8 +101,19 @@ describe("giveHint", () => {
   });
 
   test("when no piece is on the board, places the first off-board piece onto the board at its solution position", () => {
-    const pieces = [{solutionTop: 1, solutionLeft: 1}].map((piece, index) =>
-      fillInUndefinedPieceFields({id: index, poolIndex: index, ...piece}),
+    const pieces = [
+      {solutionTop: 1, solutionLeft: 1},
+      {solutionTop: 3, solutionLeft: 1},
+      {solutionTop: 3, solutionLeft: 2},
+      {solutionTop: 4, solutionLeft: 6},
+      {solutionTop: 4, solutionLeft: 3},
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        poolIndex: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
     );
 
     const state = fillInUndefinedStateFields({
@@ -84,6 +132,7 @@ describe("giveHint", () => {
     };
 
     expect(result[0]).toMatchObject(expectedNewPiece);
+
     for (let index = 1; index < state.pieces.length; index++) {
       expect(result[index]).toMatchObject(state.pieces[index]);
     }
@@ -97,7 +146,13 @@ describe("giveHint", () => {
       {solutionTop: 2, solutionLeft: 2, boardTop: 3, boardLeft: 5},
       {solutionTop: 4, solutionLeft: 1, boardTop: 3, boardLeft: 5},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -127,7 +182,13 @@ describe("giveHint", () => {
       {solutionTop: 2, solutionLeft: 2, boardTop: 3, boardLeft: 5},
       {solutionTop: 4, solutionLeft: 1, boardTop: 3, boardLeft: 5},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -157,7 +218,13 @@ describe("giveHint", () => {
       {solutionTop: 2, solutionLeft: 2, boardTop: 3, boardLeft: 1},
       {solutionTop: 4, solutionLeft: 1, boardTop: 3, boardLeft: 5},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -191,7 +258,13 @@ describe("giveHint", () => {
       {solutionTop: 2, solutionLeft: 2, boardTop: 4, boardLeft: 1},
       {solutionTop: 4, solutionLeft: 1, boardTop: 3, boardLeft: 5},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -225,7 +298,13 @@ describe("giveHint", () => {
       {solutionTop: 5, solutionLeft: 2, poolIndex: 2},
       {solutionTop: 4, solutionLeft: 3, boardTop: 6, boardLeft: 1},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -259,7 +338,13 @@ describe("giveHint", () => {
       {solutionTop: 5, solutionLeft: 2, poolIndex: 2},
       {solutionTop: 4, solutionLeft: 1, boardTop: 4, boardLeft: 1},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
@@ -301,7 +386,13 @@ describe("giveHint", () => {
       {solutionTop: 5, solutionLeft: 2, poolIndex: 2},
       {solutionTop: 4, solutionLeft: 3, boardTop: 6, boardLeft: 1},
       {solutionTop: 3, solutionLeft: 3, poolIndex: 3},
-    ].map((piece, index) => fillInUndefinedPieceFields({id: index, ...piece}));
+    ].map((piece, index) =>
+      fillInUndefinedPieceFields({
+        id: index,
+        letters: [[numberToLetter(index)]],
+        ...piece,
+      }),
+    );
 
     const state = fillInUndefinedStateFields({
       pieces,
