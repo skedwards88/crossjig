@@ -62,7 +62,7 @@ export function generatePuzzle({
     foundPuzzleWithAcceptableSingletons =
       numSingletons / numPieces < maxFractionSingles;
 
-    if (foundPuzzleWithAcceptableSingletons || count > 100) {
+    if (foundPuzzleWithAcceptableSingletons || count > 400) {
       // Pad the puzzle with a square on each side and recenter the solution
       maxShiftRight++;
       maxShiftDown++;
