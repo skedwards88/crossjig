@@ -7,11 +7,12 @@ on:
       - "README.md"
       - "TODO.md"
       - ".github/ISSUE_TEMPLATE/*"
-      - ".eslintrc.json"
+      - "eslint.config.mjs"
       - ".gitignore"
       - ".prettierignore"
       - ".prettierrc.json"
       - ".stylelintrc.json"
+      - "tsconfig.json"
   workflow_dispatch:
   repository_dispatch:
     types: [update-word-lists]
