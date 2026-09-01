@@ -20,7 +20,6 @@ export function generatePuzzle({
   // Create a new seedable random number generator
   const pseudoRandomGenerator = seed ? seedrandom(seed) : seedrandom();
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     count++;
 

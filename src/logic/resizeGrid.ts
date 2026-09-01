@@ -39,7 +39,7 @@ export function resizeGrid(grid: LetterOrEmpty[][]): LetterOrEmpty[][] {
   } else {
     // or pad
     const newRows = Array.from({length: targetPadTop - maxShiftUp}, () =>
-      Array(paddedGrid[0].length).fill(""),
+      Array<LetterOrEmpty>(paddedGrid[0].length).fill(""),
     );
     paddedGrid = [...newRows, ...paddedGrid];
   }
@@ -50,7 +50,7 @@ export function resizeGrid(grid: LetterOrEmpty[][]): LetterOrEmpty[][] {
   } else {
     // or pad
     const newRows = Array.from({length: targetPadBottom - maxShiftDown}, () =>
-      Array(paddedGrid[0].length).fill(""),
+      Array<LetterOrEmpty>(paddedGrid[0].length).fill(""),
     );
     paddedGrid = [...paddedGrid, ...newRows];
   }
@@ -61,7 +61,7 @@ export function resizeGrid(grid: LetterOrEmpty[][]): LetterOrEmpty[][] {
   } else {
     // or pad
     paddedGrid = paddedGrid.map((row) => [
-      ...new Array(targetPadLeft - maxShiftLeft).fill(""),
+      ...new Array<LetterOrEmpty>(targetPadLeft - maxShiftLeft).fill(""),
       ...row,
     ]);
   }
@@ -73,7 +73,7 @@ export function resizeGrid(grid: LetterOrEmpty[][]): LetterOrEmpty[][] {
     // or pad
     paddedGrid = paddedGrid.map((row) => [
       ...row,
-      ...new Array(targetPadRight - maxShiftRight).fill(""),
+      ...new Array<LetterOrEmpty>(targetPadRight - maxShiftRight).fill(""),
     ]);
   }
 

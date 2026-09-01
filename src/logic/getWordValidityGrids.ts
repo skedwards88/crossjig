@@ -21,7 +21,7 @@ function getHorizontalValidityGrid({
 
   const horizontalValidityGrid = Array(height)
     .fill(undefined)
-    .map(() => Array(width).fill(false));
+    .map(() => Array<boolean>(width).fill(false));
 
   for (const [rowIndex, row] of grid.entries()) {
     let word = "";

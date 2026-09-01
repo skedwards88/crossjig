@@ -43,7 +43,7 @@ export function convertRepresentativeStringToGrid(
       list.push(decipheredLetter);
     } else {
       const numSpaces = parseInt(value);
-      list = [...list, ...Array(numSpaces).fill("")];
+      list = [...list, ...Array<LetterOrEmpty>(numSpaces).fill("")];
     }
   }
 

@@ -10,7 +10,7 @@ export function getLetterCountPerSquare<
 >(height: number, width: number, pieces: T[]): number[][] {
   const grid = Array(height)
     .fill(undefined)
-    .map(() => Array(width).fill(0));
+    .map(() => Array<number>(width).fill(0));
 
   for (const piece of pieces) {
     const letters = piece.letters;

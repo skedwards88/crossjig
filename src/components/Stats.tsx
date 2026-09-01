@@ -20,7 +20,7 @@ function dayLetterFromNumber(
       return "S";
 
     default:
-      throw new Error(`Unexpected day number ${number}`);
+      throw new Error(`Unexpected day number ${String(number)}`);
   }
 }
 

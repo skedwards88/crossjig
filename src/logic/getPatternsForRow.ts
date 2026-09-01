@@ -53,21 +53,17 @@ export default function getPatternsForRow(
         includesLetter = true;
       }
 
-      if (
-        !(
-          // don't push the pattern if any of these cases are true:
-          // no letters in the pattern
-          (
-            !includesLetter ||
-            // no wild in the pattern
-            !includesWild ||
-            // less than minLength
-            currentPosition - startPosition + 1 < minLength ||
-            // the next element is a letter
-            row[currentPosition + 1]?.match("^[A-Za-z]$")
-          )
-        )
-      ) {
+      if (!(
+        // don't push the pattern if any of these cases are true:
+        // no letters in the pattern
+        !includesLetter ||
+        // no wild in the pattern
+        !includesWild ||
+        // less than minLength
+        currentPosition - startPosition + 1 < minLength ||
+        // the next element is a letter
+        row[currentPosition + 1]?.match("^[A-Za-z]$")
+      )) {
         patterns.push([pattern, startPosition]);
       }
     }

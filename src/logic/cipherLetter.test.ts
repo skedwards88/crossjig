@@ -1,4 +1,3 @@
-import type {Letter} from "../Types";
 import {cipherLetter} from "./cipherLetter";
 
 describe("cipherLetter", () => {
@@ -25,7 +24,7 @@ describe("cipherLetter", () => {
   test("ciphering a letter and then deciphering it with the negative shift returns the original letter", () => {
     const letter = "M";
     const shift = 5;
-    const cipheredLetter = cipherLetter(letter, shift) as Letter;
+    const cipheredLetter = cipherLetter(letter, shift);
     const decipheredLetter = cipherLetter(cipheredLetter, -shift);
     expect(decipheredLetter).toBe(letter);
   });

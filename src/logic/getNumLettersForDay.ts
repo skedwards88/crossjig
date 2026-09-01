@@ -1,6 +1,6 @@
 import type {DayNumber} from "../Types";
 
-export function getNumLettersForDay(dayNumber?: DayNumber | undefined): number {
+export function getNumLettersForDay(dayNumber?: DayNumber): number {
   if (dayNumber === undefined) {
     dayNumber = new Date().getDay() as DayNumber; // typecast since ts doesn't know that getDay only returns these numbers
   }

@@ -19,11 +19,9 @@ export default function CustomShare({
       <div id="custom-message-buttons">
         <button
           onClick={() => {
-            try {
-              navigator.clipboard.writeText(link);
-            } catch (error) {
+            navigator.clipboard.writeText(link).catch((error) => {
               console.log("Error copying", error);
-            }
+            });
           }}
         >
           Copy

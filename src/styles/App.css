@@ -4,7 +4,7 @@ html {
   --default-font-size: calc(var(--default-box-size) * 0.9);
   --dark-color: rgb(55 54 71);
   --shadow-color: rgb(20 19 25);
-  --drag-color: rgba(77 76 99);
+  --drag-color: rgb(77 76 99);
   --light-color: rgb(239 239 239);
 
   background-color: var(--dark-color);

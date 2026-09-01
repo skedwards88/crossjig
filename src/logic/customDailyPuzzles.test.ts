@@ -13,15 +13,12 @@ describe("customDailyPuzzles", () => {
       const allWords = getWordsFromGrid(grid);
       for (const word of allWords) {
         const {isWord} = isKnown(word, trie);
-        if (!isWord) {
-          throw new Error(
-            `Unknown word ${word} in puzzle ${representativeString}`,
-          );
-        }
+        expect(isWord).toBe(true);
       }
     }
   });
 
+  // eslint-disable-next-line jest/expect-expect -- intentionally warn-only, not a hard assertion
   test("All custom daily puzzles should have an appropriate number of letters for the day", () => {
     for (const [dateString, representativeString] of Object.entries(
       customDailyPuzzles,

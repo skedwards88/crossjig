@@ -130,10 +130,7 @@ export type GameStateAdventure = BaseGameState & {
 };
 
 export type GameState =
-  | GameStateRandom
-  | GameStateDaily
-  | GameStateCustom
-  | GameStateAdventure;
+  GameStateRandom | GameStateDaily | GameStateCustom | GameStateAdventure;
 
 export type Stats = {
   lastDateWon?: string | undefined;

@@ -107,8 +107,8 @@ function updateStateForDragStart<S extends GameState | CustomCreationState>({
 
   const newPieces = currentState.isCustomCreating
     ? updatePiecesForDragInCustomCreating({
-        piecesBeingDragged: piecesBeingDragged as PieceInCustom[],
-        piecesNotBeingDragged: piecesNotBeingDragged as PieceInCustom[],
+        piecesBeingDragged: piecesBeingDragged,
+        piecesNotBeingDragged: piecesNotBeingDragged,
         isDraggingFromPool: dragGroupBoardTop === undefined,
         dragGroupBoardTop,
         dragGroupBoardLeft,
@@ -186,7 +186,7 @@ function updatePiecesForDragNotInCustomCreating({
       (piece) => piece.poolIndex !== undefined,
     );
     remainingPoolPieces.sort((a, b) => a.poolIndex - b.poolIndex);
-    const poolIndices = Array(newPieces.length).fill(-1);
+    const poolIndices = Array<number>(newPieces.length).fill(-1);
     remainingPoolPieces.forEach((piece, index) => {
       poolIndices[piece.id] = index;
     });
@@ -221,7 +221,7 @@ function updatePiecesForDragInCustomCreating({
           ...piece,
           letters: [[""]] as LetterOrEmpty[][],
           id: (piece.id + 1) * -1,
-        } as PieceInCustom;
+        };
       })
     : [];
 
@@ -399,8 +399,8 @@ function updateStateForDragEndNotInCustomCreating<S extends GameState>(
             dragGroupLeft: undefined,
           } as PieceInPool)
         : piece.poolIndex !== undefined && piece.poolIndex >= destination.index
-        ? {...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length}
-        : piece;
+          ? {...piece, poolIndex: piece.poolIndex + draggedPieceIDs.length}
+          : piece;
   }
   return updateCompletionState({
     ...currentState,

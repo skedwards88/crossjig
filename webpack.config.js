@@ -33,9 +33,8 @@ module.exports = (env, argv) => {
 
   const privacyHtmlPlugin = new HtmlWebpackPlugin({
     filename: "privacy.html",
-    template: require.resolve(
-      "@skedwards88/shared-components/src/components/privacy.template.html",
-    ),
+    template:
+      require.resolve("@skedwards88/shared-components/src/components/privacy.template.html"),
     inject: false,
     templateParameters: {
       appName,

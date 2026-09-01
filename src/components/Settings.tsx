@@ -1,6 +1,15 @@
 import type {GameReducerPayload} from "../logic/gameReducer";
 import type {CSSPropertiesWithVars, DisplayState, GameState} from "../Types";
 
+interface NewGameFormElements extends HTMLFormControlsCollection {
+  numLetters: HTMLInputElement;
+  validityOpacity: HTMLInputElement;
+}
+
+interface NewGameFormElement extends HTMLFormElement {
+  readonly elements: NewGameFormElements;
+}
+
 export default function Settings({
   setDisplay,
   dispatchGameState,
@@ -14,13 +23,14 @@ export default function Settings({
   setValidityOpacity: React.Dispatch<React.SetStateAction<number>>;
   originalValidityOpacity: number;
 }): React.JSX.Element {
-  function handleNewGame(event: React.SubmitEvent<HTMLFormElement>): void {
+  function handleNewGame(event: React.SubmitEvent<NewGameFormElement>): void {
     event.preventDefault();
     const newNumLetters = parseInt(
       event.currentTarget.elements.numLetters.value,
     );
+
     const newValidityOpacity =
-      event.currentTarget.elements.validityOpacity.value / 100;
+      parseInt(event.currentTarget.elements.validityOpacity.value) / 100;
 
     setValidityOpacity(newValidityOpacity);
 
@@ -32,7 +42,7 @@ export default function Settings({
   }
 
   return (
-    <form className="App settings" onSubmit={(e) => handleNewGame(e)}>
+    <form className="App settings" onSubmit={handleNewGame}>
       <div id="settings">
         <div className="setting">
           <div className="setting-description">
@@ -40,7 +50,7 @@ export default function Settings({
           </div>
           <div id="numLetters-container">
             <div id="numLetters-info" className="setting-info">
-              -
+              –
             </div>
             <input
               id="numLetters"
@@ -72,8 +82,9 @@ export default function Settings({
             </div>
           </div>
           <div id="validityOpacity-container">
+            {/* Ignore the warning about the en dash being confusing here */}
             <div id="validityOpacity-info" className="setting-info">
-              -
+              –
             </div>
             <input
               id="validityOpacity"
@@ -88,6 +99,7 @@ export default function Settings({
                 setValidityOpacity(newValidityOpacity);
               }}
             />
+            {/* Ignore the warning about the en dash being confusing here */}
             <div id="validityOpacity-info" className="setting-info">
               +
             </div>

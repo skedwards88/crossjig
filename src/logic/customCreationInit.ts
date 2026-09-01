@@ -57,9 +57,7 @@ export type PieceInCustomDrag = PieceInCustomWithoutLocation & {
 };
 
 export type PieceInCustom =
-  | PieceInCustomPool
-  | PieceInCustomBoard
-  | PieceInCustomDrag;
+  PieceInCustomPool | PieceInCustomBoard | PieceInCustomDrag;
 
 export function customCreationInit({
   useSaved = true,

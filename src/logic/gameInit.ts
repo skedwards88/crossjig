@@ -240,7 +240,7 @@ function customInit({
     });
   } catch (error) {
     console.error(
-      `Error generating custom puzzle from seed ${seed}. Will proceed to generate random game instead. Caught error: ${error}`,
+      `Error generating custom puzzle from seed ${seed}. Will proceed to generate random game instead. Caught error: ${String(error)}`,
     );
 
     puzzle = generatePuzzle({

@@ -14,11 +14,7 @@ import Share from "@skedwards88/shared-components/src/components/Share";
 import CustomError from "./CustomError";
 import CustomLookup from "./CustomLookup";
 import WhatsNew from "./WhatsNew";
-import {
-  handleAppInstalled,
-  handleBeforeInstallPrompt,
-  type BeforeInstallPromptEvent,
-} from "@skedwards88/shared-components/src/logic/handleInstall";
+import {useInstallPrompt} from "@skedwards88/shared-components/src/logic/handleInstall";
 import {handleShare} from "@skedwards88/shared-components/src/logic/handleShare";
 import Settings from "./Settings";
 import {gameInit} from "../logic/gameInit";
@@ -48,44 +44,11 @@ import {dailyReducer} from "../logic/dailyReducer";
 import {customCreationReducer} from "../logic/customCreationReducer";
 
 export default function App(): React.JSX.Element {
-  // *****
-  // Install handling setup
-  // *****
-  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
-  const [installPromptEvent, setInstallPromptEvent] =
-    React.useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallButton, setShowInstallButton] =
-    React.useState<boolean>(true);
+  const {userId, sessionId} = useMetadataContext();
 
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = (event: BeforeInstallPromptEvent): void =>
-      handleBeforeInstallPrompt(
-        event,
-        setInstallPromptEvent,
-        setShowInstallButton,
-      );
-
-    window.addEventListener("beforeinstallprompt", listener);
-
-    return (): void =>
-      window.removeEventListener("beforeinstallprompt", listener);
-  }, []);
-
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = (): void =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
-
-    window.addEventListener("appinstalled", listener);
-
-    return (): void => window.removeEventListener("appinstalled", listener);
-  }, []);
-  // *****
-  // End install handling setup
-  // *****
+  // This must live at the top level component, not in InstallOverview where it is used, since the InstallOverview is not rendered initially and therefore misses its chance to attach the listeners
+  const {installPromptEvent, showInstallButton, handleInstall} =
+    useInstallPrompt({userId, sessionId});
 
   // If a query string was passed,
   // parse it to get the data to regenerate the game described by the query string
@@ -151,7 +114,7 @@ export default function App(): React.JSX.Element {
     (arg) => gameInit(arg), // this syntax (instead of just gameInit) is required for TS to correctly interpret the overloads
   );
 
-  const [, setLastVisible] = React.useState<number>(Date.now());
+  const [, setLastVisible] = React.useState<number>(() => Date.now());
 
   function handleCustomGeneration(): string {
     // If there is nothing to share, display a message with errors
@@ -236,8 +199,6 @@ export default function App(): React.JSX.Element {
   React.useEffect(() => {
     saveToStorage("crossjigAdventureState", adventureState);
   }, [adventureState]);
-
-  const {userId, sessionId} = useMetadataContext();
 
   // Store the previous state so that we can infer which analytics events to send
   const previousGameStateRef = React.useRef(gameState);
@@ -541,9 +502,9 @@ export default function App(): React.JSX.Element {
       return (
         <InstallOverview
           setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
           installPromptEvent={installPromptEvent}
+          showInstallButton={showInstallButton}
+          handleInstall={handleInstall}
           googleAppLink={
             "https://play.google.com/store/apps/details?id=com.crossjig.twa&hl=en_US"
           }
