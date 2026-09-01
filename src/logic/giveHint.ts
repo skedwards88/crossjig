@@ -5,6 +5,38 @@ function pieceToKey(piece: PieceInGame): string {
   return JSON.stringify(piece.letters);
 }
 
+// Used to sort duplicate pieces by their distance to the net commonestRealignment
+function getDistanceFromRealignment({
+  pieceIndex,
+  boardTop,
+  boardLeft,
+  commonestRealignmentTop,
+  commonestRealignmentLeft,
+  pieces,
+  effectiveShiftUp,
+  effectiveShiftLeft,
+}: {
+  pieceIndex: number;
+  boardTop: number;
+  boardLeft: number;
+  commonestRealignmentTop: number;
+  commonestRealignmentLeft: number;
+  pieces: PieceInGame[];
+  effectiveShiftUp: number;
+  effectiveShiftLeft: number;
+}): number {
+  const {solutionTop, solutionLeft} = pieces[pieceIndex];
+  return (
+    Math.abs(
+      commonestRealignmentTop - (boardTop - (solutionTop - effectiveShiftUp)),
+    ) +
+    Math.abs(
+      commonestRealignmentLeft -
+        (boardLeft - (solutionLeft - effectiveShiftLeft)),
+    )
+  );
+}
+
 // Pick the most common realignment
 // (default to 0 realignment if there weren't realignments)
 // In the event of a tie, only one realignment is still returned
@@ -98,12 +130,48 @@ export function giveHint(currentState: GameState): PieceInGame[] {
     }
   }
 
+  const effectiveShiftLeft = shiftLeft ?? 0;
+  const effectiveShiftUp = shiftUp ?? 0;
+
   // Correctly align the pieces on the board
   const realignedPieces = structuredClone(pieces);
 
   let numRealigned = 0;
 
   const realignments: (undefined | {topDiff: number; leftDiff: number})[] = [];
+
+  // ***Mutative function*** (Mutates realignedPieces, numRealigned, realignments)
+  // Moves a piece to its official solution position (adjusted by the shift found above),
+  // records how far it moved, and tracks whether it actually needed to move.
+  // Also clears pool/drag-group placement, which is required
+  // when resolving duplicate pieces that were previously sitting in the pool.
+  function applyRealignment(
+    pieceIndex: number,
+    boardLeft: number,
+    boardTop: number,
+  ): void {
+    const {solutionLeft, solutionTop} = pieces[pieceIndex];
+    const newLeft = solutionLeft - effectiveShiftLeft;
+    const newTop = solutionTop - effectiveShiftUp;
+
+    realignedPieces[pieceIndex] = {
+      ...pieces[pieceIndex],
+      boardLeft: newLeft,
+      boardTop: newTop,
+      poolIndex: undefined,
+      dragGroupTop: undefined,
+      dragGroupLeft: undefined,
+    };
+
+    if (boardLeft != newLeft || boardTop != newTop) {
+      numRealigned++;
+    }
+
+    realignments[pieceIndex] = {
+      topDiff: boardTop - newTop,
+      leftDiff: boardLeft - newLeft,
+    };
+  }
 
   // Will do the duplicate and non-duplicate pieces separately
   const duplicateGroupedIndexes: number[][] = [];
@@ -120,32 +188,14 @@ export function giveHint(currentState: GameState): PieceInGame[] {
 
   // Align the non duplicates first:
   nonDuplicateIndexes.forEach((pieceIndex) => {
-    const {boardLeft, boardTop, solutionLeft, solutionTop} = pieces[pieceIndex];
+    const {boardLeft, boardTop} = pieces[pieceIndex];
 
     // if the piece is not on the board, skip to the next piece
     if (boardLeft === undefined || boardTop === undefined) {
       return;
     }
 
-    // Move the piece to its official solution, adjusted by the offset found above
-    const newLeft = solutionLeft - (shiftLeft ?? 0);
-    const newTop = solutionTop - (shiftUp ?? 0);
-    const realignedPiece = {
-      ...pieces[pieceIndex],
-      boardLeft: newLeft,
-      boardTop: newTop,
-    };
-    realignedPieces[pieceIndex] = realignedPiece;
-
-    // Record whether we shifted the piece
-    if (boardLeft != newLeft || boardTop != newTop) {
-      numRealigned++;
-    }
-
-    // Record how much we shifted the piece by (for use when realigning duplicates)
-    const topDiff = boardTop - newTop;
-    const leftDiff = boardLeft - newLeft;
-    realignments[pieceIndex] = {topDiff, leftDiff};
+    applyRealignment(pieceIndex, boardLeft, boardTop);
   });
 
   // Then align the duplicates
@@ -193,7 +243,8 @@ export function giveHint(currentState: GameState): PieceInGame[] {
                 (
                   realignment,
                   index,
-                ): realignment is {topDiff: number; leftDiff: number} => // TS needs this extra hint because it can't handle multiple && in filter
+                ): realignment is {topDiff: number; leftDiff: number} =>
+                  // TS needs this extra hint because it can't handle multiple && in filter
                   realignment != undefined &&
                   connectedPieceIds.includes(pieces[index].id),
               )
@@ -201,59 +252,39 @@ export function giveHint(currentState: GameState): PieceInGame[] {
         );
 
       // Sort so that the one whose realignment is closest to the net commonestRealignment is first
-      unresolvedDuplicates.sort((indexA, indexB) => {
-        const diffA =
-          Math.abs(
-            commonestRealignmentTop -
-              (boardTop - (pieces[indexA].solutionTop - (shiftUp ?? 0))),
-          ) +
-          Math.abs(
-            commonestRealignmentLeft -
-              (boardLeft - (pieces[indexA].solutionLeft - (shiftLeft ?? 0))),
-          );
-
-        const diffB =
-          Math.abs(
-            commonestRealignmentTop -
-              (boardTop - (pieces[indexB].solutionTop - (shiftUp ?? 0))),
-          ) +
-          Math.abs(
-            commonestRealignmentLeft -
-              (boardLeft - (pieces[indexB].solutionLeft - (shiftLeft ?? 0))),
-          );
-        return diffA - diffB;
-      });
+      unresolvedDuplicates.sort(
+        (indexA, indexB) =>
+          getDistanceFromRealignment({
+            pieceIndex: indexA,
+            boardTop,
+            boardLeft,
+            commonestRealignmentTop,
+            commonestRealignmentLeft,
+            pieces,
+            effectiveShiftUp,
+            effectiveShiftLeft,
+          }) -
+          getDistanceFromRealignment({
+            pieceIndex: indexB,
+            boardTop,
+            boardLeft,
+            commonestRealignmentTop,
+            commonestRealignmentLeft,
+            pieces,
+            effectiveShiftUp,
+            effectiveShiftLeft,
+          }),
+      );
 
       // Remove the best fit from the unresolved group
       const bestFitIndex = unresolvedDuplicates.shift()!;
 
-      const newLeft = pieces[bestFitIndex].solutionLeft - (shiftLeft ?? 0);
-      const newTop = pieces[bestFitIndex].solutionTop - (shiftUp ?? 0);
-      const realignedPiece = {
-        ...pieces[bestFitIndex],
-        boardLeft: newLeft,
-        boardTop: newTop,
-        poolIndex: undefined,
-        dragGroupTop: undefined,
-        dragGroupLeft: undefined,
-      };
-
-      realignedPieces[bestFitIndex] = realignedPiece;
-
-      // Record whether we shifted the piece
-      if (boardLeft != newLeft || boardTop != newTop) {
-        numRealigned++;
-      }
-
-      // Record how much we shifted the piece by (for use when realigning future duplicates)
-      const topDiff = boardTop - newTop;
-      const leftDiff = boardLeft - newLeft;
-      realignments[bestFitIndex] = {topDiff, leftDiff};
+      applyRealignment(bestFitIndex, boardLeft, boardTop);
     });
 
     // Move the remaining ones to the pool
     unresolvedDuplicates.forEach((pieceIndex) => {
-      const realignedPiece = {
+      realignedPieces[pieceIndex] = {
         ...pieces[pieceIndex],
         boardLeft: undefined,
         boardTop: undefined,
@@ -261,7 +292,6 @@ export function giveHint(currentState: GameState): PieceInGame[] {
         dragGroupTop: undefined,
         dragGroupLeft: undefined,
       };
-      realignedPieces[pieceIndex] = realignedPiece;
     });
   });
 
@@ -278,8 +308,8 @@ export function giveHint(currentState: GameState): PieceInGame[] {
       if (boardLeft === undefined || boardTop === undefined) {
         realignedPieces[pieceIndex] = {
           ...realignedPieces[pieceIndex],
-          boardLeft: solutionLeft - (shiftLeft ?? 0),
-          boardTop: solutionTop - (shiftUp ?? 0),
+          boardLeft: solutionLeft - effectiveShiftLeft,
+          boardTop: solutionTop - effectiveShiftUp,
           poolIndex: undefined,
           dragGroupTop: undefined,
           dragGroupLeft: undefined,
