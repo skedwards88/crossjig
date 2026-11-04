@@ -30,7 +30,7 @@
     "@skedwards88/shared-components": "latest",
     "@skedwards88/word_lists": "latest",
     "@skedwards88/word_logic": "^4.0.9",
-    "react": "^19.2.8",
+    "react": "^19.3.0",
     "react-dom": "^19.2.8",
     "seedrandom": "^3.0.5"
   },
@@ -42,7 +42,7 @@
     "@babel/preset-typescript": "^7.29.7",
     "@eslint/js": "^9.39.5",
     "@types/jest": "^30.0.0",
-    "@types/react": "^19.2.18",
+    "@types/react": "^19.3.0",
     "@types/react-dom": "^19.2.5",
     "@types/seedrandom": "^3.0.8",
     "babel-jest": "^30.5.0",
