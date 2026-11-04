@@ -1,7 +1,7 @@
 {
   "name": "crossjig",
   "displayName": "Crossjig",
-  "version": "3.0.73",
+  "version": "3.0.74",
   "description": "",
   "main": "index.js",
   "scripts": {
