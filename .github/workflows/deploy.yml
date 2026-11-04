@@ -88,6 +88,8 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: "./dist/"
+          # To include dist/.well-known/assetlinks.json
+          include-hidden-files: true
 
       - name: Deploy to GitHub Pages
         id: deployment
